@@ -1,4 +1,4 @@
-package photo;
+package src.photo;
 
 public class FichierImage {
 

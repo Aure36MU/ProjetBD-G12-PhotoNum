@@ -1,4 +1,4 @@
-package impression;
+package src.impression;
 
 public abstract class Impression {
 
