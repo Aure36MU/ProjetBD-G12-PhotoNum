@@ -3,19 +3,9 @@ package src.impression;
 public abstract class Impression {
 	private int idImp;
 	private int nbrPages;
-	private EnumQualite qualite;
-	private EnumFormat format;
-
-	public enum EnumQualite{
-		BASSE,
-		MEDIUM,
-		PREMIUM
-	}
-	public enum EnumFormat{
-		PETIT,
-		MOYEN,
-		GRAND
-	}
+	private Qualite qualite;
+	private Format format;
+	
 	public int getIdImp() {
 		return idImp;
 	}
@@ -28,16 +18,16 @@ public abstract class Impression {
 	public void setNbrPages(int nbrPages) {
 		this.nbrPages = nbrPages;
 	}
-	public EnumQualite getQualite() {
+	public Qualite getQualite() {
 		return qualite;
 	}
-	public void setQualite(EnumQualite qualite) {
+	public void setQualite(Qualite qualite) {
 		this.qualite = qualite;
 	}
-	public EnumFormat getFormat() {
+	public Format getFormat() {
 		return format;
 	}
-	public void setFormat(EnumFormat format) {
+	public void setFormat(Format format) {
 		this.format = format;
 	}
 	

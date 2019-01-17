@@ -1,4 +1,4 @@
-package src.impression;
+package src.impression.agenda;
 
 public class AgendaJournalier extends Agenda {
 

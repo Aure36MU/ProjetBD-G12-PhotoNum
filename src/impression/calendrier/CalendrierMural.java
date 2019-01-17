@@ -1,4 +1,4 @@
-package src.impression;
+package src.impression.calendrier;
 
 public class CalendrierMural extends Calendrier {
 

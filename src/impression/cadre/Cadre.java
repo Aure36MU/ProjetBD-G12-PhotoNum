@@ -1,4 +1,6 @@
-package src.impression;
+package src.impression.cadre;
+
+import src.impression.Impression;
 
 public class Cadre extends Impression {
 	private EnumModele modele;
