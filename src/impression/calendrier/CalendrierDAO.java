@@ -72,7 +72,7 @@ public class CalendrierDAO {
 			conn.setAutoCommit(true);
 	
 			Statement state = conn.createStatement();
-			ResultSet result = state.executeQuery("SELECT * FROM Calendrier WHERE idUser="+id+";");
+			ResultSet result = state.executeQuery("SELECT * FROM Calendrier JOIN Impression ON (Calendrier.idImp = Impression.idImp) WHERE Impression.idUser="+id+";");
 			return CalendrierDAO.getCalendriers(result);
 			
 		} catch (SQLException e) {
