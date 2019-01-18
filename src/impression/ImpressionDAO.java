@@ -3,6 +3,7 @@ package src.impression;
 import java.sql.*;
 import java.util.ArrayList;
 
+import src.impression.album.AlbumDAO;
 import src.impression.calendrier.CalendrierDAO;
 
 public class ImpressionDAO {
@@ -62,15 +63,40 @@ public class ImpressionDAO {
 	}
 	
 	public static void changeQualityFrom(Connection c, Impression i,Qualite qualite){
-		
 		try {
 			i.setQualite(qualite);
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET qualite = '"+qualite+"' "
-					+ "WHERE idImp = " + i.getIdImp()++;
+								+ "WHERE idImp = '" + i.getIdImp()+"';");
 			
 		} catch (SQLException e) {
-			System.out.println("creation failed");
+			System.out.println("update failed");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void changeFormatFrom(Connection c, Impression i,Format format){
+		try {
+			i.setFormat(format);
+			Statement state = c.createStatement();
+			state.executeUpdate("UPDATE Impression SET format = '"+format+"' "
+								+ "WHERE idImp = '" + i.getIdImp()+"';");
+			
+		} catch (SQLException e) {
+			System.out.println("update failed");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void changeNbPagesFrom(Connection c, Impression i,int nb){
+		try {
+			i.setNbPages(nb);
+			Statement state = c.createStatement();
+			state.executeUpdate("UPDATE Impression SET nbPages = '"+nb+"' "
+								+ "WHERE idImp = '" + i.getIdImp()+"';");
+			
+		} catch (SQLException e) {
+			System.out.println("update failed");
 			e.printStackTrace();
 		}
 	}
