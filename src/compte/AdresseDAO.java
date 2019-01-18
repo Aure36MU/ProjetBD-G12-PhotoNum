@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class AdresseDAO {
 
@@ -13,22 +14,25 @@ public class AdresseDAO {
 		stat.executeUpdate(query);
 	}
 	
-	public static void selectAll(Connection c) throws SQLException {
+	public static ArrayList<Adresse> selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Adresse";
-		stat.executeQuery(query);
+		ResultSet result =stat.executeQuery(query);
+		return AdresseDAO.getAdresses(result);
 	}
 	
-	public static void selectAllFromUser(Connection c, int idu) throws SQLException {
+	public static ArrayList<Adresse> selectAllFromUser(Connection c, int idu) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Adresse where idUser='"+idu+"' ";
-		stat.executeQuery(query);
+		ResultSet result =stat.executeQuery(query);
+		return AdresseDAO.getAdresses(result);
 	}
 	
-	public static void selectAllFromPointRelais(Connection c) throws SQLException {
+	public static ArrayList<Adresse> selectAllFromPointRelais(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Adresse where idUser=null";
-		stat.executeQuery(query);
+		ResultSet result =stat.executeQuery(query);
+		return AdresseDAO.getAdresses(result);
 	}
 	public static void delete(Connection c, int idAdresse) throws SQLException {
 		Statement stat= c.createStatement();
@@ -39,5 +43,26 @@ public class AdresseDAO {
 		Statement stat= c.createStatement();
 		String query= "update Adresse set ville='"+vil+"',codePostal='"+codep+"',rue='"+ru+"',pays='"+pays+"' where idAdre='"+idAdresse+"'";
 		stat.executeUpdate(query);
+	}
+	
+	public static ArrayList<Adresse> getAdresses(ResultSet result) {
+		ArrayList<Adresse> Adresse = new ArrayList<Adresse>();
+		try {
+			while (result.next()) {
+				Adresse.add(new Adresse(
+					result.getInt("idAdre"),
+					result.getString("ville"),
+					result.getInt("codePostal"),
+					result.getString("rue"),
+					result.getString("pays"),
+					result.getInt("idUser")
+				));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return Adresse;
 	}
 }
