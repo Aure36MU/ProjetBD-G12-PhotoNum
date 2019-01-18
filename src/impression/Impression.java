@@ -2,7 +2,7 @@ package src.impression;
 
 public abstract class Impression {
 	private int idImp;
-	private int nbrPages;
+	private int nbPages;
 	private Qualite qualite;
 	private Format format;
 	
@@ -12,11 +12,11 @@ public abstract class Impression {
 	public void setIdImp(int idImp) {
 		this.idImp = idImp;
 	}
-	public int getNbrPages() {
-		return nbrPages;
+	public int getNbPages() {
+		return nbPages;
 	}
-	public void setNbrPages(int nbrPages) {
-		this.nbrPages = nbrPages;
+	public void setNbPages(int nbPages) {
+		this.nbPages = nbPages;
 	}
 	public Qualite getQualite() {
 		return qualite;
@@ -29,6 +29,11 @@ public abstract class Impression {
 	}
 	public void setFormat(Format format) {
 		this.format = format;
+	}
+	
+	
+	public String toString(){
+		return "id : "+this.idImp +" qualite : "+this.qualite+" format : "+this.format+" nbPages : "+this.nbPages;
 	}
 	
 	
