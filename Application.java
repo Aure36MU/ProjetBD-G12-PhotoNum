@@ -20,6 +20,24 @@ public class Application {
 				System.out.println("Vous n'avez pas choisi entre connecter: 1 et inscrire: 2 ");
 			}
 		}
+		
+		
+		
+		/*
+		 * Partie de code pour charger un jeu de test 
+		 * 
+		 * charger fichier... chaque requete sur une ligne
+		 * for ([all lines in file]) {
+		 * String line = [une ligne];
+		 * String keyword = line.split(" ")[0];
+		 * switch (keyword) {
+		 * 	case "INSERT": smth.executeUpdate(line);
+		 * 	case "UPDATE": smth.executeUpdaet(line);
+		 * 	case "SELECT": smth.executeQuery(line);
+		 * 	case "DELETE": smth.executeUpdate(line);
+		 * }
+		 * }
+		 */
 	}
 	
 
