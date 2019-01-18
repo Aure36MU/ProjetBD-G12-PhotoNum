@@ -32,7 +32,7 @@ public class ImpressionDAO {
 		try {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO Impression "
-					+ "(idImp,qualite,format,idUser,nbPages)"
+					+ "(idImp,qualite,format,idUser,nbPageTotal)"
 					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );
 			
 			
@@ -88,7 +88,7 @@ public class ImpressionDAO {
 		}
 	}
 	
-	public static void changeNbPagesFrom(Connection c, Impression i,int nb){
+	public static void changeNbPagesFrom(Connection c, Impression i, int nb){
 		try {
 			i.setNbPages(nb);
 			Statement state = c.createStatement();
