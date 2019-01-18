@@ -14,25 +14,25 @@ public class UtilisateurDAO {
 	public static void selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur";
-		stat.executeUpdate(query);
+		stat.executeQuery(query);
 	}
 	
 	public static void selectAllFromUser(Connection c, int idu) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where idUser='"+idu+"' ";
-		stat.executeUpdate(query);
+		stat.executeQuery(query);
 	}
 	
 	public static void selectAllUserFromStatut(Connection c, Statut statut) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where statut='"+statut+"'";
-		stat.executeUpdate(query);
+		stat.executeQuery(query);
 	}
 	
 	public static void selectAllUserFromActive(Connection c, Boolean active) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where active='"+active+"'";
-		stat.executeUpdate(query);
+		stat.executeQuery(query);
 	}
 	
 	public static void deleteUtilisateur(Connection c, int idUtilisateur) throws SQLException {

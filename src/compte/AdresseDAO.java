@@ -16,19 +16,19 @@ public class AdresseDAO {
 	public static void selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Adresse";
-		stat.executeUpdate(query);
+		stat.executeQuery(query);
 	}
 	
 	public static void selectAllFromUser(Connection c, int idu) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Adresse where idUser='"+idu+"' ";
-		stat.executeUpdate(query);
+		stat.executeQuery(query);
 	}
 	
 	public static void selectAllFromPointRelais(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Adresse where idUser=null";
-		stat.executeUpdate(query);
+		stat.executeQuery(query);
 	}
 	public static void delete(Connection c, int idAdresse) throws SQLException {
 		Statement stat= c.createStatement();
