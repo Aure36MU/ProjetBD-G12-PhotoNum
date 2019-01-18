@@ -1,6 +1,8 @@
 package src.photo;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,7 +25,6 @@ public class PhotoDAO {
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Photo;");
 		return getPhotos(result);
-
 
 	}
 	
@@ -83,6 +84,67 @@ public class PhotoDAO {
 		ResultSet result = state.executeQuery("SELECT * FROM Photo WHERE idFichier="+id+";");
 		return getPhotos(result);
 
+	}
+	
+	
+	/**
+	 * Ajoute une photo dans la base de données.
+	 * ATTENTION la requête est préparée donc tous les paramètres doivent avoir une valeur.
+	 * 
+	 * @param conn Connection SQL
+	 * @param idPh
+	 * @param idFichier
+	 * @param retouche
+	 * @throws SQLException
+	 */
+	public static void addPhoto(Connection conn, int idPh, int idFichier, String retouche) throws SQLException {
+
+		conn.setAutoCommit(true);
+
+		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo VALUES (?, ?, ?);");
+		state.setInt(1, idPh);
+		state.setInt(2, idFichier);
+		state.setString(3, retouche);
+		state.executeUpdate();
+	}
+	
+	
+	/**
+	 * Modifie une Photo d'un certain idPh dans la base de données.
+	 * ATTENTION la requête est préparée donc tous les paramètres doivent avoir une valeur.
+	 * 
+	 * @param conn Connection SQL
+	 * @param idPh
+	 * @param idFichier
+	 * @param retouche
+	 * @throws SQLException
+	 */
+	public static void updatePhoto(Connection conn, int idPh, int idFichier, String retouche) throws SQLException {
+
+		conn.setAutoCommit(true);
+
+		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idFichier=?, retouche=?) WHERE idPh=?;");
+		state.setInt(1, idFichier);
+		state.setString(2, retouche);
+		state.setInt(3, idPh);
+		state.executeUpdate();
+	
+	}
+	
+	
+	/**
+	 * Supprime une Photo d'un certain idPh de la base.
+	 * 
+	 * @param conn Connection SQL
+	 * @param id id fichier
+	 * @throws SQLException 
+	 */
+	public static void deletePhoto(Connection conn, int id) throws SQLException {
+
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("DELETE FROM Photo WHERE idPh="+id+";");
 	}
 	
 	/**

@@ -12,7 +12,7 @@ import src.impression.Qualite;
 public class CalendrierDAO {
 	
 	/**
-	 * Sélectionne tous les calendriers (quels que soient leurs types : Bureau, Mural...) sans conditions.
+	 * Sélectionne tous les calendriers (quels que soient leurs modèles) sans conditions.
 	 * 
 	 * @param conn Connection SQL
 	 * @return ArrayList contenant tous les objets Calendrier
@@ -30,7 +30,7 @@ public class CalendrierDAO {
 	}
 	
 	/**
-	 * Sélectionne tous les calendriers (quels que soient leurs types : Bureau, Mural...) avec des conditions paramétrées.
+	 * Sélectionne tous les calendriers avec des conditions paramétrées.
 	 * 
 	 * @param conn Connection SQL
 	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
@@ -83,6 +83,40 @@ public class CalendrierDAO {
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Calendrier VALUES("+id+", '"+modele.toString()+"');");
+		
+	}
+	
+	
+	/**
+	 * Modifie un calendrier d'un idImp donné dans la base.
+	 * 
+	 * @param id id impression
+	 * @param modele modele
+	 * @throws SQLException 
+	 */
+	public static void updateCalendrier(Connection conn, int id, ModeleCalendrier modele) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("UPDATE Calendrier SET modele='"+modele.toString()+"' WHERE idImp="+id+";");
+		
+	}
+	
+	
+	/**
+	 * Supprime un calendrier d'un idImp donné de la base.
+	 * 
+	 * @param id id impression
+	 * @param modele modele
+	 * @throws SQLException 
+	 */
+	public static void deleteCalendrier(Connection conn, int id) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("DELETE FROM Calendrier WHERE idImp="+id+";");
 		
 	}
 
