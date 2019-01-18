@@ -9,7 +9,7 @@ public class CalendrierBureau extends Calendrier {
 	Qualite qualite;
 	Format format;
 	int idUser;
-	int nbrPageTotal;	
+	int nbrPageTotal;
 	
 	public CalendrierBureau(int idimpression, Qualite qualite, Format format, int idutilisateur, int nombrepagestotal) {
 		this.idImp = idimpression;
