@@ -4,17 +4,11 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import src.impression.album.AlbumDAO;
+import src.impression.cadre.CadreDAO;
 import src.impression.calendrier.CalendrierDAO;
+import src.impression.tirage.TirageDAO;
 
 public class ImpressionDAO {
-	/*static createImpression (params id qualite format ) {
-		string query = “insert into ……..”
-		executequery(query).... (voir jdbc exemple)
-	}
-	static select 1 impression (idImp)
-	static select impressions utilisateurs (id User)
-	static update()
-	static delete from ()*/
 	
 	public static int getHigherIdImp(Connection c){
 		try {
@@ -32,7 +26,7 @@ public class ImpressionDAO {
 		try {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO Impression "
-					+ "(idImp,qualite,format,idUser,nbPages)"
+					+ "(idImp,qualite,format,idUser,nbPageTotal)"
 					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );
 			
 			
@@ -88,7 +82,7 @@ public class ImpressionDAO {
 		}
 	}
 	
-	public static void changeNbPagesFrom(Connection c, Impression i,int nb){
+	public static void changeNbPagesFrom(Connection c, Impression i, int nb){
 		try {
 			i.setNbPages(nb);
 			Statement state = c.createStatement();

@@ -1,18 +1,29 @@
 package src.impression.cadre;
 
 import src.impression.Impression;
+import src.impression.cadre.ModeleCadre;
 
 public class Cadre extends Impression {
-	private EnumModele modele;
-	public enum EnumModele{
-		BOIS,
-		ALUMINIUM,
-		CARBONE
+	ModeleCadre modele;
+	int idImp;
+
+	public Cadre(ModeleCadre modele, int idImp){
+		this.modele = modele;
+		this.idImp = idImp;
 	}
-	public EnumModele getModele() {
+	
+	public ModeleCadre getmodele() {
 		return modele;
 	}
-	public void setModele(EnumModele modele) {
+	public void setModele(ModeleCadre modele) {
 		this.modele = modele;
+	}
+	
+
+	public int getIdImp() {
+		return idImp;
+	}
+	public void setIdImp(int idImp) {
+		this.idImp = idImp;
 	}
 }

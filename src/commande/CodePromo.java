@@ -20,9 +20,9 @@ public abstract class CodePromo {
 		this.idUser = idutilisateur;
 	}
 	
-	public CodePromo() {
+	/*public CodePromo() {
 		
-	}
+	}*/
 
 	public int getIdCodeP() {
 		return idCodeP;
