@@ -1,8 +1,12 @@
 package src.compte;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import src.impression.album.Album;
 
 public class UtilisateurDAO {
 	public static void createUtilisateur(Connection c, String nom, String prenom, String mdp, String email, Boolean active, Statut statut) throws SQLException {
@@ -11,28 +15,32 @@ public class UtilisateurDAO {
 		stat.executeUpdate(query);
 	}
 	
-	public static void selectAll(Connection c) throws SQLException {
+	public static ArrayList<Utilisateur> selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur";
-		stat.executeUpdate(query);
+		ResultSet result =stat.executeQuery(query);
+		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	
-	public static void selectAllFromUser(Connection c, int idu) throws SQLException {
+	public static ArrayList<Utilisateur> selectAllFromUser(Connection c, int idu) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where idUser='"+idu+"' ";
-		stat.executeUpdate(query);
+		ResultSet result =stat.executeQuery(query);
+		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	
-	public static void selectAllUserFromStatut(Connection c, Statut statut) throws SQLException {
+	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, Statut statut) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where statut='"+statut+"'";
-		stat.executeUpdate(query);
+		ResultSet result =stat.executeQuery(query);
+		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	
-	public static void selectAllUserFromActive(Connection c, Boolean active) throws SQLException {
+	public static ArrayList<Utilisateur> selectAllUserFromActive(Connection c, Boolean active) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where active='"+active+"'";
-		stat.executeUpdate(query);
+		ResultSet result =stat.executeQuery(query);
+		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	
 	public static void deleteUtilisateur(Connection c, int idUtilisateur) throws SQLException {
@@ -45,5 +53,27 @@ public class UtilisateurDAO {
 		Statement stat= c.createStatement();
 		String query= "update Utilisateur set nom='"+nom+"',prenom='"+prenom+"',mdp='"+mdp+"',email='"+email+"', statut='"+statut+"' where idUser='"+idUtilisateur+"'";
 		stat.executeUpdate(query);
+	}
+	
+	public static ArrayList<Utilisateur> getUtilisateurs(ResultSet result) {
+		ArrayList<Utilisateur> Utilisateur = new ArrayList<Utilisateur>();
+		try {
+			while (result.next()) {
+				Utilisateur.add(new Utilisateur(
+					result.getInt("idUser"),
+					result.getString("nom"),
+					result.getString("prenom"),
+					result.getString("mdp"),
+					result.getString("email"),
+					result.getBoolean("active"),
+					(Statut)result.getObject("statut")
+				));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return Utilisateur;
 	}
 }
