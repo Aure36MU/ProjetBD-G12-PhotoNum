@@ -19,19 +19,19 @@ public class AlbumDAO {
 		stat.executeUpdate(query);
 	}
 	
-	public static void selectAllFromAlbum(Connection c, int idi) throws SQLException {
+	public static void selectAllFromUser(Connection c, int idUser) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "select * from Album where idImp='"+idi+"' ";
+		String query= "select * from Album NATURAL JOIN Impression where idUser='"+idUser+"' ";
 		stat.executeUpdate(query);
 	}
 	
-	public static void deleteUtilisateur(Connection c, int idi) throws SQLException {
+	public static void deleteAlbum(Connection c, int idi) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "delete from 'Album' where 'idImp'='"+idi+"' ";
 		stat.executeUpdate(query);
 	}
 	
-	public static void updateUtilisateur(Connection c, int idi, int photo, String titre) throws SQLException {
+	public static void updateAlbum(Connection c, int idi, int photo, String titre) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "update Album set photoCouv='"+photo+"' ,titreCouv='"+titre+"' where idImp='"+idi+"'";
 		stat.executeUpdate(query);
