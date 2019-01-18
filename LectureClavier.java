@@ -78,7 +78,8 @@ public class LectureClavier {
      * lecture au clavier d'une chaine de caracteres
      * @return la chaine lue
      */
-    public static String lireChaine() {
+    public static String lireChaine(String invite) {
+    	System.out.println(invite + " ");
         try {
             return(stdin.readLine());
         } catch (Exception e) {
