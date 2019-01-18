@@ -69,6 +69,25 @@ public class CalendrierDAO {
 	
 	}
 	
+	
+	/**
+	 * Ajoute un calendrier dans la base.
+	 * 
+	 * @param id id impression
+	 * @param modele modele
+	 * @throws SQLException 
+	 */
+	public static void addCalendrier(Connection conn, int id, ModeleCalendrier modele) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("INSERT INTO Calendrier VALUES("+id+", '"+modele.toString()+"');");
+		
+	}
+
+	
+	
 	/**
 	 * Retourne les objets Calendrier construits à partir d'un résultat de requête.
 	 * 
@@ -80,25 +99,10 @@ public class CalendrierDAO {
 		ArrayList<Calendrier> calendriers = new ArrayList<Calendrier>();
 
 		while (result.next()) {
-			if (result.getString("modele").equalsIgnoreCase("Bureau")) {
-				calendriers.add(new CalendrierBureau(
-						result.getInt("idImp"),
-						(Qualite) result.getObject("qualite"),
-						(Format) result.getObject("format"),
-						result.getInt("idUser"),
-						result.getInt("nbrPageTotal")
-						));
-				
-			} else if (result.getString("modele").equalsIgnoreCase("Mural")){
-				calendriers.add(new CalendrierMural(
-						result.getInt("idImp"),
-						(Qualite) result.getObject("qualite"),
-						(Format) result.getObject("format"),
-						result.getInt("idUser"),
-						result.getInt("nbrPageTotal")
-						));
-				
-			}				
+			calendriers.add(new Calendrier(
+				result.getInt("idImp"),
+				(ModeleCalendrier) result.getObject("modele")
+				));	
 		}
 
 		return calendriers;

@@ -4,17 +4,11 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import src.impression.album.AlbumDAO;
+import src.impression.cadre.CadreDAO;
 import src.impression.calendrier.CalendrierDAO;
+import src.impression.tirage.TirageDAO;
 
 public class ImpressionDAO {
-	/*static createImpression (params id qualite format ) {
-		string query = “insert into ……..”
-		executequery(query).... (voir jdbc exemple)
-	}
-	static select 1 impression (idImp)
-	static select impressions utilisateurs (id User)
-	static update()
-	static delete from ()*/
 	
 	public static int getHigherIdImp(Connection c){
 		try {
