@@ -1,6 +1,7 @@
 package src.impression.agenda;
 
 import src.impression.Impression;
+import src.impression.Modele;
 
 public abstract class Agenda extends Impression {
 	private Modele modele;
