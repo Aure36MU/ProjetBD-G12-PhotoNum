@@ -24,4 +24,11 @@ public class Album extends Impression {
 		this.titreCouv = titreCouv;
 	}
 	
+	public int getPhotoCouv() {
+		return photoCouv;
+	}
+
+	public void setPhotoCouv(int PhotoCouv) {
+		this.photoCouv = PhotoCouv;
+	}
 }
