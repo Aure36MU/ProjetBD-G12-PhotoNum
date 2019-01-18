@@ -1,48 +1,11 @@
-/*package tplogo;*/
 import java.io.*;
 
 /**
- *
  *   Cette classe a pour role de faciliter la lecture de donnees
  *   a partir du clavier. <BR>
  *   Elle definit une methode de lecture pour les types de base
- *   les plus courramment utilises (int, float, double, boolean, String).<BR>
- *   <BR>
- *   La lecture d'une valeur au clavier se fait en tapant celle-ci suivie
- *   d'un retour chariot.
- *   <BR>
- *   En cas d'erreur de lecture (par exemple un caractere a ete tape
- *   lors de la lecture d'un entier) un message d'erreur est affiche
- *   sur la console et l'execution du programme est interrompue.
- *   <BR><BR><BR>
- *   <B>exemples d'utilisation de cette classe</B><BR>
- *   <PRE>
- *      System.out.print("entrez un entier : ");
- *      System.out.flush();
- *      int i = LectureClavier.lireEntier();
- *      System.out.println("entier lu : " + i);
- *
- *      System.out.print("entrez une chaine :");
- *      System.out.flush();
- *      String s = LectureClavier.lireChaine();
- *      System.out.println("chaine lue : " + s);
- *
- *      System.out.print("entrez une reel (float) : ");
- *      System.out.flush();
- *      float f = LectureClavier.lireFloat();
- *      System.out.println("reel (float) lu : " + f);
- *
- *      System.out.print("entrez une reel (double) : ");
- *      System.out.flush();
- *      double d = LectureClavier.lireDouble();
- *      System.out.println("reel (double) lu : " + d);
- *
- *      System.out.print("entrez une reponse O/N : ");
- *      System.out.flush();
- *      boolean b = LectureClavier.lireOuiNon();
- *      System.out.println("booleen lu : " + b);
- *   </PRE>
- *
+ *   les plus courramment utilises (int, float, double, boolean, String).
+
  *   @author Philippe Genoud
  *   @version 13/10/98
  */
@@ -130,9 +93,8 @@ public class LectureClavier {
      * @param invite une chaine d'invite 
      */
     public static boolean lireOuiNon(String invite) {
-        System.out.println(invite + " ");
         String ch;
-        ch = lireChaine();
+        ch = lireChaine(invite);
         return (ch.equals("o") || ch.equals("O"));
     }
     
@@ -144,9 +106,8 @@ public class LectureClavier {
      *          <code>false</code> sinon
      */
     public static char lireChar(String invite) {
-        System.out.println(invite + " ");
         String ch;
-        ch = lireChaine();
+        ch = lireChaine(invite);
         return ch.charAt(0);
     }
     
