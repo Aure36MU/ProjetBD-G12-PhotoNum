@@ -15,7 +15,6 @@ public class ImpressionDAO {
 			Statement state = c.createStatement();
 			ResultSet res = state.executeQuery("SELECT max(idImp) FROM Impression");
 			return res.getInt(0);
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -27,9 +26,7 @@ public class ImpressionDAO {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO Impression "
 					+ "(idImp,qualite,format,idUser,nbPageTotal)"
-					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );
-			
-			
+					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );		
 		} catch (SQLException e) {
 			System.out.println("creation failed");
 			e.printStackTrace();
@@ -62,13 +59,11 @@ public class ImpressionDAO {
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET qualite = '"+qualite+"' "
 								+ "WHERE idImp = '" + i.getIdImp()+"';");
-			
 		} catch (SQLException e) {
 			System.out.println("update failed");
 			e.printStackTrace();
 		}
 	}
-	
 	public static void changeFormatFrom(Connection c, Impression i,Format format){
 		try {
 			i.setFormat(format);
@@ -81,14 +76,12 @@ public class ImpressionDAO {
 			e.printStackTrace();
 		}
 	}
-	
 	public static void changeNbPagesFrom(Connection c, Impression i, int nb){
 		try {
 			i.setNbPages(nb);
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET nbPages = '"+nb+"' "
 								+ "WHERE idImp = '" + i.getIdImp()+"';");
-			
 		} catch (SQLException e) {
 			System.out.println("update failed");
 			e.printStackTrace();
