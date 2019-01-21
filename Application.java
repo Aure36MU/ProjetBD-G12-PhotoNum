@@ -34,7 +34,9 @@ public class Application {
 			if(i==1) {
 				String mailConnect= LectureClavier.lireChaine("Quel est votre adresse mail?");
 				String mdp= LectureClavier.lireChaine("Quel est votre mot de passe?");
-				System.out.println("Vous voilà connecter ");
+				//verifier mdp
+				
+				System.out.println("Vous voilà connecté ");
 			}else {
 				if(i==2) {
 					System.out.println("Bienvenue sur le site PhotoNum! Nous allons vous demander quelque information pour la création de votre compte");
