@@ -3,6 +3,7 @@ package src.impression;
 import java.sql.*;
 import java.util.ArrayList;
 
+import src.impression.agenda.AgendaDAO;
 import src.impression.album.AlbumDAO;
 import src.impression.cadre.CadreDAO;
 import src.impression.calendrier.CalendrierDAO;
@@ -33,7 +34,7 @@ public class ImpressionDAO {
 		}
 	}
 	
-	public static ArrayList<Impression> selectAll(Connection c){
+	public static ArrayList<Impression> selectAll(Connection c) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
 		tab.addAll(CalendrierDAO.selectAll(c));
 		tab.addAll(AgendaDAO.selectAll(c));
@@ -43,7 +44,7 @@ public class ImpressionDAO {
 		return tab;
 	}
 	
-	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser){
+	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
 		tab.addAll(CalendrierDAO.selectAllFromUser(c,idUser));
 		tab.addAll(AgendaDAO.selectAllFromUser(c,idUser));
