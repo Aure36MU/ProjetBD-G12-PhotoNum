@@ -35,6 +35,8 @@ public class Application {
 				String mailConnect= LectureClavier.lireChaine("Quel est votre adresse mail?");
 				String mdp= LectureClavier.lireChaine("Quel est votre mot de passe?");
 				//verifier mdp
+				//UtilisateurDAO.verifiermdp()
+				 
 				
 				System.out.println("Vous voilà connecté ");
 			}else {
