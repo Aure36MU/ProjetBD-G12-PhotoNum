@@ -4,5 +4,4 @@ public enum ModeleAgenda {
     CHATONS,
     POMPIERS,
     PIRELLI
-
 }

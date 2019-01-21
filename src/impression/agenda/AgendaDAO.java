@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+
 public class AgendaDAO {
 
     /**
@@ -35,7 +36,7 @@ public class AgendaDAO {
      * @return ArrayList contenant les objets Agenda sï¿½lectionnï¿½s
      * @throws SQLException
      */
-    public static ArrayList<Agenda> selectAllFromUser(Connection conn, String condition) throws SQLException {
+    public static ArrayList<Agenda> selectAll(Connection conn, String condition) throws SQLException {
 
 
         conn.setAutoCommit(true);
@@ -65,7 +66,38 @@ public class AgendaDAO {
 
 
     }
+	/**
+	 * Ajoute un agenda dans la base.
+	 * 
+	 * @param id id impression
+	 * @param modele modele
+	 * @throws SQLException 
+	 */
+	public static void addAgenda(Connection conn, int id, ModeleAgenda modele, TypeAgenda type) throws SQLException {
+		
+		conn.setAutoCommit(true);
 
+		Statement state = conn.createStatement();
+		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+modele.toString()+"');");
+		
+	}
+	
+	
+	/**
+	 * Modifie un agenda d'un idImp donné dans la base.
+	 * 
+	 * @param id id impression
+	 * @param modele modele
+	 * @throws SQLException 
+	 */
+	public static void updateAgenda(Connection conn, int id, ModeleAgenda modele ,TypeAgenda type) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("UPDATE agenda SET modele='"+modele.toString()+"' WHERE idImp="+id+";");
+		
+	}
 
     /**
      * Supprime un Agenda d'un idImp donnï¿½ de la base.
@@ -98,10 +130,13 @@ public class AgendaDAO {
         while (result.next()) {
             Agendas.add(new Agenda(
                     result.getInt("idImp"),
-                    (ModeleAgenda) result.getObject("modele")
+                    (ModeleAgenda) result.getObject("modele"),
+                    (TypeAgenda) result.getObject("type")
             ));
         }
 
         return Agendas; 
     } 
+    
+    
 }
