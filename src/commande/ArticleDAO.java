@@ -93,19 +93,14 @@ public class ArticleDAO {
      */
 	public static ArrayList<Article> getArticles(ResultSet result) throws SQLException {
         ArrayList<Article> Articles = new ArrayList<Article>();
-/*
+
         while (result.next()) {
             Articles.add(new Article(
-                    result.getInt("idComm"),
-                    result.getInt("idUser"),
-                    result.getInt("idCodeP"),
-                    (Date) result.getObject("dateC"),
-                    (ModeLivraison) result.getObject("modeLivraison"),
-                    (Statut) result.getObject("statut")
+                    result.getInt("idArt"),
+                    result.getInt("prix"),
+                    result.getInt("qte")
             ));
-        }*/
+        }
         return Articles;
 	}
-
-
 }
