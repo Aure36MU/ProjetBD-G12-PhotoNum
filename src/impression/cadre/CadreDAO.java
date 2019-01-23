@@ -31,7 +31,7 @@ public class CadreDAO {
 		try {
 			while (result.next()) {
 				cadre.add(new Cadre(
-					(ModeleCadre)result.getObject("modele"),
+					ModeleCadre.valueOf(result.getString("modele")),
 					result.getInt("idImp")
 				));
 			}

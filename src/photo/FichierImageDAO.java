@@ -123,7 +123,7 @@ public class FichierImageDAO {
 		conn.setAutoCommit(true);
 
 		PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
-		state.setInt(1, getHigherIdFichier(conn));
+		state.setInt(1, getHigherIdFichier(conn)+1);
 		state.setInt(2, idUser);
 		state.setString(3, chemin);
 		state.setString(4, infoPVue);

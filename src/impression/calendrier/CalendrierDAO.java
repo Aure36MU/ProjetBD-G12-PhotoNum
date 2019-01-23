@@ -135,7 +135,7 @@ public class CalendrierDAO {
 		while (result.next()) {
 			calendriers.add(new Calendrier(
 				result.getInt("idImp"),
-				(ModeleCalendrier) result.getObject("modele")
+				ModeleCalendrier.valueOf(result.getString("modele"))
 				));	
 		}
 
