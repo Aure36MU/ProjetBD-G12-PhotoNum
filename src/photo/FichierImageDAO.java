@@ -100,6 +100,8 @@ public class FichierImageDAO {
 		return getFichiersImage(result);
 
 	}
+
+	
 	
 	
 	/**

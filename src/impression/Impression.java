@@ -2,7 +2,9 @@ package src.impression;
 
 public abstract class Impression {
 	private int idImp;
+	private String nomImp;
 	private int nbPages;
+	private int idUser;
 	private Qualite qualite;
 	private Format format;
 	
@@ -34,6 +36,18 @@ public abstract class Impression {
 	
 	public String toString(){
 		return "id : "+this.idImp +" qualite : "+this.qualite+" format : "+this.format+" nbPages : "+this.nbPages;
+	}
+	public int getIdUser() {
+		return idUser;
+	}
+	public void setIdUser(int idUser) {
+		this.idUser = idUser;
+	}
+	public String getNomImp() {
+		return nomImp;
+	}
+	public void setNom(String nomImp) {
+		this.nomImp = nomImp;
 	}
 	
 	

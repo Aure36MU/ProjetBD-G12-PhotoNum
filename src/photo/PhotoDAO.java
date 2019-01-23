@@ -69,6 +69,25 @@ public class PhotoDAO {
 	
 	
 	/**
+	 * Sélectionne toutes les photos d'une certaine impression.
+	 * 
+	 * @param conn Connection SQL
+	 * @param id id impression
+	 * @return ArrayList contenant les objets Photo sélectionnés
+	 * @throws SQLException 
+	 */
+	public static ArrayList<Photo> selectAllFromImpression(Connection conn, int id) throws SQLException {
+
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN Impression_Photo ON (Photo.idPh = Impression_Photo.idPh) WHERE Impression_Photo.idImp="+id+";");
+		return getPhotos(result);
+
+	}
+	
+	
+	/**
 	 * Sélectionne toutes les photos basés sur un certain FichierImage.
 	 * 
 	 * @param conn Connection SQL
