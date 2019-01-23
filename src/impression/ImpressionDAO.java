@@ -8,6 +8,7 @@ import src.impression.album.AlbumDAO;
 import src.impression.cadre.CadreDAO;
 import src.impression.calendrier.CalendrierDAO;
 import src.impression.tirage.TirageDAO;
+import src.photo.FichierImage;
 
 public class ImpressionDAO {
 	
@@ -51,6 +52,31 @@ public class ImpressionDAO {
 		tab.addAll(TirageDAO.selectAllFromUser(c,idUser));
 		tab.addAll(CadreDAO.selectAllFromUser(c,idUser));
 		tab.addAll(AlbumDAO.selectAllFromUser(c,idUser));
+		return tab;
+	}
+	
+	
+	
+	public static ArrayList<FichierImage> selectAllPhotos(Connection c,int id) throws SQLException{
+		ArrayList<FichierImage> tab = new ArrayList<FichierImage>();
+		
+		Statement state = c.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id+";");
+		
+		while (result.next()) {
+			tab.add(new FichierImage(
+					result.getInt("idFichier"),
+					result.getInt("idUser"),
+					result.getString("chemin"),
+					result.getString("infoPVue"),
+					result.getInt("pixelImg"),
+					result.getBoolean("partage"),
+					result.getDate("dateUtilisation"),
+					result.getBoolean("fileAttModif"),
+					result.getBoolean("fileAttSuppr")
+					));
+		}
+		
 		return tab;
 	}
 	

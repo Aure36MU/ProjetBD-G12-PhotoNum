@@ -130,8 +130,8 @@ public class AgendaDAO {
         while (result.next()) {
             Agendas.add(new Agenda(
                     result.getInt("idImp"),
-                    (ModeleAgenda) result.getObject("modele"),
-                    (TypeAgenda) result.getObject("type")
+                    ModeleAgenda.valueOf(result.getString("modele")),
+                    TypeAgenda.valueOf(result.getString("type"))
             ));
         }
 
