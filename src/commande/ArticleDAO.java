@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ArticleDAO {
 	
@@ -98,7 +97,8 @@ public class ArticleDAO {
             Articles.add(new Article(
                     result.getInt("idArt"),
                     result.getInt("prix"),
-                    result.getInt("qte")
+                    result.getInt("qte"),
+                    result.getInt("idImp")
             ));
         }
         return Articles;
