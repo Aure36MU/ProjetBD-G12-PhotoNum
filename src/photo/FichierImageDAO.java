@@ -5,11 +5,43 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import src.app.LectureClavier;
+
 import java.sql.Date;
 
 
 public class FichierImageDAO {
+	
+	/**
+	 * Renvoie l'idFichier le plus grand de FichierImage. Utilisé pour les opérations INSERT.
+	 * @param c Connection
+	 * @return
+	 */
+	
+	public static int getHigherIdFichier(Connection c){
+		try {
+			Statement state = c.createStatement();
+			ResultSet res = state.executeQuery("SELECT max(idFichier) FROM FichierImage;");
+			return res.getInt(0);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	
+	/** Renvoie la date du jour pour utilisation avec la base de données.
+	 * 
+	 * @return La date du jour formatté comme suit : "yyyy-mm-dd"
+	 */
+	public static String today() {
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
+	}
 	
 
 	/**
@@ -75,7 +107,6 @@ public class FichierImageDAO {
 	 * ATTENTION la requête est préparée donc tous les paramètres doivent avoir une valeur.
 	 * 
 	 * @param conn Connection SQL
-	 * @param idFichier
 	 * @param idUser
 	 * @param chemin
 	 * @param infoPVue
@@ -86,13 +117,13 @@ public class FichierImageDAO {
 	 * @param fileAttSuppr
 	 * @throws SQLException
 	 */
-	public static void addFichierImage(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,
+	public static void addFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
 			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
 
 		conn.setAutoCommit(true);
 
 		PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
-		state.setInt(1, idFichier);
+		state.setInt(1, getHigherIdFichier(conn));
 		state.setInt(2, idUser);
 		state.setString(3, chemin);
 		state.setString(4, infoPVue);
@@ -186,5 +217,36 @@ public class FichierImageDAO {
 		return fichiersimage;
 	}
 
+	
+		
+	/** Permet d'insérer un nouveau FichierImage à partir de certains paramètres.*
+	 * Les autres (partage, fileAttModif, fileAttSuppr) prennent des valeurs par défaut.
+	 * 
+	 * @param conn Connection
+	 * @param idUser id utilisateur
+	 * @param chemin chemin de l'image
+	 * @param infoPVue infos prise de vue
+	 * @param pixelImg dimensions de l'image
+	 * @throws SQLException
+	 */
+	public static void uploadFichierImage(Connection conn, int idUser, String chemin, String infoPVue, int pixelImg) throws SQLException {
+		addFichierImage(conn, idUser, chemin, infoPVue, pixelImg, false, Date.valueOf(today()), false, false);
+
+	}
+	
+	
+	
+	
+	/**
+	 * Version interactive de uploadFichierImage. Demande à l'utilisateur un chemin, les infos de prise de vue et la dimension de l'image.
+	 * 
+	 * @throws SQLException 
+	 */
+	public static void uploadFichierImage(Connection conn, int idUser) throws SQLException {
+		String chemin = LectureClavier.lireChaine("Entrez un chemin :");
+		String infoPVue = LectureClavier.lireChaine("Entrez les infos de prise de vue :");
+		int pixelImg = LectureClavier.lireEntier("Entrez la dimension de l'image :");
+		uploadFichierImage(conn, idUser, chemin, infoPVue, pixelImg);
+	}
 
 }
