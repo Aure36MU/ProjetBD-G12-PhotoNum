@@ -65,6 +65,7 @@ public class Application {
 		    System.out.println("connected");
 		    System.out.println("**********************************************************************");
 		    
+		    System.out.println("    ");
 		    while(utilisateur == null){
 				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire? ");
 				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire");
@@ -77,6 +78,7 @@ public class Application {
 						utilisateur = inscription(c);
 						break;
 					default : System.out.println("Veuillez faire un choix. ");
+					
 				}		
 		    }	
 			
