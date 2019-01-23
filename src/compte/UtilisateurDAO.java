@@ -9,10 +9,24 @@ import java.util.ArrayList;
 import src.impression.album.Album;
 
 public class UtilisateurDAO {
-	public static void createUtilisateur(Connection c, String nom, String prenom, String mdp, String email, Boolean active, Statut statut) throws SQLException {
+	
+	public static int getHigherId(Connection c){
+		try {
+			Statement state = c.createStatement();
+			ResultSet res = state.executeQuery("SELECT max(idUser) FROM Utilisateur");
+			return res.getInt(0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, Statut statut) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "insert into Utilisateur (nom , prenom, mdp , email, active, statut) values ('"+nom+"','"+prenom+"','"+mdp+"','"+email+"','"+active+"','"+statut+"')";
+		int id = (getHigherId(c)+1);
+		String query= "insert into Utilisateur (idUser, nom , prenom, mdp , mail, active, statut) values ('"+id+"','"+nom+"','"+prenom+"','"+mdp+"','"+mail+"','"+true+"','"+statut+"')";
 		stat.executeUpdate(query);
+		return new Utilisateur(id, nom, prenom, mdp, mail, true,statut);
 	}
 	
 	public static ArrayList<Utilisateur> selectAll(Connection c) throws SQLException {
