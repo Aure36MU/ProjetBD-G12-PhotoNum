@@ -22,11 +22,41 @@ public class UtilisateurDAO {
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	
-	public static ArrayList<Utilisateur> selectAllFromUser(Connection c, int idu) throws SQLException {
+	public static Utilisateur selectAllFromUser(Connection c, int idu) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where idUser='"+idu+"' ";
 		ResultSet result =stat.executeQuery(query);
-		return UtilisateurDAO.getUtilisateurs(result);
+		
+		if(result.next()){	return new Utilisateur(
+				result.getInt("idUser"),
+				result.getString("nom"),
+				result.getString("prenom"),
+				result.getString("mdp"),
+				result.getString("email"),
+				result.getBoolean("active"),
+				(Statut)result.getObject("statut")
+			);
+		}else{
+			return null;
+		}
+	}
+	
+	public static Utilisateur selectUserWithMail(Connection c, String mail) throws SQLException {
+		Statement stat= c.createStatement();
+		String query= "select * from Utilisateur where mail='"+mail+"' ";
+		ResultSet result =stat.executeQuery(query);
+		if(result.next()){	return new Utilisateur(
+				result.getInt("idUser"),
+				result.getString("nom"),
+				result.getString("prenom"),
+				result.getString("mdp"),
+				result.getString("email"),
+				result.getBoolean("active"),
+				(Statut)result.getObject("statut")
+			);
+		}else{
+			return null;
+		}
 	}
 	
 	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, Statut statut) throws SQLException {
@@ -56,10 +86,10 @@ public class UtilisateurDAO {
 	}
 	
 	public static ArrayList<Utilisateur> getUtilisateurs(ResultSet result) {
-		ArrayList<Utilisateur> Utilisateur = new ArrayList<Utilisateur>();
+		ArrayList<Utilisateur> Utilisateurs = new ArrayList<Utilisateur>();
 		try {
 			while (result.next()) {
-				Utilisateur.add(new Utilisateur(
+				Utilisateurs.add(new Utilisateur(
 					result.getInt("idUser"),
 					result.getString("nom"),
 					result.getString("prenom"),
@@ -70,10 +100,9 @@ public class UtilisateurDAO {
 				));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-		return Utilisateur;
+		return Utilisateurs;
 	}
 }

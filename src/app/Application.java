@@ -1,41 +1,49 @@
+package src.app;
 import java.sql.*;
+
+import src.compte.Utilisateur;
+import src.compte.UtilisateurDAO;
 
 
 
 public class Application {
-
-	
 	static final String CONN_URL = "jdbc:oracle:thin:@im2ag-oracle.e.ujf-grenoble.fr:1521:im2ag";
-	
 	static String USER;
 	static String PASSWD;
-
-	static Connection conn; 
+	static Connection c; 
 	
 	public static void main(String[] args) throws SQLException {
 		try{
-			USER=LectureClavier.lireChaine("Sur quel compte souhaitez-vous, vous connecter?");
-			PASSWD=LectureClavier.lireChaine("Quel est le mot de passe?");
+			USER=LectureClavier.lireChaine("saississez l'identifiant pour la connexion à la base : ");
+			PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
 			
 			// Enregistrement du driver Oracle
-		    System.out.print("Loading Oracle driver... "); 
 		    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());  	    
-		    System.out.println("loaded");
-		    
 		    // Etablissement de la connection
 		    System.out.print("Connecting to the database... "); 
-		    conn = DriverManager.getConnection(CONN_URL,USER,PASSWD);
+		    c = DriverManager.getConnection(CONN_URL,USER,PASSWD);
 		    System.out.println("connected");
-		    
-		  	conn.setAutoCommit(true);
-		  	
+		    System.out.println("*************************************************************************************************");
 			System.out.println("Souhaitez-vous, vous connectez ou vous inscrire? ");
-			int i = LectureClavier.lireEntier("connecter:1 / inscrire:2");
-			if(i==1) {
-				String mailConnect= LectureClavier.lireChaine("Quel est votre adresse mail?");
-				String mdp= LectureClavier.lireChaine("Quel est votre mot de passe?");
+			
+			int choix = LectureClavier.lireEntier("********* tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire");
+			switch(choix){ 
+				//connexion
+				case 1:  
+					String mail = LectureClavier.lireChaine("Pour vous connecter, saisissez votre mail : ");
+			    	Utilisateur utilisateur = UtilisateurDAO.selectUserWithMail(c, mail);
+			    	String mdp;
+					while(mdp != utilisateur.getMdp()){
+						mdp = LectureClavier.lireChaine("Veuillez entrer le mot de passe correspondant.");
+					}
+			    // inscription
+				case 2:
+			}
+
+		    
+		   
+			
 				System.out.println("Vous voilà connecter ");
-			}else {
 				if(i==2) {
 					System.out.println("Bienvenue sur le site PhotoNum! Nous allons vous demander quelque information pour la création de votre compte");
 					
