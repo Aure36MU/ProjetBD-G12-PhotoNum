@@ -9,10 +9,24 @@ import java.util.ArrayList;
 import src.impression.album.Album;
 
 public class UtilisateurDAO {
-	public static void createUtilisateur(Connection c, String nom, String prenom, String mdp, String email, Boolean active, Statut statut) throws SQLException {
+	
+	public static int getHigherId(Connection c){
+		try {
+			Statement state = c.createStatement();
+			ResultSet res = state.executeQuery("SELECT max(idUser) FROM Utilisateur");
+			return res.getInt(0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, Statut statut) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "insert into Utilisateur (nom , prenom, mdp , email, active, statut) values ('"+nom+"','"+prenom+"','"+mdp+"','"+email+"','"+active+"','"+statut+"')";
+		int id = (getHigherId(c)+1);
+		String query= "insert into Utilisateur (idUser, nom , prenom, mdp , mail, active, statut) values ('"+id+"','"+nom+"','"+prenom+"','"+mdp+"','"+mail+"','"+true+"','"+statut+"')";
 		stat.executeUpdate(query);
+		return new Utilisateur(id, nom, prenom, mdp, mail, true,statut);
 	}
 	
 	public static ArrayList<Utilisateur> selectAll(Connection c) throws SQLException {
@@ -22,11 +36,41 @@ public class UtilisateurDAO {
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	
-	public static ArrayList<Utilisateur> selectAllFromUser(Connection c, int idu) throws SQLException {
+	public static Utilisateur selectAllFromUser(Connection c, int idu) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where idUser='"+idu+"' ";
 		ResultSet result =stat.executeQuery(query);
-		return UtilisateurDAO.getUtilisateurs(result);
+		
+		if(result.next()){	return new Utilisateur(
+				result.getInt("idUser"),
+				result.getString("nom"),
+				result.getString("prenom"),
+				result.getString("mdp"),
+				result.getString("email"),
+				result.getBoolean("active"),
+				(Statut)result.getObject("statut")
+			);
+		}else{
+			return null;
+		}
+	}
+	
+	public static Utilisateur selectUserWithMail(Connection c, String mail) throws SQLException {
+		Statement stat= c.createStatement();
+		String query= "select * from Utilisateur where mail='"+mail+"' ";
+		ResultSet result =stat.executeQuery(query);
+		if(result.next()){	return new Utilisateur(
+				result.getInt("idUser"),
+				result.getString("nom"),
+				result.getString("prenom"),
+				result.getString("mdp"),
+				result.getString("email"),
+				result.getBoolean("active"),
+				(Statut)result.getObject("statut")
+			);
+		}else{
+			return null;
+		}
 	}
 	
 	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, Statut statut) throws SQLException {
@@ -56,10 +100,10 @@ public class UtilisateurDAO {
 	}
 	
 	public static ArrayList<Utilisateur> getUtilisateurs(ResultSet result) {
-		ArrayList<Utilisateur> Utilisateur = new ArrayList<Utilisateur>();
+		ArrayList<Utilisateur> Utilisateurs = new ArrayList<Utilisateur>();
 		try {
 			while (result.next()) {
-				Utilisateur.add(new Utilisateur(
+				Utilisateurs.add(new Utilisateur(
 					result.getInt("idUser"),
 					result.getString("nom"),
 					result.getString("prenom"),
@@ -70,10 +114,9 @@ public class UtilisateurDAO {
 				));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-		return Utilisateur;
+		return Utilisateurs;
 	}
 }

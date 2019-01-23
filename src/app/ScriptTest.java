@@ -1,3 +1,4 @@
+package src.app;
 
 public class ScriptTest {
 
