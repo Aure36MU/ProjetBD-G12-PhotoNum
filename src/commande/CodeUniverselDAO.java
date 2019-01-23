@@ -7,8 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
-
-public class CodePersonnelDAO {
+public class CodeUniverselDAO {
 
 	public static int getHigherIdCodeP(Connection c){
 		try {
@@ -22,10 +21,10 @@ public class CodePersonnelDAO {
 		return 0;
 	}
 	
-	public static void createCodePersonnel(Connection c, Date dateAcqui, Date dateUtil, String code, int taux, int idUser){
+	public static void createCodeUniversel(Connection c, Date dateAcqui, Date dateUtil, String code, int taux, int idUser){
 		try {
 			Statement state = c.createStatement();
-			state.executeUpdate("INSERT INTO CodePersonnel "
+			state.executeUpdate("INSERT INTO CodeUniversel "
 					+ "(idCodeP,dateAcqui,dateUtil,code,taux,idUser)"
 					+ "VALUES ("+(getHigherIdCodeP(c)+1)+ ", " + dateAcqui + ", " + dateUtil + ", " + code + ", " + taux + ", " + idUser + "); " );
 		} catch (SQLException e) {
@@ -34,18 +33,18 @@ public class CodePersonnelDAO {
 		}
 	}
 	
-	public static ArrayList<CodePersonnel> selectAll(Connection c) throws SQLException {
+	public static ArrayList<CodeUniversel> selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "select * from CodePromo natural join CodePersonnel";
+		String query= "select * from CodePromo natural join CodeUniversel";
 		ResultSet result =stat.executeQuery(query);
-		return CodePersonnelDAO.getCodePersonnel(result);
+		return CodeUniverselDAO.getCodeUniversel(result);
 	}
 	
-	public static ArrayList<CodePersonnel> selectAll(Connection c, int id) throws SQLException {
+	public static ArrayList<CodeUniversel> selectAll(Connection c, int id) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "select * from CodePromo natural join CodePersonnel where idUser="+id+";";
+		String query= "select * from CodePromo natural join CodeUniversel where idUser="+id+";";
 		ResultSet result =stat.executeQuery(query);
-		return CodePersonnelDAO.getCodePersonnel(result);
+		return CodeUniverselDAO.getCodeUniversel(result);
 	}
 	
 	public static void delete(Connection c, int idCodeP) throws SQLException {
@@ -54,11 +53,11 @@ public class CodePersonnelDAO {
 		stat.executeUpdate(query);
 	}
 	
-	public static ArrayList<CodePersonnel> getCodePersonnel(ResultSet result) {
-		ArrayList<CodePersonnel> codePersonnel = new ArrayList<CodePersonnel>();
+	public static ArrayList<CodeUniversel> getCodeUniversel(ResultSet result) {
+		ArrayList<CodeUniversel> codeUniversel = new ArrayList<CodeUniversel>();
 		try {
 			while (result.next()) {
-				codePersonnel.add(new CodePersonnel(
+				codeUniversel.add(new CodeUniversel(
 					result.getInt("idCodeP"),
 					result.getDate("dateAcqui"),
 					result.getDate("dateUtil"),
@@ -72,6 +71,6 @@ public class CodePersonnelDAO {
 			e.printStackTrace();
 			return null;
 		}
-		return codePersonnel;
+		return codeUniversel;
 	}
 }

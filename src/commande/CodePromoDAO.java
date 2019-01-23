@@ -41,10 +41,10 @@ public class CodePromoDAO {
 		}
 	}
 	
-	public static ArrayList<CodePromo> selectAll(Connection c){
+	public static ArrayList<CodePromo> selectAll(Connection c) throws SQLException{
 		ArrayList<CodePromo> tab = new ArrayList<CodePromo>();
-		tab.addAll(CodeUniversel.selectAll(c));
-		tab.addAll(CodePersonnel.selectAll(c));
+		tab.addAll(CodeUniverselDAO.selectAll(c));
+		tab.addAll(CodePersonnelDAO.selectAll(c));
 		return tab;
 	}
 	
