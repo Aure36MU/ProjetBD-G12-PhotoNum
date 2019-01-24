@@ -10,7 +10,7 @@ import java.util.Date;
 public class CommandeDAO {
 	
 		/**
-		 * Sélectionne tous les Commandes (quels que soient leurs modèles) sans conditions.
+		 * Selectionne tous les Commandes (quels que soient leurs modeles) sans conditions.
 		 *
 		 * @param conn Connection SQL
 		 * @return ArrayList contenant tous les objets Commande
@@ -28,12 +28,12 @@ public class CommandeDAO {
 	    }
 		
 	    /**
-	     * Sélectionne toutes les commandes  avec des conditions paramètres.
+	     * Selectionne toutes les commandes  avec des conditions parametres.
 	     *
 	     * @param conn Connection SQL
-	     * @param condition chaï¿½ne de caractï¿½res formatï¿½ comme suit : "condition1 {AND condition2}"
+	     * @param condition chaene de caracteres formate comme suit : "condition1 {AND condition2}"
 	     * Exemple : "foo=1 AND bar='bar' AND truc<>42"
-	     * @return ArrayList contenant les objets commande sï¿½lectionnï¿½s
+	     * @return ArrayList contenant les objets commande selectionnes
 	     * @throws SQLException
 	     */
 	    public static ArrayList<Commande> selectAll(Connection conn, String condition) throws SQLException {
@@ -47,13 +47,13 @@ public class CommandeDAO {
 	    }
 	    
 	    /**
-	     * Sélectionne toutes les commandes  envoyée  : represente archivage des commandes déjà faites
+	     * Selectionne toutes les commandes  envoyee  : represente archivage des commandes deje faites
 	     * Partie de la base exportable dans une zone de stockage
 	     *
 	     * @param conn Connection SQL
-	     * @param condition chaï¿½ne de caractï¿½res formatï¿½ comme suit : "condition1 {AND condition2}"
+	     * @param condition chaene de caracteres formate comme suit : "condition1 {AND condition2}"
 	     * Exemple : "foo=1 AND bar='bar' AND truc<>42"
-	     * @return ArrayList contenant les objets commande sï¿½lectionnï¿½s
+	     * @return ArrayList contenant les objets commande selectionnes
 	     * @throws SQLException
 	     */
 	    public static ArrayList<Commande> selectEnvoyer(Connection conn) throws SQLException {
@@ -61,17 +61,17 @@ public class CommandeDAO {
 	        conn.setAutoCommit(true);
 
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statut='envoyé';");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statut='envoye';");
 	        return getCommandes(result);
 
 	    }
 
 	    /**
-	     * Sï¿½lectionne tous les Commandes crï¿½ï¿½s par un certain utilisateur.
+	     * Selectionne tous les Commandes crees par un certain utilisateur.
 	     *
 	     * @param conn Connection SQL
 	     * @param id id utilisateur
-	     * @return ArrayList contenant les objets Commande sï¿½lectionnï¿½s
+	     * @return ArrayList contenant les objets Commande selectionnes
 	     * @throws SQLException
 	     */
 	    public static ArrayList<Commande> selectAllFromUser(Connection conn, int id) throws SQLException {
@@ -84,9 +84,9 @@ public class CommandeDAO {
 
 	    }
 	    /**
-	     * Retourne les objets Commande construits ï¿½ partir d'un rï¿½sultat de requï¿½te.
+	     * Retourne les objets Commande construits e partir d'un resultat de requete.
 	     *
-	     * @param result le ResultSet de la requï¿½te SQL
+	     * @param result le ResultSet de la requete SQL
 	     * @return ArrayList contenant les objets Agenda
 	     * @throws SQLException
 	     */
