@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import src.compte.Statut;
 import src.impression.Format;
 import src.impression.Qualite;
+import src.impression.calendrier.Calendrier;
 
 
 public class AlbumDAO {
@@ -19,6 +20,25 @@ public class AlbumDAO {
 		String query= "select * from Album";
 		ResultSet result =stat.executeQuery(query);
 		return AlbumDAO.getAlbums(result);
+	}
+	
+	/**
+	 * Sélectionne tous les albums avec des conditions paramétrées.
+	 * 
+	 * @param conn Connection SQL
+	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
+	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
+	 * @return ArrayList contenant les objets Calendrier sélectionnés
+	 * @throws SQLException 
+	 */
+	public static ArrayList<Album> selectAll(Connection conn, String condition) throws SQLException {
+
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Album WHERE "+condition+";");
+		return getAlbums(result);
+
 	}
 	
 	public static ArrayList<Album> selectAllFromUser(Connection c, int idUser) throws SQLException {

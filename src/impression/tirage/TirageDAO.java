@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.impression.Impression;
+import src.impression.calendrier.Calendrier;
+
 public class TirageDAO {
 
 
@@ -14,6 +17,27 @@ public class TirageDAO {
 		Statement stat = c.createStatement();
 		ResultSet result = stat.executeQuery("select * from Tirage");
 		return TirageDAO.getTirages(result);
+	}
+	
+	/**
+	 * Sélectionne tous les tirages avec des conditions paramétrées.
+	 * 
+	 * @param conn Connection SQL
+	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
+	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
+	 * @return ArrayList contenant les objets Calendrier sélectionnés
+	 * @throws SQLException 
+	 */
+	public static ArrayList<Tirage> selectAll(Connection conn, String condition) throws SQLException {
+			
+
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Tirage WHERE "+condition+";");
+		return getTirages(result);
+
+		
 	}
 	
 	public static ArrayList<Tirage> selectAllFromUser(Connection c, int idUser) throws SQLException {
@@ -77,4 +101,5 @@ public class TirageDAO {
 		}
 		return Tirage;
 	}
+
 }

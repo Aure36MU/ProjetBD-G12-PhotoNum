@@ -67,18 +67,25 @@ public class ImpressionDAO {
 		return tab;
 	}
 	
-	public static ArrayList<Impression> selectImpressionFromId(Connection c, int id) throws SQLException{
-		ArrayList<Impression> tabImp = new ArrayList<Impression>();
-		Statement state = c.createStatement();
+	public static Impression selectImpressionFromId(Connection conn, int id) throws SQLException{
+
+		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id+";");
-        /*while (result.next()) {
-            tabImp.add(new Impression(
-                    result.getInt("idArt"),
-                    result.getInt("prix"),
-                    result.getInt("qte"),
-                    result.getInt("idImp")
-            ));*/
-		return tabImp;
+        if (result.next()) {
+        	switch (result.getString("type")) {
+			case "CALENDRIER":
+				return CalendrierDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "AGENDA":
+				return AgendaDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "TIRAGE":
+				return TirageDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "CADRE":
+				return CadreDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "ALBUM":
+				return AlbumDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			}
+        }
+		return null;
 	}
 	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
