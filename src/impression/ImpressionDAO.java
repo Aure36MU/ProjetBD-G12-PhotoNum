@@ -3,6 +3,7 @@ package src.impression;
 import java.sql.*;
 import java.util.ArrayList;
 
+import src.commande.Article;
 import src.impression.agenda.AgendaDAO;
 import src.impression.album.AlbumDAO;
 import src.impression.cadre.CadreDAO;
@@ -43,6 +44,20 @@ public class ImpressionDAO {
 		tab.addAll(CadreDAO.selectAll(c));
 		tab.addAll(AlbumDAO.selectAll(c));
 		return tab;
+	}
+	
+	public static ArrayList<Impression> selectImpressionFromId(Connection c, int id) throws SQLException{
+		ArrayList<Impression> tabImp = new ArrayList<Impression>();
+		Statement state = c.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id+";");
+        /*while (result.next()) {
+            tabImp.add(new Impression(
+                    result.getInt("idArt"),
+                    result.getInt("prix"),
+                    result.getInt("qte"),
+                    result.getInt("idImp")
+            ));*/
+		return tabImp;
 	}
 	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
