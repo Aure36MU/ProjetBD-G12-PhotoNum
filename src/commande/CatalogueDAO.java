@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class CatalogueDAO {
 
 	/**
-	 * Sélectionne tous les Catalogues (quels que soient leurs modèles) sans conditions.
+	 * Sï¿½lectionne tous les Catalogues (quels que soient leurs modï¿½les) sans conditions.
 	 *
 	 * @param conn Connection SQL
 	 * @return ArrayList contenant tous les objets Catalogue
@@ -39,7 +39,7 @@ public class CatalogueDAO {
     }
 	---------------------------------------------------------------------------------------------------*/
     /**
-     * Sélectionne toutes les Catalogues  avec des conditions paramètres.
+     * Sï¿½lectionne toutes les Catalogues  avec des conditions paramï¿½tres.
      *
      * @param conn Connection SQL
      * @param condition chaï¿½ne de caractï¿½res formatï¿½ comme suit : "condition1 {AND condition2}"
@@ -141,8 +141,6 @@ public class CatalogueDAO {
 	        }
         return stats;
 	}
-	
-	
-	
+
 	/*---------------------------------------------------------------------------------------------------*/
 }
