@@ -1,6 +1,10 @@
 package src.app;
 import java.sql.*;
+import java.util.ArrayList;
 
+import src.commande.Article;
+import src.commande.ArticleDAO;
+import src.commande.CommandeDAO;
 import src.compte.Statut;
 import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
@@ -22,7 +26,7 @@ public class Application {
 		System.out.println("***********************");
 		System.out.println("      INSCRIPTION ");
 		System.out.println("***********************");
-		System.out.println("Bienvenue sur le site PhotoNum ! Nous allons vous demander quelques infos pour la création de votre compte");
+		System.out.println("Bienvenue sur le site PhotoNum ! Nous allons vous demander quelques infos pour la creation de votre compte");
 
 		Statut statut= choixStatut();			
 		String mail= LectureClavier.lireChaine("Votre adresse mail : ");	
@@ -30,7 +34,7 @@ public class Application {
 		String nom= LectureClavier.lireChaine("Votre nom : ");
 		String prenom= LectureClavier.lireChaine("Votre prenom : ");
 		System.out.println("   ");
-		System.out.println("Bienvenue à vous " + nom + " "+ prenom + " ! ");
+		System.out.println("Bienvenue e vous " + nom + " "+ prenom + " ! ");
 		return UtilisateurDAO.createUtilisateur(c,  nom,  prenom,  mdp,  mail,  statut);
 	}	
 
@@ -50,10 +54,45 @@ public class Application {
 		}
 		return utilisateur;
 	}
+	
+	private static void gererFichierImages(Connection c) {
+		boolean back = false;
+		while(!back){
+			System.out.println("*****************************************************************************");
+			System.out.println("Que voulez vous faire ?");
+			System.out.println("1 : Retourner au menu prÃ©cÃ©dent.");
+			System.out.println("2 : Consulter la liste de mes impressions.");
+			System.out.println("3 : Creer une nouvelle impression.");
+			int choixAction = LectureClavier.lireEntier("4 : .");
 
+			switch(choixAction){ 
+			case 1:  
+				back = true;
+				System.out.println("retour au menu prÃ©cÃ©dent");
+				break;
+			case 2:
+				gererImpression(c);
+				break;
+			case 3:
+				gererFichierImages(c);
+				break;
+			case 4:
+				//CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());		
+				break;
+			default : System.out.println("Veuillez faire un choix. ");
+			}
+		}
+		
+	}
+
+	private static void gererImpression(Connection c) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public static void main(String[] args) throws SQLException {
 		try{
-			USER=LectureClavier.lireChaine("saississez l'identifiant pour la connexion à la base : ");
+			USER=LectureClavier.lireChaine("saississez l'identifiant pour la connexion e la base : ");
 			PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
 
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());  	    
@@ -65,17 +104,17 @@ public class Application {
 
 			Utilisateur utilisateur = null;
 			while(utilisateur == null){
-				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire à PhotoNum ? ");
+				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire e PhotoNum ? ");
 				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire");
 
 				switch(choix){ 
 				case 1:  
 					utilisateur = connexion(c);
-					System.out.println("Vous etes maintenant connecté.");
+					System.out.println("Vous etes maintenant connecte.");
 					break;
 				case 2:
 					utilisateur = inscription(c);
-					System.out.println("Vous avez été inscrit.");
+					System.out.println("Vous avez ete inscrit.");
 					break;
 				default : System.out.println("Veuillez faire un choix. ");
 				}
@@ -83,27 +122,34 @@ public class Application {
 				while(utilisateur != null){
 					System.out.println("*****************************************************************************");
 					System.out.println("Que voulez vous faire ?");
-					System.out.println("1 : Se déconnecter.");
-					System.out.println("2 : gerer mes impressions.");
-					System.out.println("3 : gerer mes fichiers images.");
-					int choixAction = LectureClavier.lireEntier("4 : voir mon historique de commandes.");
+					System.out.println("1 : Se deconnecter.");
+					System.out.println("2 : Gerer mes impressions.");
+					System.out.println("3 : Gerer mes fichiers images.");
+					System.out.println("4 : Voir le contenu de mon panier.");
+					int choixAction = LectureClavier.lireEntier("5 : voir mon historique de commandes.");
 
 					switch(choixAction){ 
 					case 1:  
 						utilisateur = null;
-						System.out.println("Vous avez été déconnecté");
+						System.out.println("Vous avez ete deconnecte");
 						break;
 					case 2:
-						utilisateur = inscription(c);
-						System.out.println("Vous avez été inscrit.");
+						gererImpression(c);
 						break;
 					case 3:
-						utilisateur = inscription(c);
-						System.out.println("Vous avez été inscrit.");
+						gererFichierImages(c);
 						break;
 					case 4:
-						utilisateur = inscription(c);
-						System.out.println("Vous avez été inscrit.");
+						ArrayList<Article> panier = new ArrayList<Article>();
+						panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+						if(panier.isEmpty()){  System.out.println("Vous n'avez aucun article dans votre panier"); }
+						else{
+							
+						}
+						
+						break;
+					case 5:
+						CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());		
 						break;
 					default : System.out.println("Veuillez faire un choix. ");
 					}
@@ -135,5 +181,7 @@ public class Application {
 			e.printStackTrace();
 		}
 	}
+
+
 
 }

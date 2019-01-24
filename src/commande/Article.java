@@ -42,4 +42,8 @@ public class Article {
 	public void setidImp(int idImp) {
 		this.idImp = idImp;
 	}
+	
+	public String toString() {
+		return "article n°"+idArt+"   prix : "+prix+"   quantite : "+qte+"    "+idImp;
+	}
 }

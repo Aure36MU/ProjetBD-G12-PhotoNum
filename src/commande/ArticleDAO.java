@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class ArticleDAO {
 	
 	/**
-	 * Sélectionne tous les Articles (quels que soient leurs modèles) sans conditions.
+	 * Sï¿½lectionne tous les Articles (quels que soient leurs modï¿½les) sans conditions.
 	 *
 	 * @param conn Connection SQL
 	 * @return ArrayList contenant tous les objets Article
@@ -28,7 +28,7 @@ public class ArticleDAO {
     }
 	
     /**
-     * Sélectionne toutes les Articles  avec des conditions paramètres.
+     * Sï¿½lectionne toutes les Articles  avec des conditions paramï¿½tres.
      *
      * @param conn Connection SQL
      * @param condition chaï¿½ne de caractï¿½res formatï¿½ comme suit : "condition1 {AND condition2}"
@@ -47,7 +47,7 @@ public class ArticleDAO {
     }
     
     /**
-     * Sélectionne toutes les Articles  envoyée  : represente archivage des Articles déjà faites
+     * Sï¿½lectionne toutes les Articles  envoyï¿½e  : represente archivage des Articles dï¿½jï¿½ faites
      * Partie de la base exportable dans une zone de stockage
      *
      * @param conn Connection SQL
@@ -61,7 +61,7 @@ public class ArticleDAO {
         conn.setAutoCommit(true);
 
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Article WHERE statut='envoyé';");
+        ResultSet result = state.executeQuery("SELECT * FROM Article WHERE statut='envoyï¿½';");
         return getArticles(result);
 
     }
@@ -83,6 +83,30 @@ public class ArticleDAO {
         return getArticles(result);
 
     }
+    
+    /**
+     * Sï¿½lectionne tous les Articles du panier en cours. Renvoie null si non existant.
+     *
+     * @param conn Connection SQL
+     * @param id id utilisateur
+     * @return ArrayList contenant les objets Article sï¿½lectionnï¿½s
+     * @throws SQLException
+     */
+    public static ArrayList<Article> selectAllFromPanier(Connection conn, int idUser) throws SQLException {
+
+        conn.setAutoCommit(true);
+
+        Statement state = conn.createStatement();
+        ResultSet result = state.executeQuery("SELECT * FROM Article a INNER JOIN Commande c ON (a.idComm = c.idComm) "
+        									+ "WHERE c.statut = 'BROUILLON' AND c.idUser = '" +idUser+ "');");
+        return getArticles(result);
+
+    }
+    
+    
+    
+    
+    
     /**
      * Retourne les objets Article construits ï¿½ partir d'un rï¿½sultat de requï¿½te.
      *
