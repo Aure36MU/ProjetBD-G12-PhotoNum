@@ -12,4 +12,20 @@ public class Calendrier extends Impression {
 		this.modele = modele;
 	}
 
+	public int getIdImp() {
+		return idImp;
+	}
+
+	public void setIdImp(int idImp) {
+		this.idImp = idImp;
+	}
+
+	public ModeleCalendrier getModele() {
+		return modele;
+	}
+
+	public void setModele(ModeleCalendrier modele) {
+		this.modele = modele;
+	}
+
 }

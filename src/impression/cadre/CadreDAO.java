@@ -6,17 +6,36 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.impression.calendrier.Calendrier;
+
 public class CadreDAO {
-	public static void createCadre(Connection c, ModeleCadre modele, int idImp) throws SQLException {
-		//verifier si l'idImp existe dans la table IMPRESSION ?
-		Statement stat= c.createStatement();
-		stat.executeUpdate("insert into Cadre (modele,idImp) values ('"+modele+"', "+idImp+")");
-	}
+
 	
 	public static ArrayList<Cadre> selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
 		ResultSet result =stat.executeQuery("select * from Cadre");
 		return CadreDAO.getCadres(result);
+	}
+	
+	/**
+	 * Sélectionne tous les cadres avec des conditions paramétrées.
+	 * 
+	 * @param conn Connection SQL
+	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
+	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
+	 * @return ArrayList contenant les objets Calendrier sélectionnés
+	 * @throws SQLException 
+	 */
+	public static ArrayList<Cadre> selectAll(Connection conn, String condition) throws SQLException {
+			
+
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Cadre WHERE "+condition+";");
+		return getCadres(result);
+
+		
 	}
 	
 	public static ArrayList<Cadre> selectAllFromUser(Connection c, int idUser) throws SQLException {
@@ -34,7 +53,7 @@ public class CadreDAO {
 	 * @param modele modele
 	 * @throws SQLException 
 	 */
-	public static void addCadre(Connection conn, int id, ModeleCadre modele) throws SQLException {
+	public static void insertCadre(Connection conn, int id, ModeleCadre modele) throws SQLException {
 		
 		conn.setAutoCommit(true);
 

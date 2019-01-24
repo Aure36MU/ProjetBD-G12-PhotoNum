@@ -13,7 +13,7 @@ public class Agenda extends Impression {
 		this.modele = modele;
 		this.type = type;
 	}
-	public ModeleAgenda getmodele() {
+	public ModeleAgenda getModele() {
 		return modele;
 	}
 	public void setModele(ModeleAgenda modele) {

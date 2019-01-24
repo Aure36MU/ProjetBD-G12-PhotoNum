@@ -9,6 +9,7 @@ import java.util.Date;
 
 public class CommandeDAO {
 	
+	
 		/**
 		 * Selectionne tous les Commandes (quels que soient leurs modeles) sans conditions.
 		 *
@@ -83,6 +84,49 @@ public class CommandeDAO {
 	        return getCommandes(result);
 
 	    }
+	    
+	    
+	    /**
+	     * Ajoute un nouvel Article au panier, sous les conditions suivantes :
+	     * -S'il n'existe pas de Commande 'brouillon' sur cet utilisateur, on va la créer (INSERT).
+	     * -La quantité de l'article est connue à l'avance, mettre une valeur de 1 par défaut.
+	     * -Pour une commande existante, si l'idImp de l'article est déjà présent, alors il suffit d'ajouter la quantité voulue à celle-ci (UPDATE).
+	     * 
+	     * @param conn
+	     * @param idUser
+	     * @param idImp
+	     * @param idComm
+	     * @param qte
+	     * @throws SQLException 
+	     */
+	    public static void ajouterAuPanier(Connection conn, int idUser, int idImp, int idComm, int qte) throws SQLException {
+	    	conn.setAutoCommit(false);
+	    	
+	    	Statement state = conn.createStatement();
+	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statut='BROUILLON';");
+	    	
+	    	if (result.next()) { //Il existe déjà une commande
+	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp+";");
+	    		if (result.next()) { //Cet article existe déjà dans le panier
+	    			state.executeUpdate("UPDATE Article SET qte= qte+"+qte+";");
+	    		} else { //L'Article est à ajouter dans le panier
+	    			try {
+						ArticleDAO.insertArticleFromImpression(conn, idImp, idComm, qte);
+					} catch (Exception e) {
+						// EXCEPTION stock insuffisant !
+						e.printStackTrace();
+					}
+	    		}
+
+	    	} else { // Il n'existe pas encore de commande
+	    		state.executeUpdate("INSERT INTO Commande VALUES("+idComm+", "+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
+	    	}
+	    	
+	    	conn.commit();
+	    	
+	    }
+	    
+	    
 	    /**
 	     * Retourne les objets Commande construits e partir d'un resultat de requete.
 	     *

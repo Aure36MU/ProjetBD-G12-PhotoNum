@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import src.app.LectureClavier;
 import src.impression.agenda.Agenda;
 import src.impression.agenda.AgendaDAO;
+import src.impression.agenda.ModeleAgenda;
+import src.impression.agenda.TypeAgenda;
 import src.impression.album.Album;
 import src.impression.album.AlbumDAO;
 import src.impression.cadre.Cadre;
@@ -31,18 +33,7 @@ public class ImpressionDAO {
 		}
 		return 0;
 	}
-	
-	public static void createImpression(Connection c, int idUser, Format format, Qualite qualite, int nbPages){
-		try {
-			Statement state = c.createStatement();
-			state.executeUpdate("INSERT INTO Impression "
-					+ "(idImp,qualite,format,idUser,nbPageTotal)"
-					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );		
-		} catch (SQLException e) {
-			System.out.println("creation failed");
-			e.printStackTrace();
-		}
-	}
+
 	
 	public static ArrayList<Impression> selectAll(Connection c) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
@@ -54,18 +45,47 @@ public class ImpressionDAO {
 		return tab;
 	}
 	
-	public static ArrayList<Impression> selectImpressionFromId(Connection c, int id) throws SQLException{
-		ArrayList<Impression> tabImp = new ArrayList<Impression>();
-		Statement state = c.createStatement();
+	public static ArrayList<Impression> selectAllFromType(Connection c, Type type) throws SQLException{
+		ArrayList<Impression> tab = new ArrayList<Impression>();
+		switch(type.toString()) {
+		case "CALENDRIER":
+			tab.addAll(CalendrierDAO.selectAll(c));
+			break;
+		case "AGENDA":
+			tab.addAll(AgendaDAO.selectAll(c));
+			break;
+		case "TIRAGE":
+			tab.addAll(TirageDAO.selectAll(c));
+			break;
+		case "CADRE":
+			tab.addAll(CadreDAO.selectAll(c));
+			break;
+		case "ALBUM":
+			tab.addAll(AlbumDAO.selectAll(c));
+			break;				
+		}
+		return tab;
+	}
+	
+	public static Impression selectImpressionFromId(Connection conn, int id) throws SQLException{
+
+		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id+";");
-        /*while (result.next()) {
-            tabImp.add(new Impression(
-                    result.getInt("idArt"),
-                    result.getInt("prix"),
-                    result.getInt("qte"),
-                    result.getInt("idImp")
-            ));*/
-		return tabImp;
+        if (result.next()) {
+        	switch (result.getString("type")) {
+			case "CALENDRIER":
+				return CalendrierDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "AGENDA":
+				return AgendaDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "TIRAGE":
+				return TirageDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "CADRE":
+				return CadreDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "ALBUM":
+				return AlbumDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			}
+        }
+		return null;
 	}
 	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
@@ -119,6 +139,70 @@ public class ImpressionDAO {
 		
 		return tab;
 	}
+
+	
+
+	/**
+	 * Ajoute une impression dans la base.
+	 * 
+	 * @param c
+	 * @param nomImp
+	 * @param nbPages
+	 * @param idUser
+	 * @param type
+	 * @param format
+	 * @param qualite
+	 * @throws SQLException
+	 */
+	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, Type type, Format format, Qualite qualite) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("INSERT INTO Impression "
+				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type.toString() + "', '" + format.toString() + "', '" + qualite.toString() + "';");
+		
+	}
+	
+
+	/**
+	 * Modifie une Impression d'un idImp donné dans la base.
+	 * 
+	 * @param conn
+	 * @param nomImp
+	 * @param nbPages
+	 * @param idUser
+	 * @param type
+	 * @param format
+	 * @param qualite
+	 * @throws SQLException
+	 */
+	
+	public static void updateImpression(Connection conn, int idImp, String nomImp, int nbPages, int idUser, Type type, Format format, Qualite qualite) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("UPDATE Impression SET nomImp='"+nomImp+"', nbrPageTotal="+nbPages+", idUser="+idUser+", type='"+type.toString()+"', format='"+format.toString()+"', qualite='"+qualite.toString()+"' WHERE idImp="+idImp+";");
+		
+	}
+
+    /**
+     * Supprime un Impression d'un idImp donné de la base.
+     *
+     * @param id id impression
+     * @param modele modele
+     * @throws SQLException
+     */
+    public static void deleteImpression(Connection conn, int id) throws SQLException {
+
+        conn.setAutoCommit(true);
+
+        Statement state = conn.createStatement();
+        state.executeUpdate("DELETE FROM Impression WHERE idImp="+id+";");
+
+    }
 	
 	
 	public static void changeTypeIfCompatible(Connection c, Impression from, String to) throws Exception {
@@ -131,14 +215,14 @@ public class ImpressionDAO {
 				if (from instanceof Cadre)
 					throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
 				String titre = LectureClavier.lireChaine("Quel titre d'album voulez-vous ?");
-				AlbumDAO.createAlbum(c, selectAllPhotos(c, from.getIdImp()).get(0).getIdPh(), titre);
+				AlbumDAO.insertAlbum(c, selectAllPhotos(c, from.getIdImp()).get(0).getIdPh(), titre);
 			} else if (to.equals("Cadre")) {
 				ModeleCadre modele = ModeleCadre.valueOf(LectureClavier.lireChaine("Quel modèle de cadre voulez-vous ?"));
-				CadreDAO.createCadre(c, modele, from.getIdImp());
+				CadreDAO.insertCadre(c, from.getIdImp(), modele);
 			} else if (to.equals("Calendrier")) { 
 				throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
 			} else if (to.equals("Tirage")) {  
-				TirageDAO.createTirage(c, from.getIdImp());
+				TirageDAO.insertTirage(c, from.getIdImp());
 			} else { 
 				throw new Exception("Impression "+to+" is not recognized");
 			}
