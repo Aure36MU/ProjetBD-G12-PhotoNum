@@ -3,13 +3,21 @@ package src.impression;
 import java.sql.*;
 import java.util.ArrayList;
 
-import src.commande.Article;
+import src.app.LectureClavier;
+import src.impression.agenda.Agenda;
 import src.impression.agenda.AgendaDAO;
+import src.impression.album.Album;
 import src.impression.album.AlbumDAO;
+import src.impression.cadre.Cadre;
 import src.impression.cadre.CadreDAO;
+
 import src.impression.calendrier.CalendrierDAO;
+import src.impression.tirage.Tirage;
 import src.impression.tirage.TirageDAO;
 import src.photo.FichierImage;
+import src.impression.cadre.ModeleCadre;
+import src.impression.calendrier.Calendrier;
+import src.photo.Photo;
 
 public class ImpressionDAO {
 	
@@ -71,8 +79,7 @@ public class ImpressionDAO {
 	}
 	
 	
-	
-	public static ArrayList<FichierImage> selectAllPhotos(Connection c,int id) throws SQLException{
+	public static ArrayList<FichierImage> selectAllFichierImages(Connection c,int id) throws SQLException{
 		ArrayList<FichierImage> tab = new ArrayList<FichierImage>();
 		
 		Statement state = c.createStatement();
@@ -94,6 +101,73 @@ public class ImpressionDAO {
 		
 		return tab;
 	}
+	
+	
+	public static ArrayList<Photo> selectAllPhotos(Connection c,int id) throws SQLException{
+		ArrayList<Photo> tab = new ArrayList<Photo>();
+		
+		Statement state = c.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id+";");
+		
+		while (result.next()) {
+			tab.add(new Photo(
+					result.getInt("idPhoto"),
+					result.getInt("idFichier"),
+					result.getString("retouche")
+					));
+		}
+		
+		return tab;
+	}
+	
+	
+	public static void changeTypeIfCompatible(Connection c, Impression from, String to) throws Exception {
+		//Si le type de sortie 'to' est compatible avec celui en entrée, on exécute la requête INSERT sur le nouveau type d'Impression,
+		//sinon on renvoie une Exception.
+		try {
+			if (to.equals("Agenda")) { 
+				throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+			} else if (to.equals("Album")) { 
+				if (from instanceof Cadre)
+					throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+				String titre = LectureClavier.lireChaine("Quel titre d'album voulez-vous ?");
+				AlbumDAO.createAlbum(c, selectAllPhotos(c, from.getIdImp()).get(0).getIdPh(), titre);
+			} else if (to.equals("Cadre")) {
+				ModeleCadre modele = ModeleCadre.valueOf(LectureClavier.lireChaine("Quel modèle de cadre voulez-vous ?"));
+				CadreDAO.createCadre(c, modele, from.getIdImp());
+			} else if (to.equals("Calendrier")) { 
+				throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+			} else if (to.equals("Tirage")) {  
+				TirageDAO.createTirage(c, from.getIdImp());
+			} else { 
+				throw new Exception("Impression "+to+" is not recognized");
+			}
+		} catch (SQLException e) {
+			System.out.println("insert failed");
+			e.printStackTrace();
+		}
+		
+		//On exécute ensuite la requête DELETE de l'ancien type d'Impression.
+		try {
+			if (from instanceof Agenda) {
+				AgendaDAO.deleteAgenda(c, from.getIdImp());
+			} else if (from instanceof Album) {
+				AlbumDAO.deleteAlbum(c, from.getIdImp());
+			} else if (from instanceof Cadre) {
+				CadreDAO.deleteCadre(c, from.getIdImp());
+			} else if (from instanceof Calendrier) {
+				CalendrierDAO.deleteCalendrier(c, from.getIdImp());
+			} else if (from instanceof Tirage) {
+				TirageDAO.deleteTirage(c, from.getIdImp());
+			}
+		} catch (SQLException e) {
+			System.out.println("delete failed");
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 	
 	public static void changeQualityFrom(Connection c, Impression i,Qualite qualite){
 		try {
