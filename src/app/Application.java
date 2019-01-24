@@ -55,7 +55,42 @@ public class Application {
 		return utilisateur;
 	}
 	
-	private static void gererFichierImages(Connection c) {
+	
+	//revoir l'organisation de ce menu
+	//difference consulter fichier/photo ?
+	//est ce quon fait les deux ?
+	
+	private static void gererFichierImages(Connection c, Utilisateur utilisateur) {
+		boolean back = false;
+		while(!back){
+			System.out.println("*****************************************************************************");
+			System.out.println("Que voulez vous faire ?");
+			System.out.println("1 : Retourner au menu précédent.");
+			System.out.println("2 : Consulter la liste de mes fichiers de base.");
+			System.out.println("3 : Consulter la liste de mes photos.");
+			System.out.println("4 : Ajouter un nouveau fichier.");
+			int choixAction = LectureClavier.lireEntier("5 : Retoucher un fichier.");
+
+			switch(choixAction){ 
+			case 1:  
+				back = true;
+				System.out.println("retour au menu précédent");
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			default : System.out.println("Veuillez faire un choix. ");
+			}
+		}
+		
+	}
+
+	
+	//TODO: 
+	private static void gererImpression(Connection c, Utilisateur utilisateur) {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -71,22 +106,20 @@ public class Application {
 				System.out.println("retour au menu précédent");
 				break;
 			case 2:
-				gererImpression(c);
 				break;
 			case 3:
-				gererFichierImages(c);
 				break;
 			case 4:
-				//CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());		
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
-		}
-		
+		}		
 	}
-
-	private static void gererImpression(Connection c) {
-		// TODO Auto-generated method stub
+	
+	
+	private static void afficherArticles(ArrayList<Article> panier) {
+		// TODO:afficher les tostring() de chaque article en plus du nom de l'impressions associée a l'article en question.
+		//ne pas oublier le formatage avec un titre "votre panier" et des ptites étoiles
 		
 	}
 	
@@ -134,17 +167,17 @@ public class Application {
 						System.out.println("Vous avez ete deconnecte");
 						break;
 					case 2:
-						gererImpression(c);
+						gererImpression(c,utilisateur);
 						break;
 					case 3:
-						gererFichierImages(c);
+						gererFichierImages(c,utilisateur);
 						break;
 					case 4:
 						ArrayList<Article> panier = new ArrayList<Article>();
 						panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
 						if(panier.isEmpty()){  System.out.println("Vous n'avez aucun article dans votre panier"); }
 						else{
-							
+							afficherArticles(panier);
 						}
 						
 						break;
@@ -155,9 +188,6 @@ public class Application {
 					}
 				}	
 			} 
-
-
-
 
 
 
@@ -181,6 +211,8 @@ public class Application {
 			e.printStackTrace();
 		}
 	}
+
+
 
 
 
