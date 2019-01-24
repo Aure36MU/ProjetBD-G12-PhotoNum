@@ -17,14 +17,10 @@ public class AgendaDAO {
      * @throws SQLException
      */
     public static ArrayList<Agenda> selectAll(Connection conn) throws SQLException {
-
         conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Agenda;");
         return getAgendas(result);
-
-
     }
 
     /**
@@ -37,15 +33,10 @@ public class AgendaDAO {
      * @throws SQLException
      */
     public static ArrayList<Agenda> selectAll(Connection conn, String condition) throws SQLException {
-
-
         conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Agenda WHERE "+condition+";");
         return getAgendas(result);
-
-
     }
 
     /**
@@ -57,14 +48,25 @@ public class AgendaDAO {
      * @throws SQLException
      */
     public static ArrayList<Agenda> selectAllFromUser(Connection conn, int id) throws SQLException {
-
         conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Agenda JOIN Impression ON (Agenda.idImp = Impression.idImp) WHERE Impression.idUser="+id+";");
         return getAgendas(result);
-
-
+    }
+    
+    /**
+     * S�lectionne tous les Agendas cr��s par un certain utilisateur.
+     *
+     * @param conn Connection SQL
+     * @param id id utilisateur
+     * @return ArrayList contenant les objets Agenda s�lectionn�s
+     * @throws SQLException
+     */
+    public static ArrayList<Agenda> selectAllFromUserWait(Connection conn, int id) throws SQLException {
+        conn.setAutoCommit(true);
+        Statement state = conn.createStatement();
+        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Agenda') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp;");
+        return getAgendas(result);
     }
 	/**
 	 * Ajoute un agenda dans la base.
@@ -74,12 +76,9 @@ public class AgendaDAO {
 	 * @throws SQLException 
 	 */
 	public static void addAgenda(Connection conn, int id, ModeleAgenda modele, TypeAgenda type) throws SQLException {
-		
 		conn.setAutoCommit(true);
-
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+modele.toString()+"');");
-		
 	}
 	
 	
@@ -91,12 +90,9 @@ public class AgendaDAO {
 	 * @throws SQLException 
 	 */
 	public static void updateAgenda(Connection conn, int id, ModeleAgenda modele ,TypeAgenda type) throws SQLException {
-		
 		conn.setAutoCommit(true);
-
 		Statement state = conn.createStatement();
 		state.executeUpdate("UPDATE agenda SET modele='"+modele.toString()+"' WHERE idImp="+id+";");
-		
 	}
 
     /**
@@ -107,12 +103,9 @@ public class AgendaDAO {
      * @throws SQLException
      */
     public static void deleteAgenda(Connection conn, int id) throws SQLException {
-
         conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
         state.executeUpdate("DELETE FROM Agenda WHERE idImp="+id+";");// on cascade
-
     }
 
 

@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.impression.album.Album;
+
 public class CadreDAO {
 	public static void createCadre(Connection c, ModeleCadre modele, int idImp) throws SQLException {
 		//verifier si l'idImp existe dans la table IMPRESSION ?
@@ -26,6 +28,12 @@ public class CadreDAO {
 		return CadreDAO.getCadres(result);
 	}
 	
+	public static ArrayList<Cadre> selectAllFromUserWait(Connection conn, int id) throws SQLException {
+        conn.setAutoCommit(true);
+        Statement state = conn.createStatement();
+        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Cadre') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Cadre");
+        return getCadres(result);
+    }
 	
 	/**
 	 * Ajoute un cadre dans la base.

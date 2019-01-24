@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.impression.cadre.Cadre;
+
 public class TirageDAO {
 
 	public static void createTirage(Connection c, int idImp) throws SQLException {
@@ -26,6 +28,12 @@ public class TirageDAO {
 		return TirageDAO.getTirages(result);
 	}
 	
+	public static ArrayList<Tirage> selectAllFromUserWait(Connection conn, int id) throws SQLException {
+        conn.setAutoCommit(true);
+        Statement state = conn.createStatement();
+        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Tirage') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Tirage");
+        return getTirages(result);
+    }
 	
 	/**
 	 * Ajoute un tirage dans la base.

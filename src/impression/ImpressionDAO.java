@@ -32,12 +32,12 @@ public class ImpressionDAO {
 		return 0;
 	}
 	
-	public static void createImpression(Connection c, int idUser, Format format, Qualite qualite, int nbPages){
+	public static void createImpression(Connection c, int idUser, String NomImp, Type type, Format format, Qualite qualite, int nbPages){
 		try {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO Impression "
-					+ "(idImp,qualite,format,idUser,nbPageTotal)"
-					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );		
+					+ "(idImp,nomImp,type,qualite,format,idUser,nbPageTotal)"
+					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + NomImp + ", " + type + ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );		
 		} catch (SQLException e) {
 			System.out.println("creation failed");
 			e.printStackTrace();
@@ -78,6 +78,15 @@ public class ImpressionDAO {
 		return tab;
 	}
 	
+	public static ArrayList<Impression> selectAllFromUserImpressionWait(Connection c,int idUser) throws SQLException{
+		ArrayList<Impression> tab = new ArrayList<Impression>();
+		tab.addAll(CalendrierDAO.selectAllFromUserWait(c,idUser));
+		tab.addAll(AgendaDAO.selectAllFromUserWait(c,idUser));
+		tab.addAll(TirageDAO.selectAllFromUserWait(c,idUser));
+		tab.addAll(CadreDAO.selectAllFromUserWait(c,idUser));
+		tab.addAll(AlbumDAO.selectAllFromUserWait(c,idUser));
+		return tab;
+	}
 	
 	public static ArrayList<FichierImage> selectAllFichierImages(Connection c,int id) throws SQLException{
 		ArrayList<FichierImage> tab = new ArrayList<FichierImage>();

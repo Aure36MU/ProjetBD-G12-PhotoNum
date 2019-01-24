@@ -8,6 +8,7 @@ import src.commande.CommandeDAO;
 import src.compte.Statut;
 import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
+import src.impression.ImpressionDAO;
 
 
 
@@ -90,7 +91,7 @@ public class Application {
 
 	
 	//TODO: 
-	private static void gererImpression(Connection c, Utilisateur utilisateur) {
+	private static void gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -106,8 +107,15 @@ public class Application {
 				System.out.println("retour au menu précédent");
 				break;
 			case 2:
+				ImpressionDAO.selectAllFromUserImpressionWait(c,utilisateur.getIdUser());
 				break;
 			case 3:
+				String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
+				Type type= LectureClavier.lireChaine("Quel est le type de votre impression?: ");
+				Format format= LectureClavier.lireChaine("Quel format souhaitez vous? : ");	
+				QUalite qualite= LectureClavier.lireChaine("Quel qualit� souhaitez vous?: ");
+				String nbPages= LectureClavier.lireChaine("Combien de pages souhaitez vous?: ");
+				ImpressionDAO.createImpression(c, utilisateur.getIdUser(),nomI, type, format, qualite, nbPages);
 				break;
 			case 4:
 				break;
@@ -125,7 +133,7 @@ public class Application {
 	
 	public static void main(String[] args) throws SQLException {
 		try{
-			USER=LectureClavier.lireChaine("saississez l'identifiant pour la connexion e la base : ");
+			USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
 			PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
 
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());  	    
@@ -137,7 +145,7 @@ public class Application {
 
 			Utilisateur utilisateur = null;
 			while(utilisateur == null){
-				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire e PhotoNum ? ");
+				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire sur PhotoNum ? ");
 				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire");
 
 				switch(choix){ 
