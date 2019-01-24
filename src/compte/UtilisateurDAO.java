@@ -55,7 +55,7 @@ public class UtilisateurDAO {
 		}
 	}
 	
-	public static Utilisateur selectUserWithMail(Connection c, String condition) throws SQLException {
+	public static Utilisateur selectUserCondition(Connection c, String condition) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where "+condition+";";
 		ResultSet result =stat.executeQuery(query);
@@ -80,7 +80,7 @@ public class UtilisateurDAO {
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	*/
-	public static ArrayList<Utilisateur> selectAll(Connection c, String condition) throws SQLException {
+	public static ArrayList<Utilisateur> selectWithCondition(Connection c, String condition) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where "+condition+";";
 		ResultSet result =stat.executeQuery(query);

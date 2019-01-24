@@ -40,7 +40,7 @@ public class Application {
 		System.out.println("**********************");
 
 		String mail = LectureClavier.lireChaine("Pour vous connecter, saisissez votre mail : ");
-		Utilisateur utilisateur = UtilisateurDAO.selectUserWithMail(c, mail);
+		Utilisateur utilisateur = UtilisateurDAO.selectWithCondition(c, "email = '"+mail+"'").get(0);
 		String mdp = null;
 		while(!mdp.equals(utilisateur.getMdp())){
 			mdp = LectureClavier.lireChaine("Veuillez entrer le mot de passe correspondant ou entrez \"return to menu\" pour retourner au Menu Principal");
