@@ -8,10 +8,7 @@ import java.util.ArrayList;
 
 public class TirageDAO {
 
-	public static void createTirage(Connection c, int idImp) throws SQLException {
-		Statement stat= c.createStatement();
-		stat.executeUpdate("insert into Tirage (idImp)  values ('"+idImp+"')");
-	}
+
 	
 	public static ArrayList<Tirage> selectAll(Connection c) throws SQLException {
 		Statement stat = c.createStatement();
@@ -33,7 +30,7 @@ public class TirageDAO {
 	 * @param id id impression
 	 * @throws SQLException 
 	 */
-	public static void addTirage(Connection conn, int id) throws SQLException {
+	public static void insertTirage(Connection conn, int id) throws SQLException {
 		
 		conn.setAutoCommit(true);
 

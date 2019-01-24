@@ -77,7 +77,7 @@ public class CalendrierDAO {
 	 * @param modele modele
 	 * @throws SQLException 
 	 */
-	public static void addCalendrier(Connection conn, int id, ModeleCalendrier modele) throws SQLException {
+	public static void insertCalendrier(Connection conn, int id, ModeleCalendrier modele) throws SQLException {
 		
 		conn.setAutoCommit(true);
 

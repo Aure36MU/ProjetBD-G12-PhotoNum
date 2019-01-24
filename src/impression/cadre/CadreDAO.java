@@ -7,11 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class CadreDAO {
-	public static void createCadre(Connection c, ModeleCadre modele, int idImp) throws SQLException {
-		//verifier si l'idImp existe dans la table IMPRESSION ?
-		Statement stat= c.createStatement();
-		stat.executeUpdate("insert into Cadre (modele,idImp) values ('"+modele+"', "+idImp+")");
-	}
+
 	
 	public static ArrayList<Cadre> selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
@@ -34,7 +30,7 @@ public class CadreDAO {
 	 * @param modele modele
 	 * @throws SQLException 
 	 */
-	public static void addCadre(Connection conn, int id, ModeleCadre modele) throws SQLException {
+	public static void insertCadre(Connection conn, int id, ModeleCadre modele) throws SQLException {
 		
 		conn.setAutoCommit(true);
 

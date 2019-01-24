@@ -12,11 +12,7 @@ import src.impression.Qualite;
 
 
 public class AlbumDAO {
-	public static void createAlbum(Connection c, int photo, String titre) throws SQLException {
-		Statement stat= c.createStatement();
-		String query= "insert into Album (photoCouv , titreCouv) values ('"+photo+"','"+titre+"')";
-		stat.executeUpdate(query);
-	}
+
 	
 	public static ArrayList<Album> selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
@@ -32,15 +28,22 @@ public class AlbumDAO {
 		return AlbumDAO.getAlbums(result);
 	}
 	
-	public static void deleteAlbum(Connection c, int idi) throws SQLException {
+	public static void insertAlbum(Connection c, int photo, String titre) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "delete from 'Album' where 'idImp'='"+idi+"' ";
+		String query= "insert into Album (photoCouv , titreCouv) values ('"+photo+"','"+titre+"')";
 		stat.executeUpdate(query);
 	}
+
 	
 	public static void updateAlbum(Connection c, int idi, int photo, String titre) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "update Album set photoCouv='"+photo+"' ,titreCouv='"+titre+"' where idImp='"+idi+"'";
+		stat.executeUpdate(query);
+	}
+	
+	public static void deleteAlbum(Connection c, int idi) throws SQLException {
+		Statement stat= c.createStatement();
+		String query= "delete from 'Album' where 'idImp'='"+idi+"' ";
 		stat.executeUpdate(query);
 	}
 	
