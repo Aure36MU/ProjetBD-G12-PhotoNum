@@ -127,4 +127,7 @@ public class ArticleDAO {
         }
         return Articles;
 	}
+	public void AjoutAuPanier (Connection conn,int idIM) throws SQLException {
+		
+	}
 }

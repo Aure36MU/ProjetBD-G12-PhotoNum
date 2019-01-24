@@ -10,12 +10,13 @@ import src.impression.album.Album;
 import src.impression.album.AlbumDAO;
 import src.impression.cadre.Cadre;
 import src.impression.cadre.CadreDAO;
-import src.impression.cadre.ModeleCadre;
-import src.impression.calendrier.Calendrier;
+
 import src.impression.calendrier.CalendrierDAO;
 import src.impression.tirage.Tirage;
 import src.impression.tirage.TirageDAO;
 import src.photo.FichierImage;
+import src.impression.cadre.ModeleCadre;
+import src.impression.calendrier.Calendrier;
 import src.photo.Photo;
 
 public class ImpressionDAO {
@@ -51,6 +52,20 @@ public class ImpressionDAO {
 		tab.addAll(CadreDAO.selectAll(c));
 		tab.addAll(AlbumDAO.selectAll(c));
 		return tab;
+	}
+	
+	public static ArrayList<Impression> selectImpressionFromId(Connection c, int id) throws SQLException{
+		ArrayList<Impression> tabImp = new ArrayList<Impression>();
+		Statement state = c.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id+";");
+        /*while (result.next()) {
+            tabImp.add(new Impression(
+                    result.getInt("idArt"),
+                    result.getInt("prix"),
+                    result.getInt("qte"),
+                    result.getInt("idImp")
+            ));*/
+		return tabImp;
 	}
 	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
