@@ -8,6 +8,13 @@ public class Catalogue {
 	String modele;
 	int qteStock;
 	
+	public Catalogue(String type, int prix, String format, String modele, int qteStock) {
+		this.type = type;
+		this.prix = prix;
+		this.format = format;
+		this.modele = modele;
+		this.qteStock = qteStock;
+	}
 	public String getType() {
 		return type;
 	}

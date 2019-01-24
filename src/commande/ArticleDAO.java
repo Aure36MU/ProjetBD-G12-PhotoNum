@@ -21,7 +21,7 @@ public class ArticleDAO {
         conn.setAutoCommit(true);
 
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Articles;");
+        ResultSet result = state.executeQuery("SELECT * FROM Article;");
         
         return getArticles(result);
 
