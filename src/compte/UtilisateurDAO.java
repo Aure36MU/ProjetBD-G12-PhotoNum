@@ -35,7 +35,7 @@ public class UtilisateurDAO {
 		ResultSet result =stat.executeQuery(query);
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
-	
+	/*
 	public static Utilisateur selectAllFromUser(Connection c, int idu) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where idUser='"+idu+"' ";
@@ -55,9 +55,9 @@ public class UtilisateurDAO {
 		}
 	}
 	
-	public static Utilisateur selectUserWithMail(Connection c, String mail) throws SQLException {
+	public static Utilisateur selectUserCondition(Connection c, String condition) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "select * from Utilisateur where mail='"+mail+"' ";
+		String query= "select * from Utilisateur where "+condition+";";
 		ResultSet result =stat.executeQuery(query);
 		if(result.next()){	return new Utilisateur(
 				result.getInt("idUser"),
@@ -79,17 +79,17 @@ public class UtilisateurDAO {
 		ResultSet result =stat.executeQuery(query);
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
-	
-	public static ArrayList<Utilisateur> selectAllUserFromActive(Connection c, Boolean active) throws SQLException {
+	*/
+	public static ArrayList<Utilisateur> selectWithCondition(Connection c, String condition) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "select * from Utilisateur where active='"+active+"'";
+		String query= "select * from Utilisateur where "+condition+";";
 		ResultSet result =stat.executeQuery(query);
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	
-	public static void deleteUtilisateur(Connection c, int idUtilisateur) throws SQLException {
+	public static void deleteUtilisateur(Connection c, int mail) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Utilisateur set active='"+false+"' where idUser='"+idUtilisateur+"' ";
+		String query= "update Utilisateur set active='"+false+"' where email='"+mail+"' ";
 		stat.executeUpdate(query);
 	}
 	

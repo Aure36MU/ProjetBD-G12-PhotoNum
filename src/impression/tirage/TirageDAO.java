@@ -27,6 +27,45 @@ public class TirageDAO {
 	}
 	
 	
+	/**
+	 * Ajoute un tirage dans la base.
+	 * 
+	 * @param id id impression
+	 * @throws SQLException 
+	 */
+	public static void addTirage(Connection conn, int id) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("INSERT INTO Tirage VALUES("+id+");");
+		
+	}
+	
+	
+	/**
+	 * updateTirage() : est inutile car il n'y a aucun attribut à modifier à part l'idImp
+	 * 
+	 */
+	public static void updateTirage() {}
+	
+	
+	/**
+	 * Supprime un tirage d'un idImp donné de la base.
+	 * 
+	 * @param id id impression
+	 * @throws SQLException 
+	 */
+	public static void deleteTirage(Connection conn, int id) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("DELETE FROM Tirage WHERE idImp="+id+";");
+		
+	}
+	
+	
 	public static ArrayList<Tirage> getTirages(ResultSet result) {
 		ArrayList<Tirage> Tirage = new ArrayList<Tirage>();
 		try {

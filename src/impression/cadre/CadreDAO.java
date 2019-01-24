@@ -26,6 +26,56 @@ public class CadreDAO {
 		return CadreDAO.getCadres(result);
 	}
 	
+	
+	/**
+	 * Ajoute un cadre dans la base.
+	 * 
+	 * @param id id impression
+	 * @param modele modele
+	 * @throws SQLException 
+	 */
+	public static void addCadre(Connection conn, int id, ModeleCadre modele) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("INSERT INTO Cadre VALUES("+id+", '"+modele.toString()+"');");
+		
+	}
+	
+	
+	/**
+	 * Modifie un cadre d'un idImp donné dans la base.
+	 * 
+	 * @param id id impression
+	 * @param modele modele
+	 * @throws SQLException 
+	 */
+	public static void updateCadre(Connection conn, int id, ModeleCadre modele) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("UPDATE Cadre SET modele='"+modele.toString()+"' WHERE idImp="+id+";");
+		
+	}
+	
+	
+	/**
+	 * Supprime un cadre d'un idImp donné de la base.
+	 * 
+	 * @param id id impression
+	 * @throws SQLException 
+	 */
+	public static void deleteCadre(Connection conn, int id) throws SQLException {
+		
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("DELETE FROM Cadre WHERE idImp="+id+";");
+		
+	}
+	
 	public static ArrayList<Cadre> getCadres(ResultSet result) {
 		ArrayList<Cadre> cadre = new ArrayList<Cadre>();
 		try {
@@ -41,6 +91,7 @@ public class CadreDAO {
 		}
 		return cadre;
 	}
+
 	
 	
 }
