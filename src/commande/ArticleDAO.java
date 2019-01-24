@@ -6,7 +6,33 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.impression.Impression;
+import src.impression.ImpressionDAO;
+import src.impression.agenda.Agenda;
+import src.impression.agenda.AgendaDAO;
+import src.impression.album.Album;
+import src.impression.album.AlbumDAO;
+import src.impression.cadre.Cadre;
+import src.impression.cadre.CadreDAO;
+import src.impression.calendrier.Calendrier;
+import src.impression.calendrier.CalendrierDAO;
+import src.impression.tirage.Tirage;
+import src.impression.tirage.TirageDAO;
+
 public class ArticleDAO {
+	
+	
+	public static int getHigherIdArt(Connection c){
+		try {
+			Statement state = c.createStatement();
+			ResultSet res = state.executeQuery("SELECT max(idArt) FROM Article");
+			return res.getInt(0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
 	
 	/**
 	 * Sï¿½lectionne tous les Articles (quels que soient leurs modï¿½les) sans conditions.
@@ -101,6 +127,57 @@ public class ArticleDAO {
         									+ "WHERE c.statut = 'BROUILLON' AND c.idUser = '" +idUser+ "');");
         return getArticles(result);
 
+    }
+    
+    
+    /**
+     * A partir d'un id impression, id commande et quantité,
+     * retrouve les informations nécessaires sur l'Impression,
+     * vérifie dans le Catalogue le prix de cette Impression et son stock,
+     * puis ajoute un nouvel Article dans la base.
+     * 
+     * @param conn
+     * @param idImp
+     * @param idComm
+     * @param qte
+     * @throws Exception
+     */
+    public static void insertArticleFromImpression(Connection conn, int idImp, int idComm, int qte) throws Exception {
+    	
+    	Impression newImp = ImpressionDAO.selectImpressionFromId(conn, idImp);
+    	String newModele = "NULL";
+    	/* TODO modifier le switch sur newImp.type par une comparaison d'instances : Calendrier, Agenda, Cadre, [autre].
+    	 * Cela fera une requête à faire en moins dans la base !*/
+    	switch (newImp.getType()) {
+		case CALENDRIER:
+			newModele = CalendrierDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModele().toString();
+			break;
+		case AGENDA:
+			newModele = AgendaDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModele().toString();
+			break;
+		case CADRE:
+			newModele = CadreDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModele().toString();
+			break;
+		default:
+			break;
+		}
+    	
+    	Catalogue artDuCatalogue = CatalogueDAO.selectAll(conn,
+    			"type='"+newImp.getType().toString()
+    			+"' AND format='"+newImp.getFormat().toString()
+    			+"' AND modele='"+newModele+"'").get(0);
+    	
+    	if (artDuCatalogue.getQteStock() <= 0) {
+    		throw new Exception("Not enough of this Article in stock !");
+    	} else {
+
+    		//Ajout nouvel Article dans la base
+    		Statement state = conn.createStatement();
+    		state.executeUpdate("INSERT INTO Article VALUES("+getHigherIdArt(conn)+", "+artDuCatalogue.getPrix()+", "+qte+", "+idImp+", "+idComm+");");
+
+    	}
+
+    	
     }
     
     

@@ -57,10 +57,7 @@ public class Application {
 	}
 	
 	
-	//revoir l'organisation de ce menu
-	//difference consulter fichier/photo ?
-	//est ce quon fait les deux ?
-	
+	//revoir l'organisation de ce menu et 
 	private static void gererFichierImages(Connection c, Utilisateur utilisateur) {
 		boolean back = false;
 		while(!back){
@@ -89,9 +86,11 @@ public class Application {
 		
 	}
 
+
 	
 	//TODO: 
 	private static void gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
+
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");

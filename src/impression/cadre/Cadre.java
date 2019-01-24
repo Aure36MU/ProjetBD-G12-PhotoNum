@@ -12,7 +12,7 @@ public class Cadre extends Impression {
 		this.idImp = idImp;
 	}
 	
-	public ModeleCadre getmodele() {
+	public ModeleCadre getModele() {
 		return modele;
 	}
 	public void setModele(ModeleCadre modele) {

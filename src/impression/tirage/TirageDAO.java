@@ -6,19 +6,37 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import src.impression.cadre.Cadre;
+
 
 public class TirageDAO {
 
-	public static void createTirage(Connection c, int idImp) throws SQLException {
-		Statement stat= c.createStatement();
-		stat.executeUpdate("insert into Tirage (idImp)  values ('"+idImp+"')");
-	}
+
 	
 	public static ArrayList<Tirage> selectAll(Connection c) throws SQLException {
 		Statement stat = c.createStatement();
 		ResultSet result = stat.executeQuery("select * from Tirage");
 		return TirageDAO.getTirages(result);
+	}
+	
+	/**
+	 * Sélectionne tous les tirages avec des conditions paramétrées.
+	 * 
+	 * @param conn Connection SQL
+	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
+	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
+	 * @return ArrayList contenant les objets Calendrier sélectionnés
+	 * @throws SQLException 
+	 */
+	public static ArrayList<Tirage> selectAll(Connection conn, String condition) throws SQLException {
+			
+
+		conn.setAutoCommit(true);
+
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Tirage WHERE "+condition+";");
+		return getTirages(result);
+
+		
 	}
 	
 	public static ArrayList<Tirage> selectAllFromUser(Connection c, int idUser) throws SQLException {
@@ -41,7 +59,7 @@ public class TirageDAO {
 	 * @param id id impression
 	 * @throws SQLException 
 	 */
-	public static void addTirage(Connection conn, int id) throws SQLException {
+	public static void insertTirage(Connection conn, int id) throws SQLException {
 		
 		conn.setAutoCommit(true);
 
@@ -88,4 +106,5 @@ public class TirageDAO {
 		}
 		return Tirage;
 	}
+
 }
