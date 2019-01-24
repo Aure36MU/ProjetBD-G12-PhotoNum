@@ -6,6 +6,7 @@ public abstract class Impression {
 	private int nbPages;
 	private int idUser;
 	private Qualite qualite;
+	private Type type;
 	private Format format;
 	
 	public int getIdImp() {
@@ -35,7 +36,7 @@ public abstract class Impression {
 	
 	
 	public String toString(){
-		return "id : "+this.idImp +" qualite : "+this.qualite+" format : "+this.format+" nbPages : "+this.nbPages;
+		return "id : "+idImp +" nomImp : "+nomImp+" type : "+type+" qualite : "+qualite+" format : "+format+" nbPages : "+nbPages;
 	}
 	public int getIdUser() {
 		return idUser;
@@ -46,8 +47,14 @@ public abstract class Impression {
 	public String getNomImp() {
 		return nomImp;
 	}
-	public void setNom(String nomImp) {
+	public void setNomImp(String nomImp) {
 		this.nomImp = nomImp;
+	}
+	public Type getType() {
+		return type;
+	}
+	public void setType(Type type) {
+		this.type = type;
 	}
 	
 	
