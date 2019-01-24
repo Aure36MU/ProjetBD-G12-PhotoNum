@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ArticleDAO {
 	
@@ -22,7 +21,7 @@ public class ArticleDAO {
         conn.setAutoCommit(true);
 
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Articles;");
+        ResultSet result = state.executeQuery("SELECT * FROM Article;");
         
         return getArticles(result);
 
@@ -98,7 +97,8 @@ public class ArticleDAO {
             Articles.add(new Article(
                     result.getInt("idArt"),
                     result.getInt("prix"),
-                    result.getInt("qte")
+                    result.getInt("qte"),
+                    result.getInt("idImp")
             ));
         }
         return Articles;

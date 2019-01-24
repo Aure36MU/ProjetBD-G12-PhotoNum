@@ -6,11 +6,13 @@ public class Article {
 	int idArt;
 	int prix;
 	int qte;
+	int idImp;
 	
-	public Article(int idArt, int prix, int qte) {
+	public Article(int idArt, int prix, int qte,int idImp) {
 		this.idArt = idArt;
 		this.prix = prix;
 		this.qte = qte;
+		this.idImp = idImp;
 	}
 	public int getIdArt() {
 		return idArt;
@@ -32,5 +34,12 @@ public class Article {
 
 	public void setqte(int qte) {
 		this.qte = qte;
+	}
+	public int getidImp() {
+		return idImp;
+	}
+
+	public void setidImp(int idImp) {
+		this.idImp = idImp;
 	}
 }

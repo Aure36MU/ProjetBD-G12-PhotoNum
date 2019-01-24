@@ -25,7 +25,6 @@ public class CommandeDAO {
 	        ResultSet result = state.executeQuery("SELECT * FROM Commande;");
 	        
 	        return getCommandes(result);
-
 	    }
 		
 	    /**
