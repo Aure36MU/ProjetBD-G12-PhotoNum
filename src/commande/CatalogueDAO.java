@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Objects;
+
+import src.compte.Statut;
 
 public class CatalogueDAO {
 
@@ -26,6 +29,7 @@ public class CatalogueDAO {
         return getCatalogues(result);
 
     }
+	/*---------------------------------------------------------------------------------------------------
 	public static ArrayList<Catalogue> selectStats(Connection conn) throws SQLException {
 
         conn.setAutoCommit(true);
@@ -33,10 +37,10 @@ public class CatalogueDAO {
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT type,format,modele,(select count FROM Catalogue;");
         
-        return getStat(result);
+        return CatalogueDAO.getStat(result);
 
     }
-	
+	---------------------------------------------------------------------------------------------------*/
     /**
      * Sélectionne toutes les Catalogues  avec des conditions paramètres.
      *
@@ -55,6 +59,18 @@ public class CatalogueDAO {
         return getCatalogues(result);
 
     }
+    
+    public static void updateCataloguePrix(Connection c, int prix, String type, String format, String modele) throws SQLException {
+		Statement stat= c.createStatement();
+		String query= "update Utilisateur set prix='"+prix+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		stat.executeUpdate(query);
+	}
+    
+    public static void updateCatalogueQte(Connection c, int qte, String type, String format, String modele) throws SQLException {
+		Statement stat= c.createStatement();
+		String query= "update Utilisateur set qteStock='"+qte+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		stat.executeUpdate(query);
+	}
     
     /**
      * Retourne les objets Catalogue construits ï¿½ partir d'un rï¿½sultat de requï¿½te.
@@ -78,18 +94,58 @@ public class CatalogueDAO {
         return Catalogues;
 	}
 	//a modifier
-	public static ArrayList<Catalogue> getStat(ResultSet result) throws SQLException {
-        ArrayList<Catalogue> Catalogues = new ArrayList<Catalogue>();
-
-        while (result.next()) {
-            Catalogues.add(new Catalogue(
-                    result.getString("type"),
-                    result.getInt("prix"),
-                    result.getString("format"),
-                    result.getString("modele"),
-                    result.getInt("qteStock")
-            ));
-        }
-        return Catalogues;
+	/*---------------------------------------------------------------------------------------------------*/
+	public static int getNbVentes(Connection conn, Catalogue catalogue) throws SQLException {
+		int nbVentes = 0;
+		conn.setAutoCommit(true);
+		Statement state = conn.createStatement();
+        ResultSet result = state.executeQuery("SELECT sum(a.qte) FROM Commande c "
+        		+ "JOIN Article a ON (c.idComm=a.idComm) "
+        		+ "JOIN Impression i ON (a.idImp=i.idImp) "
+        		+ "NATURAL JOIN Agenda ag"
+        		+ "WHERE "+catalogue.format+"=i.format and "+catalogue.modele+"=ag.modele and "
+        		+catalogue.type+"=ag.type and c.statut<>'Brouillon' "
+        				+ "UNION "
+        				+ "SELECT sum(a.qte) FROM Commande c "
+        				+ "JOIN Article a ON (c.idComm=a.idComm) "
+        				+ "JOIN Impression i ON (a.idImp=i.idImp) "
+        				+ "NATURAL JOIN Album al"
+        				+ "WHERE "+catalogue.format+"=i.format and c.statut<>'Brouillon' "
+        						+ "UNION "
+        						+ "SELECT sum(a.qte) FROM Commande c "
+        						+ "JOIN Article a ON (c.idComm=a.idComm) "
+        						+ "JOIN Impression i ON (a.idImp=i.idImp) "
+        						+ "NATURAL JOIN Tirage t"
+        						+ "WHERE "+catalogue.format+"=i.format and c.statut<>'Brouillon' "
+        								+ "UNION "
+        								+ "SELECT sum(a.qte) FROM Commande c "
+        								+ "JOIN Article a ON (c.idComm=a.idComm) "
+        								+ "JOIN Impression i ON (a.idImp=i.idImp) "
+        								+ "NATURAL JOIN Calendrier ca"
+        								+ "WHERE "+catalogue.format+"=i.format and "+catalogue.modele+"=ca.modele and c.statut<>'Brouillon' "
+        										+ "UNION "
+        										+ "SELECT sum(a.qte) FROM Commande c "
+        										+ "JOIN Article a ON (c.idComm=a.idComm) "
+        										+ "JOIN Impression i ON (a.idImp=i.idImp) "
+        										+ "NATURAL JOIN Cadre ca"
+        										+ "WHERE "+catalogue.format+"=i.format and "+catalogue.modele+"=ca.modele and c.statut<>'Brouillon'; ");
+        nbVentes=result.getInt(0);
+        return nbVentes;
 	}
+	
+	public static ArrayList<Stat> getStat(Connection conn, ArrayList<Catalogue> catalogues) throws SQLException {
+	      ArrayList<Stat> stats = new ArrayList<Stat>();
+	      Catalogue c;
+	      	int i = 0;
+	        while (catalogues.get(i)!=null) {
+	        	c = catalogues.get(i);
+	            stats.add(new Stat(c.type, c.format, c.modele, getNbVentes(conn,c)));
+	        	i++;
+	        }
+        return stats;
+	}
+	
+	
+	
+	/*---------------------------------------------------------------------------------------------------*/
 }
