@@ -72,14 +72,15 @@ public class UtilisateurDAO {
 			return null;
 		}
 	}
+	*/
 	
-	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, Statut statut) throws SQLException {
+	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, StatutUtilisateur statut) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where statut='"+statut+"'";
 		ResultSet result =stat.executeQuery(query);
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
-	*/
+
 	public static ArrayList<Utilisateur> selectWithCondition(Connection c, String condition) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where "+condition+";";

@@ -68,6 +68,11 @@ public class CatalogueDAO {
 		String query= "update Utilisateur set qteStock='"+qte+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
 	}
+    public static void simulerLivraison(Connection c, int qteLivraison, String type, String format, String modele) throws SQLException {
+		Statement stat= c.createStatement();
+		String query= "update Utilisateur set qteStock= qteStock"+qteLivraison+" where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		stat.executeUpdate(query);
+	}
     
     /**
      * Retourne les objets Catalogue construits � partir d'un r�sultat de requ�te.
