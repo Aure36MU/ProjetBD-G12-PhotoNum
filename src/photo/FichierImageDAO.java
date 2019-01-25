@@ -112,7 +112,7 @@ public class FichierImageDAO {
 	 * @param fileAttSuppr
 	 * @throws SQLException
 	 */
-	public static void addFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
+	public static void insertFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
 			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
 
 		PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
@@ -145,7 +145,7 @@ public class FichierImageDAO {
 	 * @param fileAttSuppr
 	 * @throws SQLException
 	 */
-	public static void updateFichierImage(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,
+	private static void update(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,
 			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
 
 		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idUser=?, chemin=?, infoPVue=?, pixelImg=?, partage=?, dateUtilisation=?, fileAttModif=?, fileAttSuppr=?) WHERE idFichier=?;");
@@ -164,19 +164,105 @@ public class FichierImageDAO {
 	
 	
 	/**
+	 * Modifie un fichier image d'un certain idFichier dans la base de données.
+	 * Cette méthode vérifie si le FichierImage est éligible pour la modification dans le cas où il est partagé.
+	 * Paramètres modifiables : chemin, infoPVue, pixelImg, partage.
+	 * 
+	 * @param conn Connection SQL
+	 * @param id
+	 * @param newChemin
+	 * @param newInfoPVue
+	 * @param newPixelImg
+	 * @param newPartage
+	 * @throws SQLException
+	 */
+	public static void updateFichierImage(Connection conn, int id, String newChemin, String newInfoPVue, int newPixelImg, boolean newPartage) throws SQLException {
+		
+		FichierImage leFichierImage = selectAll(conn, "idFichier="+id).get(0);
+		if (isSharedAndUsedBySomeone(conn, id)) {
+			update(conn,
+					leFichierImage.getIdFichier(),
+					leFichierImage.getIdUser(),
+					leFichierImage.getChemin(),
+					leFichierImage.getInfoPVue(),
+					leFichierImage.getPixelImg(),
+					leFichierImage.isPartage(),
+					leFichierImage.getDateUtilisation(),
+					true,
+					leFichierImage.isFileAttSuppr());
+		} else {
+			update(conn,
+					leFichierImage.getIdFichier(),
+					leFichierImage.getIdUser(),
+					newChemin,
+					newInfoPVue,
+					newPixelImg,
+					newPartage,
+					leFichierImage.getDateUtilisation(),
+					true,
+					leFichierImage.isFileAttSuppr());
+		}
+	}
+	
+	
+	
+	/**
 	 * Supprime un FichierImage d'un certain idFichier de la base.
+	 * @param conn
+	 * @param id
+	 * @throws SQLException
+	 */
+	private static void delete(Connection conn, int id) throws SQLException {
+
+		Statement state = conn.createStatement();
+		state.executeUpdate("DELETE FROM FichierImage WHERE idFichier="+id+";");
+	}
+	
+
+	/**
+	 * Supprime un FichierImage d'un certain idFichier de la base.
+	 * Cette méthode vérifie si le FichierImage est éligible pour la suppression dans le cas où il est partagé.
 	 * 
 	 * @param conn Connection SQL
 	 * @param id id fichier
 	 * @throws SQLException 
 	 */
 	public static void deleteFichierImage(Connection conn, int id) throws SQLException {
-
-		Statement state = conn.createStatement();
-		state.executeUpdate("DELETE FROM FichierImage WHERE idFichier="+id+";");
+		
+		FichierImage leFichierImage = selectAll(conn, "idFichier="+id).get(0);
+		if (isSharedAndUsedBySomeone(conn, id)) {
+			update(conn,
+					leFichierImage.getIdFichier(),
+					leFichierImage.getIdUser(),
+					leFichierImage.getChemin(),
+					leFichierImage.getInfoPVue(),
+					leFichierImage.getPixelImg(),
+					leFichierImage.isPartage(),
+					leFichierImage.getDateUtilisation(),
+					leFichierImage.isFileAttModif(),
+					true);
+		} else {
+			delete(conn, id);
+		}
 	}
-	
-	
+
+
+	/**
+	 * Vérifie si un FichierImage est partagé et utilisé par quelqu'un d'autre à partir de l'id fichier.
+	 * 
+	 * @param conn
+	 * @param id
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static boolean isSharedAndUsedBySomeone(Connection conn, int id) throws SQLException {
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT count(Impression.id_user) FROM FichierImage NATURAL JOIN Photo NATURAL JOIN Impression_Photo NATURAL JOIN Impression WHERE idFichier="+id+";");
+		result.next();
+		return (result.getInt(0) > 1);
+	}
+
+
 	/**
 	 * Retourne les objets FichierImage construits à partir d'un résultat de requête.
 	 * 
@@ -219,7 +305,7 @@ public class FichierImageDAO {
 	 * @throws SQLException
 	 */
 	public static void uploadFichierImage(Connection conn, int idUser, String chemin, String infoPVue, int pixelImg) throws SQLException {
-		addFichierImage(conn, idUser, chemin, infoPVue, pixelImg, false, Date.valueOf(today()), false, false);
+		insertFichierImage(conn, idUser, chemin, infoPVue, pixelImg, false, Date.valueOf(today()), false, false);
 
 	}
 	
