@@ -18,12 +18,12 @@ public class AlbumDAO {
 	}
 	
 	/**
-	 * Sélectionne tous les albums avec des conditions paramétrées.
+	 * Sï¿½lectionne tous les albums avec des conditions paramï¿½trï¿½es.
 	 * 
 	 * @param conn Connection SQL
-	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
+	 * @param condition chaï¿½ne de caractï¿½res formatï¿½ comme suit : "condition1 {AND condition2}"
 	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
-	 * @return ArrayList contenant les objets Calendrier sélectionnés
+	 * @return ArrayList contenant les objets Calendrier sï¿½lectionnï¿½s
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Album> selectAll(Connection conn, String condition) throws SQLException {
@@ -70,10 +70,10 @@ public class AlbumDAO {
 	}
 	
 	public static ArrayList<Album> getAlbums(ResultSet result) {
-		ArrayList<Album> Album = new ArrayList<Album>();
+		ArrayList<Album> albums = new ArrayList<Album>();
 		try {
 			while (result.next()) {
-				Album.add(new Album(
+				albums.add(new Album(
 					result.getInt("idImp"),
 					result.getInt("photoCouv"),
 					result.getString("titreCouv")
@@ -84,6 +84,6 @@ public class AlbumDAO {
 			e.printStackTrace();
 			return null;
 		}
-		return Album;
+		return albums;
 	}
 }

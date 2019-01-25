@@ -17,12 +17,12 @@ public class CadreDAO {
 	}
 	
 	/**
-	 * Sélectionne tous les cadres avec des conditions paramétrées.
+	 * Sï¿½lectionne tous les cadres avec des conditions paramï¿½trï¿½es.
 	 * 
 	 * @param conn Connection SQL
-	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
+	 * @param condition chaï¿½ne de caractï¿½res formatï¿½ comme suit : "condition1 {AND condition2}"
 	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
-	 * @return ArrayList contenant les objets Calendrier sélectionnés
+	 * @return ArrayList contenant les objets Calendrier sï¿½lectionnï¿½s
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Cadre> selectAll(Connection conn, String condition) throws SQLException {
@@ -69,7 +69,7 @@ public class CadreDAO {
 	
 	
 	/**
-	 * Modifie un cadre d'un idImp donné dans la base.
+	 * Modifie un cadre d'un idImp donnï¿½ dans la base.
 	 * 
 	 * @param id id impression
 	 * @param modele modele
@@ -86,7 +86,7 @@ public class CadreDAO {
 	
 	
 	/**
-	 * Supprime un cadre d'un idImp donné de la base.
+	 * Supprime un cadre d'un idImp donnï¿½ de la base.
 	 * 
 	 * @param id id impression
 	 * @throws SQLException 
@@ -101,10 +101,10 @@ public class CadreDAO {
 	}
 	
 	public static ArrayList<Cadre> getCadres(ResultSet result) {
-		ArrayList<Cadre> cadre = new ArrayList<Cadre>();
+		ArrayList<Cadre> cadres = new ArrayList<Cadre>();
 		try {
 			while (result.next()) {
-				cadre.add(new Cadre(
+				cadres.add(new Cadre(
 					ModeleCadre.valueOf(result.getString("modele")),
 					result.getInt("idImp")
 				));
@@ -113,7 +113,7 @@ public class CadreDAO {
 			e.printStackTrace();
 			return null;
 		}
-		return cadre;
+		return cadres;
 	}
 
 	

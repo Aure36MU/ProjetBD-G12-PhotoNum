@@ -192,17 +192,17 @@ public class ArticleDAO {
      * @throws SQLException
      */
 	public static ArrayList<Article> getArticles(ResultSet result) throws SQLException {
-        ArrayList<Article> Articles = new ArrayList<Article>();
+        ArrayList<Article> articles = new ArrayList<Article>();
 
         while (result.next()) {
-            Articles.add(new Article(
+            articles.add(new Article(
                     result.getInt("idArt"),
                     result.getInt("prix"),
                     result.getInt("qte"),
                     result.getInt("idImp")
             ));
         }
-        return Articles;
+        return articles;
 	}
 	public void AjoutAuPanier (Connection conn,int idIM) throws SQLException {
 		
