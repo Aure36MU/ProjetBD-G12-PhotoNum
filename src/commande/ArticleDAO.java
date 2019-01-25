@@ -44,8 +44,6 @@ public class ArticleDAO {
 
 	public static ArrayList<Article> selectAll(Connection conn) throws SQLException {
 
-        conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Article;");
         
@@ -64,8 +62,6 @@ public class ArticleDAO {
      */
     public static ArrayList<Article> selectAll(Connection conn, String condition) throws SQLException {
 
-        conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Article WHERE "+condition+";");
         return getArticles(result);
@@ -77,17 +73,14 @@ public class ArticleDAO {
      * Partie de la base exportable dans une zone de stockage
      *
      * @param conn Connection SQL
-     * @param condition cha�ne de caract�res format� comme suit : "condition1 {AND condition2}"
      * Exemple : "foo=1 AND bar='bar' AND truc<>42"
      * @return ArrayList contenant les objets Article s�lectionn�s
      * @throws SQLException
      */
     public static ArrayList<Article> selectEnvoyer(Connection conn) throws SQLException {
 
-        conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Article WHERE statut='envoy�';");
+        ResultSet result = state.executeQuery("SELECT * FROM Article NATURAL JOIN Commande WHERE statutCommande='ENVOYE';");
         return getArticles(result);
 
     }
@@ -101,8 +94,6 @@ public class ArticleDAO {
      * @throws SQLException
      */
     public static ArrayList<Article> selectAllFromCommande(Connection conn, int id) throws SQLException {
-
-        conn.setAutoCommit(true);
 
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Article WHERE idComm="+id+";");
@@ -120,11 +111,9 @@ public class ArticleDAO {
      */
     public static ArrayList<Article> selectAllFromPanier(Connection conn, int idUser) throws SQLException {
 
-        conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Article a INNER JOIN Commande c ON (a.idComm = c.idComm) "
-        									+ "WHERE c.statut = 'BROUILLON' AND c.idUser = '" +idUser+ "');");
+        									+ "WHERE c.statutCommande = 'BROUILLON' AND c.idUser = '" +idUser+ "');");
         return getArticles(result);
 
     }

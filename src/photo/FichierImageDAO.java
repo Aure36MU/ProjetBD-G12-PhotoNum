@@ -52,8 +52,6 @@ public class FichierImageDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<FichierImage> selectAll(Connection conn) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM FichierImage;");
@@ -72,9 +70,6 @@ public class FichierImageDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<FichierImage> selectAll(Connection conn, String condition) throws SQLException {
-			
-
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE "+condition+";");
@@ -92,8 +87,6 @@ public class FichierImageDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<FichierImage> selectAllFromUser(Connection conn, int id) throws SQLException {
-
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE idUser="+id+";");
@@ -121,8 +114,6 @@ public class FichierImageDAO {
 	 */
 	public static void addFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
 			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
-
-		conn.setAutoCommit(true);
 
 		PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
 		state.setInt(1, getHigherIdFichier(conn)+1);
@@ -157,8 +148,6 @@ public class FichierImageDAO {
 	public static void updateFichierImage(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,
 			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
 
-		conn.setAutoCommit(true);
-
 		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idUser=?, chemin=?, infoPVue=?, pixelImg=?, partage=?, dateUtilisation=?, fileAttModif=?, fileAttSuppr=?) WHERE idFichier=?;");
 		state.setInt(1, idUser);
 		state.setString(2, chemin);
@@ -182,8 +171,6 @@ public class FichierImageDAO {
 	 * @throws SQLException 
 	 */
 	public static void deleteFichierImage(Connection conn, int id) throws SQLException {
-
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM FichierImage WHERE idFichier="+id+";");

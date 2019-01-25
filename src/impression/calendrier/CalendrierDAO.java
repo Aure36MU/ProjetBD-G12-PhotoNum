@@ -20,8 +20,6 @@ public class CalendrierDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Calendrier> selectAll(Connection conn) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Calendrier;");
@@ -40,9 +38,6 @@ public class CalendrierDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Calendrier> selectAll(Connection conn, String condition) throws SQLException {
-			
-
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Calendrier WHERE "+condition+";");
@@ -60,14 +55,12 @@ public class CalendrierDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Calendrier> selectAllFromUser(Connection conn, int id) throws SQLException {
-		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Calendrier JOIN Impression ON (Calendrier.idImp = Impression.idImp) WHERE Impression.idUser="+id+";");
 		return getCalendriers(result);
 	}
 	
 	public static ArrayList<Calendrier> selectAllFromUserWait(Connection conn, int id) throws SQLException {
-        conn.setAutoCommit(true);
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Calendrier') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Calendrier");
         return getCalendriers(result);
@@ -81,8 +74,6 @@ public class CalendrierDAO {
 	 * @throws SQLException 
 	 */
 	public static void insertCalendrier(Connection conn, int id, String modeleCalendrier) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Calendrier VALUES("+id+", '"+modeleCalendrier+"');");
@@ -98,8 +89,6 @@ public class CalendrierDAO {
 	 * @throws SQLException 
 	 */
 	public static void updateCalendrier(Connection conn, int id, String modeleCalendrier) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("UPDATE Calendrier SET modeleCalendrier='"+modeleCalendrier+"' WHERE idImp="+id+";");
@@ -114,8 +103,6 @@ public class CalendrierDAO {
 	 * @throws SQLException 
 	 */
 	public static void deleteCalendrier(Connection conn, int id) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM Calendrier WHERE idImp="+id+";");

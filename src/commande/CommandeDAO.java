@@ -20,8 +20,6 @@ public class CommandeDAO {
 	
 		public static ArrayList<Commande> selectAll(Connection conn) throws SQLException {
 
-	        conn.setAutoCommit(true);
-
 	        Statement state = conn.createStatement();
 	        ResultSet result = state.executeQuery("SELECT * FROM Commande;");
 	        
@@ -38,8 +36,6 @@ public class CommandeDAO {
 	     * @throws SQLException
 	     */
 	    public static ArrayList<Commande> selectAll(Connection conn, String condition) throws SQLException {
-
-	        conn.setAutoCommit(true);
 
 	        Statement state = conn.createStatement();
 	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE "+condition+";");
@@ -59,10 +55,8 @@ public class CommandeDAO {
 	     */
 	    public static ArrayList<Commande> selectEnvoyer(Connection conn) throws SQLException {
 
-	        conn.setAutoCommit(true);
-
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statut='ENVOYE';");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='ENVOYE';");
 	        return getCommandes(result);
 
 	    }
@@ -76,8 +70,6 @@ public class CommandeDAO {
 	     * @throws SQLException
 	     */
 	    public static ArrayList<Commande> selectAllFromUser(Connection conn, int id) throws SQLException {
-
-	        conn.setAutoCommit(true);
 
 	        Statement state = conn.createStatement();
 	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+id+";");
@@ -103,7 +95,7 @@ public class CommandeDAO {
 	    	conn.setAutoCommit(false);
 	    	
 	    	Statement state = conn.createStatement();
-	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statut='BROUILLON';");
+	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON';");
 	    	
 	    	if (result.next()) { //Il existe d�j� une commande
 	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp+";");

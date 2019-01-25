@@ -28,9 +28,6 @@ public class TirageDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Tirage> selectAll(Connection conn, String condition) throws SQLException {
-			
-
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Tirage WHERE "+condition+";");
@@ -47,7 +44,6 @@ public class TirageDAO {
 	}
 	
 	public static ArrayList<Tirage> selectAllFromUserWait(Connection conn, int id) throws SQLException {
-        conn.setAutoCommit(true);
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Tirage') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Tirage");
         return getTirages(result);
@@ -60,8 +56,6 @@ public class TirageDAO {
 	 * @throws SQLException 
 	 */
 	public static void insertTirage(Connection conn, int id) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Tirage VALUES("+id+");");
@@ -83,8 +77,6 @@ public class TirageDAO {
 	 * @throws SQLException 
 	 */
 	public static void deleteTirage(Connection conn, int id) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM Tirage WHERE idImp="+id+";");
