@@ -9,9 +9,9 @@ public class Commande {
 	int idCodeP;
 	Date dateC;
 	ModeLivraison modeLivraison;
-	Statut statut;
+	StatutCommande statut;
 	
-	public Commande(int idcommande, int idutilisateur, int idcodepromo, Date datecommande, ModeLivraison modelivraison, Statut statut) {
+	public Commande(int idcommande, int idutilisateur, int idcodepromo, Date datecommande, ModeLivraison modelivraison, StatutCommande statut) {
 		this.idComm = idcommande;
 		this.idUser = idutilisateur;
 		this.idCodeP = idcodepromo;
@@ -60,11 +60,11 @@ public class Commande {
 		this.modeLivraison = modeLivraison;
 	}
 
-	public Statut getStatut() {
+	public StatutCommande getStatut() {
 		return statut;
 	}
 
-	public void setStatut(Statut statut) {
+	public void setStatut(StatutCommande statut) {
 		this.statut = statut;
 	}
 

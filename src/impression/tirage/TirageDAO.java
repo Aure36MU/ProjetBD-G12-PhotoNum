@@ -19,12 +19,12 @@ public class TirageDAO {
 	}
 	
 	/**
-	 * Sélectionne tous les tirages avec des conditions paramétrées.
+	 * Sï¿½lectionne tous les tirages avec des conditions paramï¿½trï¿½es.
 	 * 
 	 * @param conn Connection SQL
-	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
+	 * @param condition chaï¿½ne de caractï¿½res formatï¿½ comme suit : "condition1 {AND condition2}"
 	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
-	 * @return ArrayList contenant les objets Calendrier sélectionnés
+	 * @return ArrayList contenant les objets Calendrier sï¿½lectionnï¿½s
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Tirage> selectAll(Connection conn, String condition) throws SQLException {
@@ -70,14 +70,14 @@ public class TirageDAO {
 	
 	
 	/**
-	 * updateTirage() : est inutile car il n'y a aucun attribut à modifier à part l'idImp
+	 * updateTirage() : est inutile car il n'y a aucun attribut ï¿½ modifier ï¿½ part l'idImp
 	 * 
 	 */
 	public static void updateTirage() {}
 	
 	
 	/**
-	 * Supprime un tirage d'un idImp donné de la base.
+	 * Supprime un tirage d'un idImp donnï¿½ de la base.
 	 * 
 	 * @param id id impression
 	 * @throws SQLException 
@@ -93,10 +93,10 @@ public class TirageDAO {
 	
 	
 	public static ArrayList<Tirage> getTirages(ResultSet result) {
-		ArrayList<Tirage> Tirage = new ArrayList<Tirage>();
+		ArrayList<Tirage> tirages = new ArrayList<Tirage>();
 		try {
 			while (result.next()) {
-				Tirage.add(new Tirage(
+				tirages.add(new Tirage(
 					result.getInt("idImp")
 				));
 			}
@@ -104,7 +104,7 @@ public class TirageDAO {
 			e.printStackTrace();
 			return null;
 		}
-		return Tirage;
+		return tirages;
 	}
 
 }
