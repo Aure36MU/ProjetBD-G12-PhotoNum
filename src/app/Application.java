@@ -3,15 +3,17 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
 import src.commande.Article;
 import src.commande.ArticleDAO;
+import src.commande.CatalogueDAO;
 import src.commande.CommandeDAO;
+import src.commande.Stat;
 import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
 import src.impression.Format;
 import src.impression.ImpressionDAO;
+import src.impression.Modele;
 import src.impression.Qualite;
 import src.impression.Type;
 import src.photo.FichierImageDAO;
@@ -25,14 +27,14 @@ public class Application {
 	static String PASSWD;
 	static Connection c; 
 
-	/* TODO se r�f�rer � StatutUtilisateur.definir() qui fait essentiellement la m�me chose en interactif
+	/* TODO se référer à StatutUtilisateur.definir() qui fait essentiellement la même chose en interactif
 	public static StatutUtilisateur choixStatut(){
 		System.out.println("Vous pouvez vous inscrire en temps que client ou en tant que gestionnaire.");
 		return StatutUtilisateur.valueOf(LectureClavier.lireChaine("CLIENT ou GESTIONNAIRE ?"));
 	}
 	*/
 
-	public static Utilisateur inscription(Connection c) throws SQLException{
+	private static Utilisateur inscription(Connection c) throws SQLException{
 		System.out.println("***********************");
 		System.out.println("      INSCRIPTION ");
 		System.out.println("***********************");
@@ -48,7 +50,7 @@ public class Application {
 		return UtilisateurDAO.createUtilisateur(c,  nom,  prenom,  mdp,  mail,  statut);
 	}	
 
-	public static Utilisateur connexion(Connection c) throws SQLException{
+	private static Utilisateur connexion(Connection c) throws SQLException{
 		System.out.println("**********************");
 		System.out.println("      CONNEXION ");
 		System.out.println("**********************");
@@ -72,7 +74,7 @@ public class Application {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Retourner au menu précédent.");
+			System.out.println("1 : Retourner au menu precedent.");
 			System.out.println("2 : Consulter la liste de mes fichiers de base.");
 			System.out.println("3 : Consulter la liste de mes photos.");
 			System.out.println("4 : Ajouter un nouveau fichier.");
@@ -81,7 +83,7 @@ public class Application {
 			switch(choixAction){ 
 			case 1:  
 				back = true;
-				System.out.println("retour au menu précédent");
+				System.out.println("retour au menu precedent");
 				break;
 			case 2:
 				FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser());
@@ -112,7 +114,7 @@ public class Application {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Retourner au menu précédent.");
+			System.out.println("1 : Retourner au menu precedent.");
 			System.out.println("2 : Consulter la liste de mes impressions.");
 			System.out.println("3 : Creer une nouvelle impression.");
 			int choixAction = LectureClavier.lireEntier("4 : .");
@@ -120,7 +122,7 @@ public class Application {
 			switch(choixAction){ 
 			case 1:  
 				back = true;
-				System.out.println("retour au menu précédent");
+				System.out.println("retour au menu precedent");
 				break;
 			case 2:
 				ImpressionDAO.selectAllFromUserImpressionWait(c,utilisateur.getIdUser());
@@ -142,8 +144,8 @@ public class Application {
 	
 	
 	private static void afficherArticles(ArrayList<Article> panier) {
-		// TODO:afficher les tostring() de chaque article en plus du nom de l'impressions associée a l'article en question.
-		//ne pas oublier le formatage avec un titre "votre panier" et des ptites étoiles
+		// TODO:afficher les tostring() de chaque article en plus du nom de l'impressions associee a l'article en question.
+		//ne pas oublier le formatage avec un titre "votre panier" et des ptites etoiles
 		
 	}
 	
@@ -175,68 +177,152 @@ public class Application {
 					break;
 				default : System.out.println("Veuillez faire un choix. ");
 				}
-
-				while(utilisateur != null){
-					System.out.println("*****************************************************************************");
-					System.out.println("Que voulez vous faire ?");
-					System.out.println("1 : Se deconnecter.");
-					System.out.println("2 : Gerer mes impressions.");
-					System.out.println("3 : Gerer mes fichiers images.");
-					System.out.println("4 : Voir le contenu de mon panier.");
-					int choixAction = LectureClavier.lireEntier("5 : voir mon historique de commandes.");
-
-					switch(choixAction){ 
-					case 1:  
-						utilisateur = null;
-						System.out.println("Vous avez ete deconnecte");
-						break;
-					case 2:
-						gererImpression(c,utilisateur);
-						break;
-					case 3:
-						gererFichierImages(c,utilisateur);
-						break;
-					case 4:
-						ArrayList<Article> panier = new ArrayList<Article>();
-						panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
-						if(panier.isEmpty()){  System.out.println("Vous n'avez aucun article dans votre panier"); }
-						else{
-							afficherArticles(panier);
-						}
-						
-						break;
-					case 5:
-						CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());		
-						break;
-					default : System.out.println("Veuillez faire un choix. ");
-					}
-				}	
+				if(utilisateur.getStatut() == StatutUtilisateur.valueOf("STATUT")){
+					menuClient(c, utilisateur);
+				}else {
+					menuGestionnaire(c, utilisateur);
+				}
 			} 
-
-
-
-			/*
-			 * Partie de code pour charger un jeu de test 
-			 * 
-			 * charger fichier... chaque requete sur une ligne
-			 * for ([all lines in file]) {
-			 * String line = [une ligne];
-			 * String keyword = line.split(" ")[0];
-			 * switch (keyword) {
-			 * 	case "INSERT": smth.executeUpdate(line);
-			 * 	case "UPDATE": smth.executeUpdate(line);
-			 * 	case "SELECT": smth.executeQuery(line);
-			 * 	case "DELETE": smth.executeUpdate(line);
-			 * }
-			 * }
-			 */
+			c.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	private static void menuClient(Connection c, Utilisateur utilisateur) throws SQLException {
+		while(utilisateur != null){
+			System.out.println("*****************************************************************************");
+			System.out.println("Que voulez vous faire ?");
+			System.out.println("1 : Se deconnecter.");
+			System.out.println("2 : Gerer mes impressions.");
+			System.out.println("3 : Gerer mes fichiers images.");
+			System.out.println("4 : Voir le contenu de mon panier.");
+			int choixAction = LectureClavier.lireEntier("5 : voir mon historique de commandes.");
 
+			switch(choixAction){ 
+				case 1:  
+					utilisateur = null;
+					System.out.println("Vous avez ete deconnecte");
+					break;
+				case 2:
+					gererImpression(c,utilisateur);
+					break;
+				case 3:
+					gererFichierImages(c,utilisateur);
+					break;
+				case 4:
+					ArrayList<Article> panier = new ArrayList<Article>();
+					panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+					if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); }
+					else{
+						afficherArticles(panier);
+					}
+					
+					break;
+				case 5:
+					CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());		
+					break;
+				default : System.out.println("Veuillez faire un choix. ");
+			}
+		}
+	}
 
+	private static void menuGestionnaire(Connection c, Utilisateur utilisateur) throws SQLException {
+		while(utilisateur != null){
+			System.out.println("*****************************************************************************");
+			System.out.println("Que voulez vous faire ?");
+			System.out.println("1 : Se deconnecter.");
+			System.out.println("2 : Enregistrer une livraison");
+			System.out.println("3 : Modifier le prix d'un article du catalogue.");
+			System.out.println("4 : Consulter la liste des clients.");
+			System.out.println("5 : Gerer les commandes clients.");
+			System.out.println("7 : Voir la liste des fichiers et le nom de leur propriétaire.");
+			int choixAction = LectureClavier.lireEntier("8 : Voir les statistiques de vente ");
+
+			switch(choixAction){ 
+				case 1:  
+					utilisateur = null;
+					System.out.println("Vous avez ete deconnecte");
+					break;
+				case 2:
+					String type = Type.definir();
+					String format = Format.definir();
+					String modele = Modele.definir();
+					int qteLivraison = LectureClavier.lireEntier("Combien en avez vous reçus ?");
+					CatalogueDAO.simulerLivraison( c,  qteLivraison,  type,  format,  modele);
+					break;
+				case 3:
+					type = Type.definir();
+					format = Format.definir();
+					modele = Modele.definir();
+					int newPrix = LectureClavier.lireEntier("Nouveau prix ?");
+					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
+					break;
+				case 4:
+					afficherUtilisateur(UtilisateurDAO.selectAllUserFromStatut(c, StatutUtilisateur.CLIENT));
+					//fonction gestion clients
+					break;
+				case 5:
+					gererCommandeClients(c);
+					break;
+				case 6:
+					
+					break;
+				case 7:
+					
+					break;
+				case 8:
+					afficherStats(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
+					break;
+				default : System.out.println("Veuillez faire un choix. ");
+			}
+		}
+	}
+	
+	private static void gererCommandeClients(Connection c) {
+		boolean back = false;
+		while(!back){
+			System.out.println("*****************************************************************************");
+			System.out.println("Que voulez vous faire ?");
+			System.out.println("1 : Retourner au menu precedent.");
+			System.out.println("2 : Consulter la liste des commandes clients en cours.");
+			System.out.println("3 : Creer une nouvelle impression.");
+			int choixAction = LectureClavier.lireEntier("4 : .");
+
+			switch(choixAction){ 
+			case 1:  
+				back = true;
+				System.out.println("retour au menu precedent");
+				break;
+			case 2:
+				break;
+			case 3:
+				
+				break;
+			case 4:
+				break;
+			default : System.out.println("Veuillez faire un choix. ");
+			}
+	}
+
+	private static void afficherStats(ArrayList<Stat> stat) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void afficherUtilisateur(ArrayList<Utilisateur> users) {
+		// TODO:afficher les tostring() de chaque user avec les ptites etoiles
+		
+	}
+	
+	
+	/*
+	 * Consulter tous utilisateurs
+Supprimer ⇔ désactiver un client
+Consulter tous fichiers images et leur createur
+Suppression fichiers images 
+Consulter commandes (filtrer par article → filtrage dans ArticleDAO)
+1*/
 
 
 

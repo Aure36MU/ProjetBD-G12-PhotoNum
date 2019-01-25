@@ -8,22 +8,7 @@ import java.util.ArrayList;
 
 public class CatalogueDAO {
 
-	/**
-	 * S�lectionne tous les Catalogues (quels que soient leurs mod�les) sans conditions.
-	 *
-	 * @param conn Connection SQL
-	 * @return ArrayList contenant tous les objets Catalogue
-	 * @throws SQLException
-	 */
 
-	public static ArrayList<Catalogue> selectAll(Connection conn) throws SQLException {
-
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Catalogue;");
-        
-        return getCatalogues(result);
-
-    }
 	/*---------------------------------------------------------------------------------------------------
 	public static ArrayList<Catalogue> selectStats(Connection conn) throws SQLException {
 
@@ -44,12 +29,25 @@ public class CatalogueDAO {
      * @throws SQLException
      */
     public static ArrayList<Catalogue> selectAll(Connection conn, String condition) throws SQLException {
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Catalogue WHERE "+condition+";");
         return getCatalogues(result);
-
     }
+	/**
+	 * S�lectionne tous les Catalogues (quels que soient leurs mod�les) sans conditions.
+	 *
+	 * @param conn Connection SQL
+	 * @return ArrayList contenant tous les objets Catalogue
+	 * @throws SQLException
+	 */
+
+	public static ArrayList<Catalogue> selectAll(Connection conn) throws SQLException {
+        Statement state = conn.createStatement();
+        ResultSet result = state.executeQuery("SELECT * FROM Catalogue;");
+        return getCatalogues(result);
+    }
+    
+    
     
     public static void updateCataloguePrix(Connection c, int prix, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
