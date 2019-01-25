@@ -1,5 +1,7 @@
 package src.app;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import src.commande.Article;
@@ -12,6 +14,8 @@ import src.impression.Format;
 import src.impression.ImpressionDAO;
 import src.impression.Qualite;
 import src.impression.Type;
+import src.photo.FichierImageDAO;
+import src.photo.PhotoDAO;
 
 
 
@@ -61,7 +65,7 @@ public class Application {
 	
 	
 	//revoir l'organisation de ce menu et 
-	private static void gererFichierImages(Connection c, Utilisateur utilisateur) {
+	private static void gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -78,10 +82,18 @@ public class Application {
 				System.out.println("retour au menu précédent");
 				break;
 			case 2:
+				FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser());
 				break;
 			case 3:
+				PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 				break;
 			case 4:
+				String chemin= LectureClavier.lireChaine("Ou ce trouve votre fichier? ");
+				String infoPVue= LectureClavier.lireChaine("Commentaire sur le fichier: ");
+				int pixelImg= LectureClavier.lireEntier("Quel est la taille en pixell : ");	
+				Boolean partage= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
+				String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
+				FichierImageDAO.addFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage, Date.valueOf(dateUse) , false, false);
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
