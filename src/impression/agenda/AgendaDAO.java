@@ -75,12 +75,7 @@ public class AgendaDAO {
 	 * @param modele modele
 	 * @throws SQLException 
 	 */
-
-	/*public static void addAgenda(Connection conn, int id, ModeleAgenda modele, TypeAgenda type) throws SQLException {*/
-
 	public static void insertAgenda(Connection conn, int id, ModeleAgenda modele, TypeAgenda type) throws SQLException {
-		
-
 		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+modele.toString()+"');");
