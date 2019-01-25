@@ -1,17 +1,21 @@
 package src.app;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import src.commande.Article;
 import src.commande.ArticleDAO;
 import src.commande.CommandeDAO;
-import src.compte.Statut;
+import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
 import src.impression.Format;
 import src.impression.ImpressionDAO;
 import src.impression.Qualite;
 import src.impression.Type;
+import src.photo.FichierImageDAO;
+import src.photo.PhotoDAO;
 
 
 
@@ -21,10 +25,12 @@ public class Application {
 	static String PASSWD;
 	static Connection c; 
 
-	public static Statut choixStatut(){
+	/* TODO se référer à StatutUtilisateur.definir() qui fait essentiellement la même chose en interactif
+	public static StatutUtilisateur choixStatut(){
 		System.out.println("Vous pouvez vous inscrire en temps que client ou en tant que gestionnaire.");
-		return Statut.valueOf(LectureClavier.lireChaine("CLIENT ou GESTIONNAIRE ?"));
+		return StatutUtilisateur.valueOf(LectureClavier.lireChaine("CLIENT ou GESTIONNAIRE ?"));
 	}
+	*/
 
 	public static Utilisateur inscription(Connection c) throws SQLException{
 		System.out.println("***********************");
@@ -32,7 +38,7 @@ public class Application {
 		System.out.println("***********************");
 		System.out.println("Bienvenue sur le site PhotoNum ! Nous allons vous demander quelques infos pour la creation de votre compte");
 
-		Statut statut= choixStatut();			
+		String statut= StatutUtilisateur.definir();			
 		String mail= LectureClavier.lireChaine("Votre adresse mail : ");	
 		String mdp= LectureClavier.lireChaine("Votre mot de passe : ");	
 		String nom= LectureClavier.lireChaine("Votre nom : ");
@@ -61,7 +67,7 @@ public class Application {
 	
 	
 	//revoir l'organisation de ce menu et 
-	private static void gererFichierImages(Connection c, Utilisateur utilisateur) {
+	private static void gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -78,10 +84,18 @@ public class Application {
 				System.out.println("retour au menu prÃ©cÃ©dent");
 				break;
 			case 2:
+				FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser());
 				break;
 			case 3:
+				PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 				break;
 			case 4:
+				String chemin= LectureClavier.lireChaine("Ou ce trouve votre fichier? ");
+				String infoPVue= LectureClavier.lireChaine("Commentaire sur le fichier: ");
+				int pixelImg= LectureClavier.lireEntier("Quel est la taille en pixell : ");	
+				Boolean partage= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
+				String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
+				FichierImageDAO.addFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage, Date.valueOf(dateUse) , false, false);
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
@@ -113,9 +127,9 @@ public class Application {
 				break;
 			case 3:
 				String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
-				Type type= Type.valueOf(LectureClavier.lireChaine("Quel est le type de votre impression?: "));
-				Format format= Format.valueOf(LectureClavier.lireChaine("Quel format souhaitez vous? : "));	
-				Qualite qualite= Qualite.valueOf(LectureClavier.lireChaine("Quel qualité souhaitez vous?: "));
+				String type= Type.definir();
+				String format= Format.definir();
+				String qualite= Qualite.definir();
 				int nbPages= LectureClavier.lireEntier("Combien de pages souhaitez vous?: ");
 				ImpressionDAO.insertImpression(c, nomI, nbPages, utilisateur.getIdUser(), type, format, qualite );
 				break;

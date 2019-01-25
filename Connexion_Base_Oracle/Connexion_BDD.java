@@ -63,7 +63,9 @@ public class Connexion_BDD {
       System.out.println();
       // Perform a database operation 
       try {
-		Scripts("C:\\Users\\P61SDEMVID2\\Documents\\projets\\ABD -Projet Photo\\ProjetBD-G12-PhotoNum\\Connexion_Base_Oracle\\nettoyageBase.sql",connection);
+
+		Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
+
       } catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -90,7 +92,6 @@ public class Connexion_BDD {
 		  BufferedReader in = new BufferedReader(new FileReader(aSQLScriptFilePath));
 		  String str;
 		  while ((str = in.readLine()) != null) {
-			  System.out.println(str);
 			  try {
 				  Requete(connection,str);
 					System.out.println("requete effectuée");
@@ -98,6 +99,7 @@ public class Connexion_BDD {
 				  System.err.println("Failed to Execute " + aSQLScriptFilePath +". The error is "+ e.getMessage());
 				  System.err.println("requete en erreur :" +str);
 			  }
+
 		  }
 		  in.close();
 

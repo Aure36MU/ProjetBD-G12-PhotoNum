@@ -5,19 +5,13 @@ import src.impression.Impression;
 
 public class Agenda extends Impression {
 	int idImp;
-	ModeleAgenda modele;
-	TypeAgenda type;
+	Ornement ornement;
+	ModeleAgenda modeleAgenda;
 
-	public Agenda(int idimpression, ModeleAgenda modele , TypeAgenda type) {
+	public Agenda(int idimpression, Ornement ornement , ModeleAgenda modeleAgenda) {
 		this.idImp = idimpression;
-		this.modele = modele;
-		this.type = type;
-	}
-	public ModeleAgenda getModele() {
-		return modele;
-	}
-	public void setModele(ModeleAgenda modele) {
-		this.modele = modele;
+		this.ornement = ornement;
+		this.modeleAgenda = modeleAgenda;
 	}
 
 	public int getIdImp() {
@@ -27,10 +21,17 @@ public class Agenda extends Impression {
 		this.idImp = idImp;
 	}
 	
-	public TypeAgenda gettype() {
-		return type;
+	public Ornement getOrnement() {
+		return ornement;
 	}
-	public void setType(TypeAgenda type) {
-		this.type = type;
+	public void setOrnement(Ornement ornement) {
+		this.ornement = ornement;
+	}
+	
+	public ModeleAgenda getModeleAgenda() {
+		return modeleAgenda;
+	}
+	public void setModeleAgenda(ModeleAgenda modeleAgenda) {
+		this.modeleAgenda = modeleAgenda;
 	}
 }

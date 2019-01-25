@@ -46,10 +46,10 @@ public class AdresseDAO {
 	}
 	
 	public static ArrayList<Adresse> getAdresses(ResultSet result) {
-		ArrayList<Adresse> Adresse = new ArrayList<Adresse>();
+		ArrayList<Adresse> adresse = new ArrayList<Adresse>();
 		try {
 			while (result.next()) {
-				Adresse.add(new Adresse(
+				adresse.add(new Adresse(
 					result.getInt("idAdre"),
 					result.getString("ville"),
 					result.getInt("codePostal"),
@@ -63,6 +63,6 @@ public class AdresseDAO {
 			e.printStackTrace();
 			return null;
 		}
-		return Adresse;
+		return adresse;
 	}
 }

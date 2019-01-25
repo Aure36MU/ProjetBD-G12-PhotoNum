@@ -85,6 +85,7 @@ public class CatalogueDAO {
                     result.getInt("prix"),
                     result.getString("format"),
                     result.getString("modele"),
+                    result.getString("qualite"),
                     result.getInt("qteStock")
             ));
         }

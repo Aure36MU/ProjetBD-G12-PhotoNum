@@ -4,19 +4,19 @@ import src.impression.Impression;
 import src.impression.cadre.ModeleCadre;
 
 public class Cadre extends Impression {
-	ModeleCadre modele;
+	ModeleCadre modeleCadre;
 	int idImp;
 
-	public Cadre(ModeleCadre modele, int idImp){
-		this.modele = modele;
+	public Cadre(ModeleCadre modeleCadre, int idImp){
+		this.modeleCadre = modeleCadre;
 		this.idImp = idImp;
 	}
 	
-	public ModeleCadre getModele() {
-		return modele;
+	public ModeleCadre getModeleCadre() {
+		return modeleCadre;
 	}
-	public void setModele(ModeleCadre modele) {
-		this.modele = modele;
+	public void setModeleCadre(ModeleCadre modeleCadre) {
+		this.modeleCadre = modeleCadre;
 	}
 	
 
