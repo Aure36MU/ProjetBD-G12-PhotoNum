@@ -8,11 +8,18 @@ public enum ModeleCadre {
 	CARBONE;
 	
 	public static String definir() {
-		
-		int choix = LectureClavier.lireEntier("Choisissez un modèle de cadre : 1) BOIS ; 2) ALUMINIUM ; 3) CARBONE ");
-		while (ModeleCadre.values()[choix-1] == null) {
+
+		StringBuilder invite = new StringBuilder("Choisissez un modèle de Cadre : ");
+		int index=1;
+		for(ModeleCadre i : ModeleCadre.values()) {
+			invite.append(index + ") " + i + " ; ");
+			index += 1;
+		}
+		invite.setLength(invite.length()-2);
+		int choix = LectureClavier.lireEntier(""+invite);
+		while (choix > ModeleCadre.values().length || choix <= 0) {
 			if (choix == 0) { return null; }
-			choix = LectureClavier.lireEntier("Choix incorrect. Choisissez un modèle de cadre : 1) BOIS ; 2) ALUMINIUM ; 3) CARBONE ");
+			choix = LectureClavier.lireEntier("Choix incorrect. "+invite);
 		}
 		return ModeleCadre.values()[choix-1].toString();
 	}
