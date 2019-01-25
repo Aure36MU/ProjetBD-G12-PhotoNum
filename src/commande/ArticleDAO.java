@@ -131,9 +131,9 @@ public class ArticleDAO {
     
     
     /**
-     * A partir d'un id impression, id commande et quantité,
-     * retrouve les informations nécessaires sur l'Impression,
-     * vérifie dans le Catalogue le prix de cette Impression et son stock,
+     * A partir d'un id impression, id commande et quantitï¿½,
+     * retrouve les informations nï¿½cessaires sur l'Impression,
+     * vï¿½rifie dans le Catalogue le prix de cette Impression et son stock,
      * puis ajoute un nouvel Article dans la base.
      * 
      * @param conn
@@ -147,16 +147,16 @@ public class ArticleDAO {
     	Impression newImp = ImpressionDAO.selectImpressionFromId(conn, idImp);
     	String newModele = "NULL";
     	/* TODO modifier le switch sur newImp.type par une comparaison d'instances : Calendrier, Agenda, Cadre, [autre].
-    	 * Cela fera une requête à faire en moins dans la base !*/
+    	 * Cela fera une requï¿½te ï¿½ faire en moins dans la base !*/
     	switch (newImp.getType()) {
 		case CALENDRIER:
 			newModele = CalendrierDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModele().toString();
 			break;
 		case AGENDA:
-			newModele = AgendaDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModele().toString();
+			newModele = AgendaDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleAgenda().toString();
 			break;
 		case CADRE:
-			newModele = CadreDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModele().toString();
+			newModele = CadreDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleCadre().toString();
 			break;
 		default:
 			break;
@@ -192,17 +192,17 @@ public class ArticleDAO {
      * @throws SQLException
      */
 	public static ArrayList<Article> getArticles(ResultSet result) throws SQLException {
-        ArrayList<Article> Articles = new ArrayList<Article>();
+        ArrayList<Article> articles = new ArrayList<Article>();
 
         while (result.next()) {
-            Articles.add(new Article(
+            articles.add(new Article(
                     result.getInt("idArt"),
                     result.getInt("prix"),
                     result.getInt("qte"),
                     result.getInt("idImp")
             ));
         }
-        return Articles;
+        return articles;
 	}
 	public void AjoutAuPanier (Connection conn,int idIM) throws SQLException {
 		

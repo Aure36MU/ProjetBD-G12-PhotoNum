@@ -21,7 +21,7 @@ public class UtilisateurDAO {
 		return 0;
 	}
 	
-	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, Statut statut) throws SQLException {
+	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, StatutUtilisateur statut) throws SQLException {
 		Statement stat= c.createStatement();
 		int id = (getHigherId(c)+1);
 		String query= "insert into Utilisateur (idUser, nom , prenom, mdp , mail, active, statut) values ('"+id+"','"+nom+"','"+prenom+"','"+mdp+"','"+mail+"','"+true+"','"+statut+"')";
@@ -93,30 +93,30 @@ public class UtilisateurDAO {
 		stat.executeUpdate(query);
 	}
 	
-	public static void updateUtilisateur(Connection c, int idUtilisateur, String nom, String prenom, String mdp, String email, Statut statut) throws SQLException {
+	public static void updateUtilisateur(Connection c, int idUtilisateur, String nom, String prenom, String mdp, String email, StatutUtilisateur statut) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "update Utilisateur set nom='"+nom+"',prenom='"+prenom+"',mdp='"+mdp+"',email='"+email+"', statut='"+statut+"' where idUser='"+idUtilisateur+"'";
 		stat.executeUpdate(query);
 	}
 	
 	public static ArrayList<Utilisateur> getUtilisateurs(ResultSet result) {
-		ArrayList<Utilisateur> Utilisateurs = new ArrayList<Utilisateur>();
+		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 		try {
 			while (result.next()) {
-				Utilisateurs.add(new Utilisateur(
+				utilisateurs.add(new Utilisateur(
 					result.getInt("idUser"),
 					result.getString("nom"),
 					result.getString("prenom"),
 					result.getString("mdp"),
 					result.getString("email"),
 					result.getBoolean("active"),
-					(Statut)result.getObject("statut")
+					(StatutUtilisateur)result.getObject("statut")
 				));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return Utilisateurs;
+		return utilisateurs;
 	}
 }

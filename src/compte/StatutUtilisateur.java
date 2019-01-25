@@ -1,6 +1,6 @@
 package src.compte;
 
-public enum Statut {
+public enum StatutUtilisateur {
 	GESTIONNAIRE,
 	CLIENT
 }

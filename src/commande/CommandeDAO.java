@@ -88,9 +88,9 @@ public class CommandeDAO {
 	    
 	    /**
 	     * Ajoute un nouvel Article au panier, sous les conditions suivantes :
-	     * -S'il n'existe pas de Commande 'brouillon' sur cet utilisateur, on va la créer (INSERT).
-	     * -La quantité de l'article est connue à l'avance, mettre une valeur de 1 par défaut.
-	     * -Pour une commande existante, si l'idImp de l'article est déjà présent, alors il suffit d'ajouter la quantité voulue à celle-ci (UPDATE).
+	     * -S'il n'existe pas de Commande 'brouillon' sur cet utilisateur, on va la crï¿½er (INSERT).
+	     * -La quantitï¿½ de l'article est connue ï¿½ l'avance, mettre une valeur de 1 par dï¿½faut.
+	     * -Pour une commande existante, si l'idImp de l'article est dï¿½jï¿½ prï¿½sent, alors il suffit d'ajouter la quantitï¿½ voulue ï¿½ celle-ci (UPDATE).
 	     * 
 	     * @param conn
 	     * @param idUser
@@ -105,11 +105,11 @@ public class CommandeDAO {
 	    	Statement state = conn.createStatement();
 	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statut='BROUILLON';");
 	    	
-	    	if (result.next()) { //Il existe déjà une commande
+	    	if (result.next()) { //Il existe dï¿½jï¿½ une commande
 	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp+";");
-	    		if (result.next()) { //Cet article existe déjà dans le panier
+	    		if (result.next()) { //Cet article existe dï¿½jï¿½ dans le panier
 	    			state.executeUpdate("UPDATE Article SET qte= qte+"+qte+";");
-	    		} else { //L'Article est à ajouter dans le panier
+	    		} else { //L'Article est ï¿½ ajouter dans le panier
 	    			try {
 						ArticleDAO.insertArticleFromImpression(conn, idImp, idComm, qte);
 					} catch (Exception e) {
@@ -135,19 +135,19 @@ public class CommandeDAO {
 	     * @throws SQLException
 	     */
 		public static ArrayList<Commande> getCommandes(ResultSet result) throws SQLException {
-	        ArrayList<Commande> Commandes = new ArrayList<Commande>();
+	        ArrayList<Commande> commandes = new ArrayList<Commande>();
 
 	        while (result.next()) {
-	            Commandes.add(new Commande(
+	            commandes.add(new Commande(
 	                    result.getInt("idComm"),
 	                    result.getInt("idUser"),
 	                    result.getInt("idCodeP"),
 	                    (Date) result.getObject("dateC"),
 	                    (ModeLivraison) result.getObject("modeLivraison"),
-	                    (Statut) result.getObject("statut")
+	                    (StatutCommande) result.getObject("statut")
 	            ));
 	        }
-	        return Commandes;
+	        return commandes;
 		}
 
 }
