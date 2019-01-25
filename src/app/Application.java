@@ -95,7 +95,7 @@ public class Application {
 				int pixelImg= LectureClavier.lireEntier("Quel est la taille en pixell : ");	
 				Boolean partage= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
 				String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
-				FichierImageDAO.addFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage, Date.valueOf(dateUse) , false, false);
+				FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage, Date.valueOf(dateUse) , false, false);
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}

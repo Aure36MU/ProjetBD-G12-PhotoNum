@@ -111,7 +111,7 @@ public class PhotoDAO {
 	 * @param retouche
 	 * @throws SQLException
 	 */
-	public static void addPhoto(Connection conn, int idPh, int idFichier, String retouche) throws SQLException {
+	public static void insertPhoto(Connection conn, int idPh, int idFichier, String retouche) throws SQLException {
 
 		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo VALUES (?, ?, ?);");
 		state.setInt(1, idPh);
