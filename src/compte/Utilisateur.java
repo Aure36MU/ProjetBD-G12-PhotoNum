@@ -9,9 +9,9 @@ public class Utilisateur {
 	String mdp;
 	String email;
 	boolean active;
-	Statut statut;
+	StatutUtilisateur statut;
 	
-	public Utilisateur(int idutilisateur, String nom, String prenom, String motdepasse, String adressemail, boolean active, Statut statut) {
+	public Utilisateur(int idutilisateur, String nom, String prenom, String motdepasse, String adressemail, boolean active, StatutUtilisateur statut) {
 		this.idUser = idutilisateur;
 		this.nom = nom;
 		this.prenom = prenom;
@@ -69,11 +69,11 @@ public class Utilisateur {
 		this.active = active;
 	}
 	
-	public void setStatut(Statut statut) {
+	public void setStatut(StatutUtilisateur statut) {
 		this.statut = statut;
 	}
 	
-	public Statut getStatut() {
+	public StatutUtilisateur getStatut() {
 		return statut;
 	}
 
