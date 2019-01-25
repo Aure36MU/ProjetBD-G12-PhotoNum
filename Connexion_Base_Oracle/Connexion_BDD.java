@@ -66,7 +66,7 @@ public class Connexion_BDD {
       //Requete(connection); //juste les requetes
       
       try {
-		Scripts("C:\\Users\\P61SDEMVID2\\Documents\\projets\\ABD -Projet Photo\\ProjetBD-G12-PhotoNum\\Connexion_Base_Oracle\\nettoyageBase.sql",connection);
+		Scripts("C:\\Users\\tguev\\git\\ProjetBD-G12-PhotoNum\\Connexion_Base_Oracle\\nettoyageBase.sql",connection);
 		System.out.println("coucou");
       } catch (IOException e) {
 		// TODO Auto-generated catch block
@@ -95,13 +95,16 @@ public class Connexion_BDD {
 	  	try {
 		  BufferedReader in = new BufferedReader(new FileReader(aSQLScriptFilePath));
 		  String str;
+		  int i=0;
+		  Statement stmt = connection.createStatement();
 		  StringBuffer sb = new StringBuffer();
 		  while ((str = in.readLine()) != null) {
-			  sb.append(str + "\n ");
+			  sb.append(str /*+ "\n "*/);
+			  stmt.executeUpdate(sb.toString());
+			  System.out.println("fuck you: " + i);
+			  i++;
 		  }
 		  in.close();
-		  Statement stmt = connection.createStatement();
-		  stmt.executeUpdate(sb.toString());
 		  isScriptExecuted = true;
 	  	} catch (Exception e) {
 	  	System.err.println("Failed to Execute " + aSQLScriptFilePath +". The error is "+ e.getMessage());
