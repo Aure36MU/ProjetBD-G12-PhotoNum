@@ -62,7 +62,7 @@ public class CommandeDAO {
 	        conn.setAutoCommit(true);
 
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statut='envoye';");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statut='ENVOYE';");
 	        return getCommandes(result);
 
 	    }
@@ -142,9 +142,9 @@ public class CommandeDAO {
 	                    result.getInt("idComm"),
 	                    result.getInt("idUser"),
 	                    result.getInt("idCodeP"),
-	                    (Date) result.getObject("dateC"),
-	                    (ModeLivraison) result.getObject("modeLivraison"),
-	                    (StatutCommande) result.getObject("statut")
+	                    result.getDate("dateC"),
+	                    ModeLivraison.valueOf(result.getString("modeLivraison")),
+	                    StatutCommande.valueOf(result.getString("statut"))
 	            ));
 	        }
 	        return commandes;

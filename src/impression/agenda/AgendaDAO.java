@@ -72,13 +72,14 @@ public class AgendaDAO {
 	 * Ajoute un agenda dans la base.
 	 * 
 	 * @param id id impression
-	 * @param modele modele
+	 * @param ornement ornement d'agenda
+	 * @param modele modele d'agenda
 	 * @throws SQLException 
 	 */
-	public static void insertAgenda(Connection conn, int id, Ornement ornement, ModeleAgenda modeleAgenda) throws SQLException {
+	public static void insertAgenda(Connection conn, int id, String ornement, String modeleAgenda) throws SQLException {
 		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+ornement.toString()+"');");
+		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+ornement+"', '"+modeleAgenda+"');");
 	}
 	
 	
@@ -89,10 +90,10 @@ public class AgendaDAO {
 	 * @param modele modele
 	 * @throws SQLException 
 	 */
-	public static void updateAgenda(Connection conn, int id, Ornement ornement) throws SQLException {
+	public static void updateAgenda(Connection conn, int id, String ornement, String modeleAgenda) throws SQLException {
 		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
-		state.executeUpdate("UPDATE agenda SET modele='"+ornement.toString()+"' WHERE idImp="+id+";");
+		state.executeUpdate("UPDATE agenda SET ornement='"+ornement+"', modeleAgenda='"+modeleAgenda+"' WHERE idImp="+id+";");
 	}
 
     /**

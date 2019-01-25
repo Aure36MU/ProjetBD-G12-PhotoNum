@@ -55,15 +55,15 @@ public class CadreDAO {
 	 * Ajoute un cadre dans la base.
 	 * 
 	 * @param id id impression
-	 * @param modele modele
+	 * @param modeleCadre modele
 	 * @throws SQLException 
 	 */
-	public static void insertCadre(Connection conn, int id, ModeleCadre modele) throws SQLException {
+	public static void insertCadre(Connection conn, int id, String modeleCadre) throws SQLException {
 		
 		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO Cadre VALUES("+id+", '"+modele.toString()+"');");
+		state.executeUpdate("INSERT INTO Cadre VALUES("+id+", '"+modeleCadre+"');");
 		
 	}
 	
@@ -72,15 +72,15 @@ public class CadreDAO {
 	 * Modifie un cadre d'un idImp donn� dans la base.
 	 * 
 	 * @param id id impression
-	 * @param modele modele
+	 * @param modeleCadre modele
 	 * @throws SQLException 
 	 */
-	public static void updateCadre(Connection conn, int id, ModeleCadre modele) throws SQLException {
+	public static void updateCadre(Connection conn, int id, String modeleCadre) throws SQLException {
 		
 		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("UPDATE Cadre SET modele='"+modele.toString()+"' WHERE idImp="+id+";");
+		state.executeUpdate("UPDATE Cadre SET modeleCadre='"+modeleCadre+"' WHERE idImp="+id+";");
 		
 	}
 	

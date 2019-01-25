@@ -21,12 +21,12 @@ public class UtilisateurDAO {
 		return 0;
 	}
 	
-	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, StatutUtilisateur statut) throws SQLException {
+	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, String statut) throws SQLException {
 		Statement stat= c.createStatement();
 		int id = (getHigherId(c)+1);
 		String query= "insert into Utilisateur (idUser, nom , prenom, mdp , mail, active, statut) values ('"+id+"','"+nom+"','"+prenom+"','"+mdp+"','"+mail+"','"+true+"','"+statut+"')";
 		stat.executeUpdate(query);
-		return new Utilisateur(id, nom, prenom, mdp, mail, true,statut);
+		return new Utilisateur(id, nom, prenom, mdp, mail, true,StatutUtilisateur.valueOf(statut));
 	}
 	
 	public static ArrayList<Utilisateur> selectAll(Connection c) throws SQLException {
@@ -48,7 +48,7 @@ public class UtilisateurDAO {
 				result.getString("mdp"),
 				result.getString("email"),
 				result.getBoolean("active"),
-				(Statut)result.getObject("statut")
+				StatutUtilisateur.valueOf(result.getString("statut"))
 			);
 		}else{
 			return null;
@@ -66,7 +66,7 @@ public class UtilisateurDAO {
 				result.getString("mdp"),
 				result.getString("email"),
 				result.getBoolean("active"),
-				(Statut)result.getObject("statut")
+				StatutUtilisateur.valueOf(result.getString("statut"))
 			);
 		}else{
 			return null;
@@ -93,7 +93,7 @@ public class UtilisateurDAO {
 		stat.executeUpdate(query);
 	}
 	
-	public static void updateUtilisateur(Connection c, int idUtilisateur, String nom, String prenom, String mdp, String email, StatutUtilisateur statut) throws SQLException {
+	public static void updateUtilisateur(Connection c, int idUtilisateur, String nom, String prenom, String mdp, String email, String statut) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "update Utilisateur set nom='"+nom+"',prenom='"+prenom+"',mdp='"+mdp+"',email='"+email+"', statut='"+statut+"' where idUser='"+idUtilisateur+"'";
 		stat.executeUpdate(query);
@@ -110,7 +110,7 @@ public class UtilisateurDAO {
 					result.getString("mdp"),
 					result.getString("email"),
 					result.getBoolean("active"),
-					(StatutUtilisateur)result.getObject("statut")
+					StatutUtilisateur.valueOf(result.getString("statut"))
 				));
 			}
 		} catch (SQLException e) {
