@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import src.commande.Article;
 import src.commande.ArticleDAO;
 import src.commande.CommandeDAO;
-import src.compte.Statut;
+import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
 import src.impression.Format;
@@ -21,9 +21,9 @@ public class Application {
 	static String PASSWD;
 	static Connection c; 
 
-	public static Statut choixStatut(){
+	public static StatutUtilisateur choixStatut(){
 		System.out.println("Vous pouvez vous inscrire en temps que client ou en tant que gestionnaire.");
-		return Statut.valueOf(LectureClavier.lireChaine("CLIENT ou GESTIONNAIRE ?"));
+		return StatutUtilisateur.valueOf(LectureClavier.lireChaine("CLIENT ou GESTIONNAIRE ?"));
 	}
 
 	public static Utilisateur inscription(Connection c) throws SQLException{
@@ -32,7 +32,7 @@ public class Application {
 		System.out.println("***********************");
 		System.out.println("Bienvenue sur le site PhotoNum ! Nous allons vous demander quelques infos pour la creation de votre compte");
 
-		Statut statut= choixStatut();			
+		StatutUtilisateur statut= choixStatut();			
 		String mail= LectureClavier.lireChaine("Votre adresse mail : ");	
 		String mdp= LectureClavier.lireChaine("Votre mot de passe : ");	
 		String nom= LectureClavier.lireChaine("Votre nom : ");
@@ -115,7 +115,7 @@ public class Application {
 				String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
 				Type type= Type.valueOf(LectureClavier.lireChaine("Quel est le type de votre impression?: "));
 				Format format= Format.valueOf(LectureClavier.lireChaine("Quel format souhaitez vous? : "));	
-				Qualite qualite= Qualite.valueOf(LectureClavier.lireChaine("Quel qualité souhaitez vous?: "));
+				Qualite qualite= Qualite.valueOf(LectureClavier.lireChaine("Quel qualitï¿½ souhaitez vous?: "));
 				int nbPages= LectureClavier.lireEntier("Combien de pages souhaitez vous?: ");
 				ImpressionDAO.insertImpression(c, nomI, nbPages, utilisateur.getIdUser(), type, format, qualite );
 				break;
