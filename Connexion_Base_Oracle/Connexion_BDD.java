@@ -62,12 +62,8 @@ public class Connexion_BDD {
       System.out.println("Database Username is: " + connection.getUserName());
       System.out.println();
       // Perform a database operation 
-      
-      //Requete(connection); //juste les requetes
-      
       try {
 		Scripts("C:\\Users\\P61SDEMVID2\\Documents\\projets\\ABD -Projet Photo\\ProjetBD-G12-PhotoNum\\Connexion_Base_Oracle\\nettoyageBase.sql",connection);
-		System.out.println("coucou");
       } catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -77,12 +73,10 @@ public class Connexion_BDD {
  /*
   * Displays first_name and last_name from the employees table.
   */
-  public static void Requete(Connection connection) throws SQLException {
+  public static void Requete(Connection connection,String req) throws SQLException {
     // Statement and ResultSet are AutoCloseable and closed automatically. 
     try (Statement statement = connection.createStatement()) {      
-      try (ResultSet resultSet = statement
-          .executeQuery("DROP TABLE ROUSSYS.ZOO_LESRESPONSABLES")) {
-        System.out.println("***");
+      try (ResultSet resultSet = statement.executeQuery(req)) {
         System.out.println("---------------------");
         while (resultSet.next())
           System.out.println(resultSet.getString(1) + " ");
@@ -92,20 +86,22 @@ public class Connexion_BDD {
   }
   public static boolean Scripts(String aSQLScriptFilePath,Connection connection) throws IOException,SQLException {
 	  boolean isScriptExecuted = false;
-	  	try {
+	  	
 		  BufferedReader in = new BufferedReader(new FileReader(aSQLScriptFilePath));
 		  String str;
-		  StringBuffer sb = new StringBuffer();
 		  while ((str = in.readLine()) != null) {
-			  sb.append(str + "\n ");
+			  System.out.println(str);
+			  try {
+				  Requete(connection,str);
+					System.out.println("requete effectuée");
+			  } catch (Exception e) {
+				  System.err.println("Failed to Execute " + aSQLScriptFilePath +". The error is "+ e.getMessage());
+				  System.err.println("requete en erreur :" +str);
+			  }
 		  }
 		  in.close();
-		  Statement stmt = connection.createStatement();
-		  stmt.executeUpdate(sb.toString());
+
 		  isScriptExecuted = true;
-	  	} catch (Exception e) {
-	  	System.err.println("Failed to Execute " + aSQLScriptFilePath +". The error is "+ e.getMessage());
-	  } 
 	  return isScriptExecuted;
 	}
 }
