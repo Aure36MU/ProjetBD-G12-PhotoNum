@@ -303,6 +303,7 @@ public class Application {
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
+		}
 	}
 
 	private static void afficherStats(ArrayList<Stat> stat) {
