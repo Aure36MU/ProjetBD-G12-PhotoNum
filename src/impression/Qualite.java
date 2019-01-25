@@ -8,11 +8,18 @@ public enum Qualite {
 	PREMIUM;
 	
 	public static String definir() {
-		
-		int choix = LectureClavier.lireEntier("Choisissez une qualité d'impression : 1) BASSE ; 2) MEDIUM ; 3) PREMIUM ");
-		while (Qualite.values()[choix-1] == null) {
+
+		StringBuilder invite = new StringBuilder("Choisissez une qualité d'impression : ");
+		int index=1;
+		for(Qualite i : Qualite.values()) {
+			invite.append(index + ") " + i + " ; ");
+			index += 1;
+		}
+		invite.setLength(invite.length()-2);
+		int choix = LectureClavier.lireEntier(""+invite);
+		while (choix > Qualite.values().length || choix <= 0) {
 			if (choix == 0) { return null; }
-			choix = LectureClavier.lireEntier("Choix incorrect. Choisissez une qualité d'impression : 1) BASSE ; 2) MEDIUM ; 3) PREMIUM ");
+			choix = LectureClavier.lireEntier("Choix incorrect. "+invite);
 		}
 		return Qualite.values()[choix-1].toString();
 	}

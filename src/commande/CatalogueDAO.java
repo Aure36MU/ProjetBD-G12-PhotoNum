@@ -8,28 +8,9 @@ import java.util.ArrayList;
 
 public class CatalogueDAO {
 
-	/**
-	 * S�lectionne tous les Catalogues (quels que soient leurs mod�les) sans conditions.
-	 *
-	 * @param conn Connection SQL
-	 * @return ArrayList contenant tous les objets Catalogue
-	 * @throws SQLException
-	 */
 
-	public static ArrayList<Catalogue> selectAll(Connection conn) throws SQLException {
-
-        conn.setAutoCommit(true);
-
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Catalogue;");
-        
-        return getCatalogues(result);
-
-    }
 	/*---------------------------------------------------------------------------------------------------
 	public static ArrayList<Catalogue> selectStats(Connection conn) throws SQLException {
-
-        conn.setAutoCommit(true);
 
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT type,format,modele,(select count FROM Catalogue;");
@@ -48,24 +29,40 @@ public class CatalogueDAO {
      * @throws SQLException
      */
     public static ArrayList<Catalogue> selectAll(Connection conn, String condition) throws SQLException {
-
-        conn.setAutoCommit(true);
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Catalogue WHERE "+condition+";");
         return getCatalogues(result);
-
     }
+	/**
+	 * S�lectionne tous les Catalogues (quels que soient leurs mod�les) sans conditions.
+	 *
+	 * @param conn Connection SQL
+	 * @return ArrayList contenant tous les objets Catalogue
+	 * @throws SQLException
+	 */
+
+	public static ArrayList<Catalogue> selectAll(Connection conn) throws SQLException {
+        Statement state = conn.createStatement();
+        ResultSet result = state.executeQuery("SELECT * FROM Catalogue;");
+        return getCatalogues(result);
+    }
+    
+    
     
     public static void updateCataloguePrix(Connection c, int prix, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Utilisateur set prix='"+prix+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		String query= "update Catalogue set prix='"+prix+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
 	}
     
     public static void updateCatalogueQte(Connection c, int qte, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Utilisateur set qteStock='"+qte+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		String query= "update Catalogue set qteStock='"+qte+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		stat.executeUpdate(query);
+	}
+    public static void simulerLivraison(Connection c, int qteLivraison, String type, String format, String modele) throws SQLException {
+		Statement stat= c.createStatement();
+		String query= "update Utilisateur set qteStock= qteStock"+qteLivraison+" where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
 	}
     
@@ -95,7 +92,6 @@ public class CatalogueDAO {
 	/*---------------------------------------------------------------------------------------------------*/
 	public static int getNbVentes(Connection conn, Catalogue catalogue) throws SQLException {
 		int nbVentes = 0;
-		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT sum(a.qte) FROM Commande c "
         		+ "JOIN Article a ON (c.idComm=a.idComm) "

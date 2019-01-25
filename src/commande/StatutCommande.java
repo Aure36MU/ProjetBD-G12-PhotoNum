@@ -9,11 +9,18 @@ public enum StatutCommande {
 	ENVOYEE;
 	
 	public static String definir() {
-		
-		int choix = LectureClavier.lireEntier("Choisissez un statut de commande : 1) BROUILLON ; 2) EN_COURS ; 3) PRET_A_L_ENVOI ; 4) ENVOYEE ");
-		while (StatutCommande.values()[choix-1] == null) {
+
+		StringBuilder invite = new StringBuilder("Choisissez un statut de commande : ");
+		int index=1;
+		for(StatutCommande i : StatutCommande.values()) {
+			invite.append(index + ") " + i + " ; ");
+			index += 1;
+		}
+		invite.setLength(invite.length()-2);
+		int choix = LectureClavier.lireEntier(""+invite);
+		while (choix > StatutCommande.values().length || choix <= 0) {
 			if (choix == 0) { return null; }
-			choix = LectureClavier.lireEntier("Choix incorrect. Choisissez un statut de commande : 1) BROUILLON ; 2) EN_COURS ; 3) PRET_A_L_ENVOI ; 4) ENVOYEE ");
+			choix = LectureClavier.lireEntier("Choix incorrect. "+invite);
 		}
 		return StatutCommande.values()[choix-1].toString();
 	}

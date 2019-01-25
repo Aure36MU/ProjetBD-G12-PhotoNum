@@ -55,9 +55,9 @@ public class ImpressionDAO {
 		return tab;
 	}
 	
-	public static ArrayList<Impression> selectAllFromType(Connection c, Type type) throws SQLException{
+	public static ArrayList<Impression> selectAllFromType(Connection c, String type) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
-		switch(type.toString()) {
+		switch(type) {
 		case "CALENDRIER":
 			tab.addAll(CalendrierDAO.selectAll(c));
 			break;
@@ -173,14 +173,12 @@ public class ImpressionDAO {
 	 * @param qualite
 	 * @throws SQLException
 	 */
-	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, Type type, Format format, Qualite qualite) throws SQLException {
-		
-		conn.setAutoCommit(true);
+	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type.toString() + "', '" + format.toString() + "', '" + qualite.toString() + "';");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
 		
 	}
 	
@@ -198,12 +196,10 @@ public class ImpressionDAO {
 	 * @throws SQLException
 	 */
 	
-	public static void updateImpression(Connection conn, int idImp, String nomImp, int nbPages, int idUser, Type type, Format format, Qualite qualite) throws SQLException {
-		
-		conn.setAutoCommit(true);
+	public static void updateImpression(Connection conn, int idImp, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("UPDATE Impression SET nomImp='"+nomImp+"', nbrPageTotal="+nbPages+", idUser="+idUser+", type='"+type.toString()+"', format='"+format.toString()+"', qualite='"+qualite.toString()+"' WHERE idImp="+idImp+";");
+		state.executeUpdate("UPDATE Impression SET nomImp='"+nomImp+"', nbrPageTotal="+nbPages+", idUser="+idUser+", type='"+type+"', format='"+format+"', qualite='"+qualite+"' WHERE idImp="+idImp+";");
 		
 	}
 
@@ -215,8 +211,6 @@ public class ImpressionDAO {
      * @throws SQLException
      */
     public static void deleteImpression(Connection conn, int id) throws SQLException {
-
-        conn.setAutoCommit(true);
 
         Statement state = conn.createStatement();
         state.executeUpdate("DELETE FROM Impression WHERE idImp="+id+";");
@@ -236,8 +230,8 @@ public class ImpressionDAO {
 				String titre = LectureClavier.lireChaine("Quel titre d'album voulez-vous ?");
 				AlbumDAO.insertAlbum(c, selectAllPhotos(c, from.getIdImp()).get(0).getIdPh(), titre);
 			} else if (to.equals("Cadre")) {
-				ModeleCadre modele = ModeleCadre.valueOf(LectureClavier.lireChaine("Quel modèle de cadre voulez-vous ?"));
-				CadreDAO.insertCadre(c, from.getIdImp(), modele);
+				String modeleCadre = LectureClavier.lireChaine("Quel modèle de cadre voulez-vous ?");
+				CadreDAO.insertCadre(c, from.getIdImp(), modeleCadre);
 			} else if (to.equals("Calendrier")) { 
 				throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
 			} else if (to.equals("Tirage")) {  

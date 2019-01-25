@@ -28,8 +28,6 @@ public class AlbumDAO {
 	 */
 	public static ArrayList<Album> selectAll(Connection conn, String condition) throws SQLException {
 
-		conn.setAutoCommit(true);
-
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Album WHERE "+condition+";");
 		return getAlbums(result);
@@ -44,7 +42,6 @@ public class AlbumDAO {
 	}
 
     public static ArrayList<Album> selectAllFromUserWait(Connection conn, int id) throws SQLException {
-        conn.setAutoCommit(true);
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Album') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Album");
         return getAlbums(result);
@@ -65,7 +62,7 @@ public class AlbumDAO {
 	
 	public static void deleteAlbum(Connection c, int idi) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "delete from 'Album' where 'idImp'='"+idi+"' ";
+		String query= "delete from Album where idImp='"+idi+"' ";
 		stat.executeUpdate(query);
 	}
 	

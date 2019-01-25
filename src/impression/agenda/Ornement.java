@@ -9,11 +9,18 @@ public enum Ornement {
 	BASIQUE;
 	
 	public static String definir() {
-		
-		int choix = LectureClavier.lireEntier("Choisissez un ornement d'agenda : 1) CHATONS ; 2) FLEURS ; 3) NATURE ; 4) BASIQUE ");
-		while (Ornement.values()[choix-1] == null) {
+
+		StringBuilder invite = new StringBuilder("Choisissez un ornement d'Agenda : ");
+		int index=1;
+		for(Ornement i : Ornement.values()) {
+			invite.append(index + ") " + i + " ; ");
+			index += 1;
+		}
+		invite.setLength(invite.length()-2);
+		int choix = LectureClavier.lireEntier(""+invite);
+		while (choix > Ornement.values().length || choix <= 0) {
 			if (choix == 0) { return null; }
-			choix = LectureClavier.lireEntier("Choix incorrect. Choisissez un ornement d'agenda : 1) CHATONS ; 2) FLEURS ; 3) NATURE ; 4) BASIQUE ");
+			choix = LectureClavier.lireEntier("Choix incorrect. "+invite);
 		}
 		return Ornement.values()[choix-1].toString();
 	}

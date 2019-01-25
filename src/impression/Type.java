@@ -10,11 +10,18 @@ public enum Type {
 	CADRE;
 	
 	public static String definir() {
-		
-		int choix = LectureClavier.lireEntier("Choisissez un type d'impression : 1) AGENDA ; 2) TIRAGE ; 3) CALENDRIER ; 4) ALBUM ; 5) CADRE ");
-		while (Type.values()[choix-1] == null) {
+
+		StringBuilder invite = new StringBuilder("Choisissez un type d'impression : ");
+		int index=1;
+		for(Type i : Type.values()) {
+			invite.append(index + ") " + i + " ; ");
+			index += 1;
+		}
+		invite.setLength(invite.length()-2);
+		int choix = LectureClavier.lireEntier(""+invite);
+		while (choix > Type.values().length || choix <= 0) {
 			if (choix == 0) { return null; }
-			choix = LectureClavier.lireEntier("Choix incorrect. Choisissez un type d'impression : 1) AGENDA ; 2) TIRAGE ; 3) CALENDRIER ; 4) ALBUM ; 5) CADRE ");
+			choix = LectureClavier.lireEntier("Choix incorrect. "+invite);
 		}
 		return Type.values()[choix-1].toString();
 	}

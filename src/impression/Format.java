@@ -8,11 +8,18 @@ public enum Format {
 	GRAND;
 	
 	public static String definir() {
-		
-		int choix = LectureClavier.lireEntier("Choisissez un format d'impression : 1) PETIT ; 2) MOYEN ; 3) GRAND ");
-		while (Format.values()[choix-1] == null) {
+
+		StringBuilder invite = new StringBuilder("Choisissez un format d'impression : ");
+		int index=1;
+		for(Format i : Format.values()) {
+			invite.append(index + ") " + i + " ; ");
+			index += 1;
+		}
+		invite.setLength(invite.length()-2);
+		int choix = LectureClavier.lireEntier(""+invite);
+		while (choix > Format.values().length || choix <= 0) {
 			if (choix == 0) { return null; }
-			choix = LectureClavier.lireEntier("Choix incorrect. Choisissez un format d'impression : 1) PETIT ; 2) MOYEN ; 3) GRAND ");
+			choix = LectureClavier.lireEntier("Choix incorrect. "+invite);
 		}
 		return Format.values()[choix-1].toString();
 	}

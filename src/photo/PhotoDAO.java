@@ -33,7 +33,7 @@ public class PhotoDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Photo> selectAll(Connection conn) throws SQLException {
-		conn.setAutoCommit(true);
+
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Photo;");
 		return getPhotos(result);
@@ -49,7 +49,6 @@ public class PhotoDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Photo> selectAll(Connection conn, String condition) throws SQLException {
-		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Photo WHERE "+condition+";");
 		return getPhotos(result);
@@ -64,14 +63,12 @@ public class PhotoDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Photo> selectAllFromUser(Connection conn, int id) throws SQLException {
-		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN FichierImage ON (Photo.idFichier = FichierImage.idFichier) WHERE FichierImage.idUser="+id+" OR FichierImage.partage=true;");
 		return getPhotos(result);
 	}
 	
 	public static ArrayList<Photo> selectAllFromUserWait(Connection conn, int id) throws SQLException {
-        conn.setAutoCommit(true);
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Photo') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Photo");
         return getPhotos(result);
@@ -86,7 +83,6 @@ public class PhotoDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Photo> selectAllFromImpression(Connection conn, int id) throws SQLException {
-		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN Impression_Photo ON (Photo.idPh = Impression_Photo.idPh) WHERE Impression_Photo.idImp="+id+";");
 		return getPhotos(result);
@@ -102,7 +98,6 @@ public class PhotoDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Photo> selectAllFromFichierImage(Connection conn, int id) throws SQLException {
-		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Photo WHERE idFichier="+id+";");
 		return getPhotos(result);
@@ -119,8 +114,8 @@ public class PhotoDAO {
 	 * @param retouche
 	 * @throws SQLException
 	 */
-	public static void addPhoto(Connection conn, int idFichier, String retouche) throws SQLException {
-		conn.setAutoCommit(true);
+
+	public static void insertPhoto(Connection conn, int idFichier, String retouche) throws SQLException {
 		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo VALUES (?, ?, ?);");
 		state.setInt(1, getHigherIdFichier(conn)+1);
 		state.setInt(2, idFichier);
@@ -140,7 +135,6 @@ public class PhotoDAO {
 	 * @throws SQLException
 	 */
 	public static void updatePhoto(Connection conn, int idPh, int idFichier, String retouche) throws SQLException {
-		conn.setAutoCommit(true);
 		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idFichier=?, retouche=?) WHERE idPh=?;");
 		state.setInt(1, idFichier);
 		state.setString(2, retouche);
@@ -157,7 +151,6 @@ public class PhotoDAO {
 	 * @throws SQLException 
 	 */
 	public static void deletePhoto(Connection conn, int id) throws SQLException {
-		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM Photo WHERE idPh="+id+";");
 	}
