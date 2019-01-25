@@ -6,13 +6,16 @@ public class Catalogue {
 	int prix;
 	String format;
 	String modele;
+	String qualite;
 	int qteStock;
 	
-	public Catalogue(String type, int prix, String format, String modele, int qteStock) {
+
+	public Catalogue(String type, int prix, String format, String modele, String qualite, int qteStock) {
 		this.type = type;
 		this.prix = prix;
 		this.format = format;
 		this.modele = modele;
+		this.qualite = qualite;
 		this.qteStock = qteStock;
 	}
 	public String getType() {
@@ -38,6 +41,12 @@ public class Catalogue {
 	}
 	public void setModele(String modele) {
 		this.modele = modele;
+	}
+	public String getQualite() {
+		return qualite;
+	}
+	public void setQualite(String qualite) {
+		this.qualite = qualite;
 	}
 	public int getQteStock() {
 		return qteStock;
