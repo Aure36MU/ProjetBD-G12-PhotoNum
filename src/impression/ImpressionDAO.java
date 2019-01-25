@@ -174,8 +174,6 @@ public class ImpressionDAO {
 	 * @throws SQLException
 	 */
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
@@ -199,8 +197,6 @@ public class ImpressionDAO {
 	 */
 	
 	public static void updateImpression(Connection conn, int idImp, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
-		
-		conn.setAutoCommit(true);
 
 		Statement state = conn.createStatement();
 		state.executeUpdate("UPDATE Impression SET nomImp='"+nomImp+"', nbrPageTotal="+nbPages+", idUser="+idUser+", type='"+type+"', format='"+format+"', qualite='"+qualite+"' WHERE idImp="+idImp+";");
@@ -215,8 +211,6 @@ public class ImpressionDAO {
      * @throws SQLException
      */
     public static void deleteImpression(Connection conn, int id) throws SQLException {
-
-        conn.setAutoCommit(true);
 
         Statement state = conn.createStatement();
         state.executeUpdate("DELETE FROM Impression WHERE idImp="+id+";");
