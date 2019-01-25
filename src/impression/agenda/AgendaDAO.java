@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class AgendaDAO {
 
     /**
-     * Sï¿½lectionne tous les Agendas (quels que soient leurs modï¿½les) sans conditions.
+     * Sï¿½lectionne tous les Agendas sans conditions.
      *
      * @param conn Connection SQL
      * @return ArrayList contenant tous les objets Agenda
@@ -75,24 +75,24 @@ public class AgendaDAO {
 	 * @param modele modele
 	 * @throws SQLException 
 	 */
-	public static void insertAgenda(Connection conn, int id, ModeleAgenda modele, TypeAgenda type) throws SQLException {
+	public static void insertAgenda(Connection conn, int id, Ornement ornement, ModeleAgenda modeleAgenda) throws SQLException {
 		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+modele.toString()+"');");
+		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+ornement.toString()+"');");
 	}
 	
 	
 	/**
-	 * Modifie un agenda d'un idImp donné dans la base.
+	 * Modifie un agenda d'un idImp donnï¿½ dans la base.
 	 * 
 	 * @param id id impression
 	 * @param modele modele
 	 * @throws SQLException 
 	 */
-	public static void updateAgenda(Connection conn, int id, ModeleAgenda modele ,TypeAgenda type) throws SQLException {
+	public static void updateAgenda(Connection conn, int id, Ornement ornement) throws SQLException {
 		conn.setAutoCommit(true);
 		Statement state = conn.createStatement();
-		state.executeUpdate("UPDATE agenda SET modele='"+modele.toString()+"' WHERE idImp="+id+";");
+		state.executeUpdate("UPDATE agenda SET modele='"+ornement.toString()+"' WHERE idImp="+id+";");
 	}
 
     /**
@@ -118,17 +118,17 @@ public class AgendaDAO {
      * @throws SQLException
      */
     public static ArrayList<Agenda> getAgendas(ResultSet result) throws SQLException {
-        ArrayList<Agenda> Agendas = new ArrayList<Agenda>();
+        ArrayList<Agenda> agendas = new ArrayList<Agenda>();
 
         while (result.next()) {
-            Agendas.add(new Agenda(
+            agendas.add(new Agenda(
                     result.getInt("idImp"),
-                    ModeleAgenda.valueOf(result.getString("modele")),
-                    TypeAgenda.valueOf(result.getString("type"))
+                    Ornement.valueOf(result.getString("ornement")),
+                    ModeleAgenda.valueOf(result.getString("modeleAgenda"))
             ));
         }
 
-        return Agendas; 
+        return agendas; 
     } 
     
     
