@@ -7,12 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
-import src.impression.Format;
-import src.impression.Impression;
-import src.impression.Qualite;
-import src.impression.album.AlbumDAO;
-import src.impression.calendrier.CalendrierDAO;
-
 public class CodePromoDAO {
 
 	public static int getHigherIdCodeP(Connection c){

@@ -1,8 +1,6 @@
 package src.impression.album;
 
-import src.impression.Format;
 import src.impression.Impression;
-import src.impression.Qualite;
 
 public class Album extends Impression {
 	
