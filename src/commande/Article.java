@@ -43,7 +43,7 @@ public class Article {
 		this.idImp = idImp;
 	}
 	
-	public String toString() {
-		return "article n°"+idArt+"   prix : "+prix+"   quantite : "+qte+"    "+idImp;
+	public String toString(){
+		return "idArt : "+idArt+"     prix : "+prix+"     qte : "+qte+"     idImp : "+idImp;
 	}
 }

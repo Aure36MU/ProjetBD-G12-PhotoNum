@@ -77,4 +77,8 @@ public class Utilisateur {
 		return statut;
 	}
 
+	public String toString(){
+		return "idUser : "+idUser+"     nom : "+nom+"     prenom : "+prenom+"     mdp : "+mdp+"     email : "+email+"     actif : "+active+"     statut : "+statut.toString();
+	}
+	
 }
