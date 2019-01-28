@@ -12,6 +12,7 @@ import src.compte.UtilisateurDAO;
 import src.impression.Format;
 import src.impression.Modele;
 import src.impression.Type;
+import src.photo.FichierImageDAO;
 
 public class UtilitaireGestionnaire {
 
@@ -24,7 +25,7 @@ public class UtilitaireGestionnaire {
 			System.out.println("3 : Modifier le prix d'un article du catalogue.");
 			System.out.println("4 : Gerer les clients (suppression).");
 			System.out.println("5 : Gerer les commandes clients.");
-			System.out.println("6 : Voir la liste des fichiers et le nom de leur propriétaire (controle de contenu).");
+			System.out.println("6 : Gerer les fichiers et le nom de leur propriétaire (controle de contenu).");
 			int choixAction = LectureClavier.lireEntier("7 : Voir les statistiques de vente ");
 
 			switch(choixAction){ 
@@ -53,7 +54,7 @@ public class UtilitaireGestionnaire {
 					gererCommandeClients(c,utilisateur);
 					break;
 				case 6:
-					
+					gererFichiersClients(c);
 					break;
 				case 7:
 					new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
@@ -63,17 +64,23 @@ public class UtilitaireGestionnaire {
 		}
 	}
 	
+	private static void gererFichiersClients(Connection c) {
+		new Affichage<Utilisateur>().afficher(FichierImageDAO.selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
+		int idUser = 0;
+		while(!UtilisateurDAO.idExists(c,idUser)){
+			idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
+		}
+		//FichierImageDAO.deleteUtilisateur(c, idUser);
+	}
+
 	private static void gererClients(Connection c) throws SQLException {
 		new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
 		int idUser = 0;
 		while(!UtilisateurDAO.idExists(c,idUser)){
 			idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
 		}
-		
+		UtilisateurDAO.deleteUtilisateur(c, idUser);
 	}
-
-	
-	
 	
 	private static void gererCommandeClients(Connection c, Utilisateur utilisateur) {
 		boolean back = false;

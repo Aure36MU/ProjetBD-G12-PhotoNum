@@ -1,5 +1,4 @@
 package src.photo;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +26,6 @@ public class FichierImageDAO {
 			Statement state = c.createStatement();
 			ResultSet res = state.executeQuery("SELECT max(idFichier) FROM FichierImage;");
 			return res.getInt(0);
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -43,7 +41,6 @@ public class FichierImageDAO {
 		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
 	}
 	
-
 	/**
 	 * Sélectionne tous les fichiers images sans conditions.
 	 * 
@@ -52,12 +49,9 @@ public class FichierImageDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<FichierImage> selectAll(Connection conn) throws SQLException {
-
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM FichierImage;");
 		return getFichiersImage(result);
-
-
 	}
 	
 	/**
@@ -70,12 +64,9 @@ public class FichierImageDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<FichierImage> selectAll(Connection conn, String condition) throws SQLException {
-
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE "+condition+";");
 		return getFichiersImage(result);
-
-		
 	}
 	
 	/**
