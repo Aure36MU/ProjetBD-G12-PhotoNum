@@ -22,10 +22,10 @@ public class UtilitaireGestionnaire {
 			System.out.println("1 : Se deconnecter.");
 			System.out.println("2 : Enregistrer une livraison");
 			System.out.println("3 : Modifier le prix d'un article du catalogue.");
-			System.out.println("4 : Consulter la liste des clients.");
+			System.out.println("4 : Gerer les clients (suppression).");
 			System.out.println("5 : Gerer les commandes clients.");
-			System.out.println("7 : Voir la liste des fichiers et le nom de leur propriétaire.");
-			int choixAction = LectureClavier.lireEntier("8 : Voir les statistiques de vente ");
+			System.out.println("6 : Voir la liste des fichiers et le nom de leur propriétaire (controle de contenu).");
+			int choixAction = LectureClavier.lireEntier("7 : Voir les statistiques de vente ");
 
 			switch(choixAction){ 
 				case 1:  
@@ -47,10 +47,7 @@ public class UtilitaireGestionnaire {
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
 				case 4:
-					ArrayList<Utilisateur> users = UtilisateurDAO.selectAllUserFromStatut(c, StatutUtilisateur.CLIENT);
-					new Affichage<Utilisateur>().afficher(users);
-					int idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier.");
-					gererClients(c, users, idFichier);
+					gererClients(c);
 					break;
 				case 5:
 					gererCommandeClients(c,utilisateur);
@@ -59,9 +56,6 @@ public class UtilitaireGestionnaire {
 					
 					break;
 				case 7:
-					
-					break;
-				case 8:
 					new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
 					break;
 				default : System.out.println("Veuillez faire un choix. ");
@@ -69,10 +63,18 @@ public class UtilitaireGestionnaire {
 		}
 	}
 	
-	private static void gererClients(Connection c, ArrayList<Utilisateur> users, int idFichier) {
-			
+	private static void gererClients(Connection c) throws SQLException {
+		new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
+		int idUser = 0;
+		while(!UtilisateurDAO.idExists(c,idUser)){
+			idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
+		}
+		
 	}
 
+	
+	
+	
 	private static void gererCommandeClients(Connection c, Utilisateur utilisateur) {
 		boolean back = false;
 		while(!back){
@@ -86,6 +88,7 @@ public class UtilitaireGestionnaire {
 			switch(choixAction){ 
 			case 1:  
 				utilisateur = null;
+				back = true;
 				System.out.println("Vous avez ete deconnecte");
 				break;
 			case 2:
@@ -96,9 +99,12 @@ public class UtilitaireGestionnaire {
 				
 				break;
 			case 4:
+				
 				break;
+				
 			default : System.out.println("Veuillez faire un choix. ");
 			}
+			
 		}
 	}
 	

@@ -74,11 +74,17 @@ public class UtilisateurDAO {
 	
 	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, StatutUtilisateur statut) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "select * from Utilisateur where statut='"+statut+"'";
+		String query= "select * from Utilisateur where statut='"+statut+"';";
 		ResultSet result =stat.executeQuery(query);
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
 
+	public static Boolean idExists(Connection c, int idUser) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from Utilisateur where idUser='"+idUser+"';");
+		return result.getInt(0)==1;
+	}
+	
 	public static ArrayList<Utilisateur> selectWithCondition(Connection c, String condition) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where "+condition+";";
@@ -86,15 +92,21 @@ public class UtilisateurDAO {
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
 	
-	public static void deleteUtilisateur(Connection c, int mail) throws SQLException {
+	public static void deleteUtilisateur(Connection c, String mail) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Utilisateur set active='"+false+"' where email='"+mail+"' ";
+		String query= "update Utilisateur set active='"+false+"' where email='"+mail+"' ;";
+		stat.executeUpdate(query);
+	}
+	
+	public static void deleteUtilisateur(Connection c, int id) throws SQLException {
+		Statement stat= c.createStatement();
+		String query= "update Utilisateur set active='"+false+"' where idUser = '"+id+"' ;";
 		stat.executeUpdate(query);
 	}
 	
 	public static void updateUtilisateur(Connection c, int idUtilisateur, String nom, String prenom, String mdp, String email, String statut) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Utilisateur set nom='"+nom+"',prenom='"+prenom+"',mdp='"+mdp+"',email='"+email+"', statut='"+statut+"' where idUser='"+idUtilisateur+"'";
+		String query= "update Utilisateur set nom='"+nom+"',prenom='"+prenom+"',mdp='"+mdp+"',email='"+email+"', statut='"+statut+"' where idUser='"+idUtilisateur+"';";
 		stat.executeUpdate(query);
 	}
 	
