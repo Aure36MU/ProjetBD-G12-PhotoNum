@@ -76,30 +76,36 @@ public class Application {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Retourner au menu precedent.");
-			System.out.println("2 : Consulter la liste de mes fichiers de base.");
-			System.out.println("3 : Consulter la liste de mes photos.");
-			System.out.println("4 : Consulter la liste des fichiers partag�s.");
-			int choixAction = LectureClavier.lireEntier("5 : Ajouter un nouveau fichier.");
+			System.out.println("1 : Se deconnecter.");
+			System.out.println("2 : Retourner au menu precedent.");
+			System.out.println("3 : Consulter la liste de mes fichiers de base.");
+			System.out.println("4 : Consulter la liste de mes photos.");
+			System.out.println("5 : Consulter la liste des fichiers partages.");
+			int choixAction = LectureClavier.lireEntier("6 : Ajouter un nouveau fichier.");
 
 			switch(choixAction){ 
 			case 1:  
+				utilisateur = null;
+				System.out.println("Vous avez ete deconnecte");
+				break;
+			case 2:  
 				back = true;
 				System.out.println("retour au menu precedent");
 				break;
-			case 2:
+			case 3:
 				FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser());
 				gererUnFichier(c,utilisateur);
 				break;
-			case 3:
+			case 4:
 				PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 				gererUnePhoto(c,utilisateur);
 				break;
-			case 4:
+			case 5:
 				FichierImageDAO.selectAll(c, "partage=true");
+				gererFichierPartager(c, utilisateur);
 				//PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 				break;
-			case 5:
+			case 6:
 				gererAjoutFichier(c,utilisateur);
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
@@ -125,14 +131,19 @@ public class Application {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Retourner au menu precedent.");
-			int choixAction = LectureClavier.lireEntier("2 : Retoucher un fichier.");
+			System.out.println("1 : Se deconnecter.");
+			System.out.println("2 : Retourner au menu precedent.");
+			int choixAction = LectureClavier.lireEntier("3 : Retoucher un fichier.");
 			switch(choixAction){ 
 			case 1:  
+				utilisateur = null;
+				System.out.println("Vous avez ete deconnecte");
+				break;
+			case 2:  
 				back = true;
 				System.out.println("retour au menu precedent");
 				break;
-			case 2:
+			case 3:
 				gereRetoucheFichier(c,utilisateur);
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
@@ -145,23 +156,28 @@ public class Application {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Retourner au menu precedent.");
-			System.out.println("2 : Modifier un fichier");
-			System.out.println("3 : Supprimer un fichier");
-			int choixAction = LectureClavier.lireEntier("4 : Retoucher un fichier.");
+			System.out.println("1 : Se deconnecter.");
+			System.out.println("2 : Retourner au menu precedent.");
+			System.out.println("3 : Modifier un fichier");
+			System.out.println("4 : Supprimer un fichier");
+			int choixAction = LectureClavier.lireEntier("5 : Retoucher un fichier.");
 			
 			switch(choixAction){ 
 			case 1:  
+				utilisateur = null;
+				System.out.println("Vous avez ete deconnecte");
+				break;
+			case 2:  
 				back = true;
 				System.out.println("retour au menu precedent");
 				break;
-			case 2:
+			case 3:
 				gereModifFichier(c,utilisateur);
 				break;
-			case 3:
+			case 4:
 				gereSupprFichier(c,utilisateur);
 				break;
-			case 4:
+			case 5:
 				gereRetoucheFichier(c,utilisateur);
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
@@ -230,19 +246,24 @@ public class Application {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Retourner au menu precedent.");
-			System.out.println("2 : Modifier une photo");
-			int choixAction = LectureClavier.lireEntier("3 : Supprimer une photo");
+			System.out.println("1 : Se deconnecter.");
+			System.out.println("2 : Retourner au menu precedent.");
+			System.out.println("3 : Modifier une photo");
+			int choixAction = LectureClavier.lireEntier("4 : Supprimer une photo");
 			
 			switch(choixAction){ 
 			case 1:  
+				utilisateur = null;
+				System.out.println("Vous avez ete deconnecte");
+				break;
+			case 2:  
 				back = true;
 				System.out.println("retour au menu precedent");
 				break;
-			case 2:
+			case 3:
 				gereModifPhoto(c,utilisateur);
 				break;
-			case 3:
+			case 4:
 				gereSupprPhoto(c,utilisateur);
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
@@ -282,36 +303,53 @@ public class Application {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Retourner au menu precedent.");
-			System.out.println("2 : Consulter la liste de mes impressions.");
-			System.out.println("3 : Creer une nouvelle impression.");
-			int choixAction = LectureClavier.lireEntier("4 : .");
+			System.out.println("1 : Se deconnecter.");
+			System.out.println("2 : Retourner au menu precedent.");
+			System.out.println("3 : Consulter la liste de mes impressions.");
+			int choixAction = LectureClavier.lireEntier("4 : Creer une nouvelle impression.");
 
 			switch(choixAction){ 
 			case 1:  
+				utilisateur = null;
+				System.out.println("Vous avez ete deconnecte");
+				break;
+			case 2:  
 				back = true;
 				System.out.println("retour au menu precedent");
 				break;
-			case 2:
+			case 3:
 				ImpressionDAO.selectAllFromUserImpressionWait(c,utilisateur.getIdUser());
 				break;
-			case 3:
-				
-				String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
-				String type= Type.definir();
-				String format= Format.definir();
-				String qualite= Qualite.definir();
-				int nbPages= LectureClavier.lireEntier("Combien de pages souhaitez vous?: ");
-				ImpressionDAO.insertImpression(c, nomI, nbPages, utilisateur.getIdUser(), type, format, qualite );
-				
-				break;
 			case 4:
+				gereInsertImp(c,utilisateur);
+				break;
+			case 5:
 				break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 		}		
 	}
 	
+	private static void gereInsertImp(Connection c, Utilisateur utilisateur) throws SQLException {
+		Boolean votreChoix=false;
+		while(votreChoix==false) {
+			String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
+			System.out.println("Quel est le type de votre impression?");
+			String type= Type.definir();
+			System.out.println("Quel est le format de votre impression?");
+			String format= Format.definir();
+			System.out.println("Quel est la qualite de votre impression?");
+			String qualite= Qualite.definir();
+			int nbPages= LectureClavier.lireEntier("Combien de pages souhaitez vous?: ");
+			System.out.println("Récapitulatif: ");
+			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
+			String leChoix=LectureClavier.lireChaine("Cela vous conviens? (oui/non)");
+			if(leChoix=="oui") {
+				ImpressionDAO.insertImpression(c, nomI, nbPages, utilisateur.getIdUser(), type, format, qualite );
+				votreChoix=true;
+			}
+		}
+	}
 	
 	private static void afficherArticles(ArrayList<Article> panier) {
 		// TODO:afficher les tostring() de chaque article en plus du nom de l'impressions associee a l'article en question.
@@ -433,7 +471,7 @@ public class Application {
 					//fonction gestion clients
 					break;
 				case 5:
-					gererCommandeClients(c);
+					gererCommandeClients(c,utilisateur);
 					break;
 				case 6:
 					
@@ -449,22 +487,24 @@ public class Application {
 		}
 	}
 	
-	private static void gererCommandeClients(Connection c) {
+	private static void gererCommandeClients(Connection c, Utilisateur utilisateur) {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Retourner au menu precedent.");
-			System.out.println("2 : Consulter la liste des commandes clients en cours.");
-			System.out.println("3 : Creer une nouvelle impression.");
-			int choixAction = LectureClavier.lireEntier("4 : .");
+			System.out.println("1 : Se deconnecter.");
+			System.out.println("2 : Retourner au menu precedent.");
+			System.out.println("3 : Consulter la liste des commandes clients en cours.");
+			int choixAction = LectureClavier.lireEntier("4 : Creer une nouvelle impression.\"");
 
 			switch(choixAction){ 
 			case 1:  
-				back = true;
-				System.out.println("retour au menu precedent");
+				utilisateur = null;
+				System.out.println("Vous avez ete deconnecte");
 				break;
 			case 2:
+				back = true;
+				System.out.println("retour au menu precedent");
 				break;
 			case 3:
 				
