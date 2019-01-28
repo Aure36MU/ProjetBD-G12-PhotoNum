@@ -236,6 +236,41 @@ public class FichierImageDAO {
 			delete(conn, id);
 		}
 	}
+	
+	
+	/**
+	 * Supprime un FichierImage d'un certain idFichier de la base.
+	 * Cette méthode vérifie si le FichierImage est éligible pour la suppression dans le cas où il est partagé.
+	 * En mode Gestionnaire, on doit également annuler toutes les commandes de statut 'BROUILLON' ou 'EN_COURS' qui utilisent ce fichier image.
+	 * 
+	 * @param conn Connection SQL
+	 * @param id id fichier
+	 * @throws SQLException 
+	 */
+	public static void deleteFichierImageModeGestion(Connection conn, int id) throws SQLException {
+		
+		Statement state = conn.createStatement();
+		ResultSet lesCommandes = state.executeQuery("SELECT idComm FROM Commande NATURAL JOIN Article NATURAL JOIN Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE idFichier="+id+";");
+		
+		FichierImage leFichierImage = selectAll(conn, "idFichier="+id).get(0);
+		if (isSharedAndUsedBySomeone(conn, id)) {
+			update(conn,
+					leFichierImage.getIdFichier(),
+					leFichierImage.getIdUser(),
+					leFichierImage.getChemin(),
+					leFichierImage.getInfoPVue(),
+					leFichierImage.getPixelImg(),
+					leFichierImage.isPartage(),
+					leFichierImage.getDateUtilisation(),
+					leFichierImage.isFileAttModif(),
+					true);
+			while (lesCommandes.next()) {
+				state.executeQuery("UPDATE Commande SET statutCommande='ANNULEE' WHERE statutCommande<>'ENVOYEE' AND idComm="+lesCommandes.getInt("idComm")+";");
+			}
+		} else {
+			delete(conn, id);
+		}
+	}
 
 
 	/**
