@@ -64,8 +64,9 @@ public class Connexion_BDD {
       // Perform a database operation 
       try {
 
-		Scripts("Connexion_Base_Oracle\\creationBase.sql",connection);
-		//Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
+    	Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
+    	Scripts("Connexion_Base_Oracle\\creationBase.sql",connection);
+    	//Scripts("Connexion_Base_Oracle\\triggerBase.sql",connection);
 
       } catch (IOException e) {
 		// TODO Auto-generated catch block
@@ -91,7 +92,6 @@ public class Connexion_BDD {
     	}else {
     		boolean resultB = statement.execute(req);
     		System.out.println("++++++++++");
-    		System.out.println(resultB);
     	}
     }   
   }
