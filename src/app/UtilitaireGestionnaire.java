@@ -49,9 +49,8 @@ public class UtilitaireGestionnaire {
 				case 4:
 					ArrayList<Utilisateur> users = UtilisateurDAO.selectAllUserFromStatut(c, StatutUtilisateur.CLIENT);
 					new Affichage<Utilisateur>().afficher(users);
-					
-					
-					gererClients(c, );
+					int idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier.");
+					gererClients(c, users, idFichier);
 					break;
 				case 5:
 					gererCommandeClients(c,utilisateur);
@@ -70,6 +69,10 @@ public class UtilitaireGestionnaire {
 		}
 	}
 	
+	private static void gererClients(Connection c, ArrayList<Utilisateur> users, int idFichier) {
+			
+	}
+
 	private static void gererCommandeClients(Connection c, Utilisateur utilisateur) {
 		boolean back = false;
 		while(!back){
