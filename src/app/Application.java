@@ -296,7 +296,6 @@ public class Application {
 	 * --------------------------------------------Impression-------------------------------------------------------------------
 	 * -----------------------------------------------------------------------------------------------------------------------------
 	 */
-	//TODO: 
 	private static void gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
 
 		boolean back = false;
