@@ -55,5 +55,7 @@ public class Catalogue {
 		this.qteStock = qteStock;
 	}
 	
-	
+	public String toString(){
+		return "type : "+type+"     prix : "+prix+"     format : "+format+"     modele : "+modele+"     qualite : "+qualite+"     qteStock : "+qteStock;
+	}
 }

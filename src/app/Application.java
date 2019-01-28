@@ -186,7 +186,7 @@ public class Application {
 	}
 	
 	private static void gereModifFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous modifier? (Entr� le num�ro du fichier)");
+		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous modifier? (Entre le numero du fichier)");
 		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
 		if(utilisateur.getIdUser()==tab.get(0).getIdUser()) {
 			boolean part=tab.get(0).isPartage();
@@ -205,13 +205,13 @@ public class Application {
 				System.out.println("Fichier modifier avec succes!");
 			}
 		}else {
-			System.out.println("Vous n'avez pas le droit de modifier ce fichier, il n'est pas � vous");
+			System.out.println("Vous n'avez pas le droit de modifier ce fichier, il n'est pas e vous");
 		}
 		
 	}
 	
 	private static void gereSupprFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous supprimer? (Entr� le num�ro du fichier)");
+		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous supprimer? (Entre le numero du fichier)");
 		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
 		if(utilisateur.getIdUser()==tab.get(0).getIdUser()) {
 			System.out.println("Le fichier que vous souhaitez supprimer est: "+ tab.get(0).getIdFichier() + " avec comme chemin :"+ tab.get(0).getChemin());
@@ -221,12 +221,12 @@ public class Application {
 				System.out.println("Fichier supprimer avec succes!");
 			}
 		}else {
-			System.out.println("Vous n'avez pas le droit de supprimer ce fichier, il n'est pas � vous");
+			System.out.println("Vous n'avez pas le droit de supprimer ce fichier, il n'est pas e vous");
 		}
 	}
 	
 	private static void gereRetoucheFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous supprimer? (Entr� le num�ro du fichier)");
+		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous supprimer? (Entre le numero du fichier)");
 		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
 		if((utilisateur.getIdUser()==tab.get(0).getIdUser()) || (tab.get(0).isPartage()==true)) {
 			System.out.println("Le fichier que vous souhaitez supprimer est: "+ tab.get(0).getIdFichier() + " avec comme chemin :"+ tab.get(0).getChemin());
@@ -237,7 +237,7 @@ public class Application {
 				System.out.println("Fichier retoucher avec succes!");
 			}
 		}else {
-			System.out.println("Vous n'avez pas le droit de retoucher ce fichier, il n'est pas � vous et il n'est pas en libre service");
+			System.out.println("Vous n'avez pas le droit de retoucher ce fichier, il n'est pas e vous et il n'est pas en libre service");
 		}
 	}
 	
@@ -271,7 +271,7 @@ public class Application {
 		}
 	}
 	private static void gereModifPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
-		int photo = LectureClavier.lireEntier("Quelle photo voulez vous modifier? (Entre le num�ro de la photo)");
+		int photo = LectureClavier.lireEntier("Quelle photo voulez vous modifier? (Entre le numero de la photo)");
 		ArrayList<Photo> tab = PhotoDAO.selectAll(c, "idPh=" + photo);
 		System.out.println("La photo que vous souhaitez modifier est: "+ tab.get(0).getIdPh() + " du fichier :"+ tab.get(0).getIdFichier() + " avec la retouche :" + tab.get(0).getRetouche());
 		boolean choix = LectureClavier.lireOuiNon("Voulez vous modifier cette photo?");
@@ -282,7 +282,7 @@ public class Application {
 	}
 	
 	private static void gereSupprPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
-		int photo = LectureClavier.lireEntier("Quel photo voulez vous supprimer? (Entre le num�ro de la photo)");
+		int photo = LectureClavier.lireEntier("Quel photo voulez vous supprimer? (Entre le numero de la photo)");
 		ArrayList<Photo> tab = PhotoDAO.selectAll(c, "idPh=" + photo);
 		System.out.println("La photo que vous souhaitez supprimer est: "+ tab.get(0).getIdPh() + " du fichier :"+ tab.get(0).getIdFichier());
 		boolean choix = LectureClavier.lireOuiNon("Voulez vous supprimer cette photo?");
@@ -351,12 +351,6 @@ public class Application {
 		}
 	}
 	
-	private static void afficherArticles(ArrayList<Article> panier) {
-		// TODO:afficher les tostring() de chaque article en plus du nom de l'impressions associee a l'article en question.
-		//ne pas oublier le formatage avec un titre "votre panier" et des ptites etoiles
-		
-	}
-	
 	public static void main(String[] args) throws SQLException {
 		try{
 			USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
@@ -423,7 +417,7 @@ public class Application {
 					panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
 					if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); }
 					else{
-						afficherArticles(panier);
+						new Utilitaire<Article>().afficher(panier);
 					}
 					
 					break;
@@ -467,7 +461,7 @@ public class Application {
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
 				case 4:
-					afficherUtilisateur(UtilisateurDAO.selectAllUserFromStatut(c, StatutUtilisateur.CLIENT));
+					new Utilitaire<Utilisateur>().afficher(UtilisateurDAO.selectAllUserFromStatut(c, StatutUtilisateur.CLIENT));
 					//fonction gestion clients
 					break;
 				case 5:
@@ -480,7 +474,7 @@ public class Application {
 					
 					break;
 				case 8:
-					afficherStats(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
+					new Utilitaire<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
 					break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
@@ -515,17 +509,6 @@ public class Application {
 			}
 		}
 	}
-
-	private static void afficherStats(ArrayList<Stat> stat) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private static void afficherUtilisateur(ArrayList<Utilisateur> users) {
-		// TODO:afficher les tostring() de chaque user avec les ptites etoiles
-		
-	}
-	
 	
 	/*
 	 * Consulter tous utilisateurs
