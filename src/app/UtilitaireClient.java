@@ -17,6 +17,7 @@ import src.impression.Qualite;
 import src.impression.Type;
 import src.impression.agenda.ModeleAgenda;
 import src.impression.agenda.Ornement;
+import src.impression.cadre.ModeleCadre;
 import src.impression.calendrier.ModeleCalendrier;
 import src.photo.FichierImage;
 import src.photo.FichierImageDAO;
@@ -106,12 +107,12 @@ public class UtilitaireClient {
 		
 	}
 	private static void gererAjoutFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		Boolean continuer= true;
+		boolean continuer= true;
 		while(continuer==true);{
 			String chemin= LectureClavier.lireChaine("Ou ce trouve votre fichier? ");
 			String infoPVue= LectureClavier.lireChaine("Commentaire sur le fichier: ");
 			int pixelImg= LectureClavier.lireEntier("Quel est la taille en pixel : ");	
-			Boolean partage= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
+			boolean partage= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
 			String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
 			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage, Date.valueOf(dateUse) , false, false);
 			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
@@ -326,38 +327,78 @@ public class UtilitaireClient {
 		}		
 	}
 
+	
 	private static void gereInsertImp(Connection c, Utilisateur utilisateur) throws SQLException {
-		Boolean votreChoix=false;
+		boolean votreChoix=false;
 		while(votreChoix==false) {
 			String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
 			String type= Type.definir();
 			String format= Format.definir();
 			String qualite= Qualite.definir();
+			
+			System.out.println("Récapitulatif: ");
+			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
+			String leChoix=LectureClavier.lireChaine("Cela vous conviens? (oui/non)");
+			if(leChoix=="oui") {
+				//ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite );
+				votreChoix=true;
+				System.out.println("Vous venez de crée votre nouvelle impression");
+			}
+			
 			switch(type){ 
 				case "AGENDA":
 					String modeleAgenda= ModeleAgenda.definir();
 					String ornement = Ornement.definir();
+					ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,ornement,modeleAgenda );
+					System.out.println("Vous venez de crée votre nouvelle impression");
 					break;
 				case "CALENDRIER":
 					String modeleCalendrier = ModeleCalendrier.definir();
+					ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,modeleCalendrier);
+					System.out.println("Vous venez de crée votre nouvelle impression");
 					break;
 				case "ALBUM":
-					
+					String titreCouv=LectureClavier.lireChaine("Quel nom souhaitez vous sur la couverture?: ");
+					ArrayList<Photo> tab =PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
+					int i=0;
+					boolean trouve=false;
+					new Affichage<Photo>().afficher(tab);
+					while(trouve==false) {
+						int photo= LectureClavier.lireEntier("Quel photo voulez vous mettre en couverture? Entrée le numero de la photo");
+						while(i<tab.size() && tab.get(i).getIdPh()!=photo) {
+							i++;
+						}
+						if(i<tab.size()) {
+							trouve=true;
+							ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,photo,titreCouv );
+						}else {
+							System.out.println("Vous n'avez pas selectionner une photo que vous possedez");
+						}
+					}	
+					System.out.println("Vous venez de crée votre nouvelle impression");
 					break;	
-					
 				case "CADRE":
-	
+					String modeleCadre = ModeleCadre.definir();
+					ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,modeleCadre);
+					System.out.println("Vous venez de crée votre nouvelle impression");
+					break;
+				case "TIRAGE":
+					ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite);
+					System.out.println("Vous venez de crée votre nouvelle impression");
 					break;
 			}
-			System.out.println("Récapitulatif: ");
+			/*System.out.println("Récapitulatif: ");
 			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
 			String leChoix=LectureClavier.lireChaine("Cela vous conviens? (oui/non)");
 			if(leChoix=="oui") {
 				ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite );
 				votreChoix=true;
 				System.out.println("Vous venez de crée votre nouvelle impression");
-			}
+			}*/
 		}
 	}
-
+		
+	private static void gererInsertPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
+		
+	}
 }
