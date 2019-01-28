@@ -6,10 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import src.impression.Format;
-import src.impression.Qualite;
-import src.impression.cadre.Cadre;
-
 public class CalendrierDAO {
 	
 	/**

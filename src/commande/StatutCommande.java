@@ -6,7 +6,8 @@ public enum StatutCommande {
 	BROUILLON,
 	EN_COURS,
 	PRET_A_L_ENVOI,
-	ENVOYEE;
+	ENVOYEE,
+	ANNULEE;
 	
 	public static String definir() {
 

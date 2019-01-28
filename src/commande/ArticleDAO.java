@@ -8,16 +8,9 @@ import java.util.ArrayList;
 
 import src.impression.Impression;
 import src.impression.ImpressionDAO;
-import src.impression.agenda.Agenda;
 import src.impression.agenda.AgendaDAO;
-import src.impression.album.Album;
-import src.impression.album.AlbumDAO;
-import src.impression.cadre.Cadre;
 import src.impression.cadre.CadreDAO;
-import src.impression.calendrier.Calendrier;
 import src.impression.calendrier.CalendrierDAO;
-import src.impression.tirage.Tirage;
-import src.impression.tirage.TirageDAO;
 
 public class ArticleDAO {
 	

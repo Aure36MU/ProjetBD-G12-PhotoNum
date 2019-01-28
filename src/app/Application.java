@@ -5,19 +5,11 @@ import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
 
 
-
 public class Application {
 	static final String CONN_URL = "jdbc:oracle:thin:@im2ag-oracle.e.ujf-grenoble.fr:1521:im2ag";
 	static String USER;
 	static String PASSWD;
 	static Connection c; 
-
-	/* TODO se référer à StatutUtilisateur.definir() qui fait essentiellement la même chose en interactif
-	public static StatutUtilisateur choixStatut(){
-		System.out.println("Vous pouvez vous inscrire en temps que client ou en tant que gestionnaire.");
-		return StatutUtilisateur.valueOf(LectureClavier.lireChaine("CLIENT ou GESTIONNAIRE ?"));
-	}
-	*/
 
 	private static Utilisateur inscription(Connection c) throws SQLException{
 		System.out.println("***********************");
@@ -51,16 +43,6 @@ public class Application {
 		}
 		return utilisateur;
 	}
-	
-	
-	//revoir l'organisation de ce menu et 
-	
-/*-----------------------------------------------------------------------------------------------------------------------------
- * -----------------------------------------Partie de Pauline------------------------------------------------------------------
- * --------------------------------------------Impression-------------------------------------------------------------------
- * -----------------------------------------------------------------------------------------------------------------------------
- */
-	
 	
 	public static void main(String[] args) throws SQLException {
 		try{
@@ -102,12 +84,7 @@ public class Application {
 			e.printStackTrace();
 		}
 	}
-	
 
-	
-	
-	
-	
 	/*
 	 * Consulter tous utilisateurs
 Supprimer ⇔ désactiver un client
@@ -115,7 +92,5 @@ Consulter tous fichiers images et leur createur
 Suppression fichiers images 
 Consulter commandes (filtrer par article → filtrage dans ArticleDAO)
 1*/
-
-
 
 }

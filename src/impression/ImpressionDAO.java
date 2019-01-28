@@ -15,7 +15,6 @@ import src.impression.calendrier.CalendrierDAO;
 import src.impression.tirage.Tirage;
 import src.impression.tirage.TirageDAO;
 import src.photo.FichierImage;
-import src.impression.cadre.ModeleCadre;
 import src.impression.calendrier.Calendrier;
 import src.photo.Photo;
 
