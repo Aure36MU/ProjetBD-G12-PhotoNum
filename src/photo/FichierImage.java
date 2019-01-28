@@ -99,5 +99,9 @@ public class FichierImage {
 		this.fileAttSuppr = fileAttSuppr;
 	}
 	
+	public String toString(){
+		return "idFichier : "+idFichier+"     idUser : "+idUser+"     nombrePixels : "+pixelImg+"     chemin : "+chemin+"     infoPriseVue : "+infoPVue+"     partage : "+partage+"     dateUtilisation : "+dateUtilisation+"     fileModif : "+fileAttModif+"     fileSuppr : "+fileAttSuppr;
+	}
+
 
 }

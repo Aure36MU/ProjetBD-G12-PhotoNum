@@ -67,7 +67,9 @@ public class Adresse {
 		this.idUser = idUser;
 	}
 	
-
+	public String toString(){
+		return "idAdre : "+idAdre+"     ville : "+ville+"     codePostal : "+codePostal+"     rue : "+rue+"     pays : "+pays+"     idUser : "+idUser;
+	}
 	
 	
 }

@@ -36,4 +36,8 @@ public class Photo {
 	public void setRetouche(String retouche) {
 		this.retouche = retouche;
 	}
+	public String toString(){
+		return "idPh : "+idPh+"     idFichier : "+idFichier+"     retouche : "+retouche;
+	}
+
 }

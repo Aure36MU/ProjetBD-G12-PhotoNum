@@ -67,5 +67,7 @@ public class Commande {
 	public void setStatut(StatutCommande statut) {
 		this.statut = statut;
 	}
-
+	public String toString(){
+		return "idComm : "+idComm+"     idUser : "+idUser+"     idCodePromo : "+idCodeP+"     date : "+dateC+"     modeLivraison : "+modeLivraison+"     statut : "+statut.toString();
+	}
 }
