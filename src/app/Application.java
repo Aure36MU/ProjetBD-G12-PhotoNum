@@ -16,6 +16,9 @@ import src.impression.ImpressionDAO;
 import src.impression.Modele;
 import src.impression.Qualite;
 import src.impression.Type;
+import src.impression.agenda.ModeleAgenda;
+import src.impression.agenda.Ornement;
+import src.impression.calendrier.ModeleCalendrier;
 import src.photo.FichierImage;
 import src.photo.FichierImageDAO;
 import src.photo.Photo;
@@ -322,6 +325,10 @@ public class Application {
 				break;
 			case 4:
 				gereInsertImp(c,utilisateur);
+				String leChoix= LectureClavier.lireChaine("Souhaitez vous commencer a remplir votre nouvelle impression? (oui/non)");
+				if(leChoix=="oui") {
+					
+				}
 				break;
 			case 5:
 				break;
@@ -329,27 +336,47 @@ public class Application {
 			}
 		}		
 	}
-	
+
 	private static void gereInsertImp(Connection c, Utilisateur utilisateur) throws SQLException {
 		Boolean votreChoix=false;
 		while(votreChoix==false) {
 			String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
-			System.out.println("Quel est le type de votre impression?");
 			String type= Type.definir();
-			System.out.println("Quel est le format de votre impression?");
 			String format= Format.definir();
-			System.out.println("Quel est la qualite de votre impression?");
 			String qualite= Qualite.definir();
-			int nbPages= LectureClavier.lireEntier("Combien de pages souhaitez vous?: ");
+			switch(type){ 
+				case "AGENDA":
+					String modeleAgenda= ModeleAgenda.definir();
+					String ornement = Ornement.definir();
+					break;
+				case "CALENDRIER":
+					String modeleCalendrier = ModeleCalendrier.definir();
+					break;
+				case "ALBUM":
+					
+					break;	
+					
+				case "CADRE":
+	
+					break;
+			}
 			System.out.println("Récapitulatif: ");
 			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
 			String leChoix=LectureClavier.lireChaine("Cela vous conviens? (oui/non)");
 			if(leChoix=="oui") {
-				ImpressionDAO.insertImpression(c, nomI, nbPages, utilisateur.getIdUser(), type, format, qualite );
+				ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite );
 				votreChoix=true;
+				System.out.println("Vous venez de crée votre nouvelle impression");
 			}
 		}
 	}
+
+/*-----------------------------------------------------------------------------------------------------------------------------
+ * -----------------------------------------Partie de Pauline------------------------------------------------------------------
+ * --------------------------------------------Impression-------------------------------------------------------------------
+ * -----------------------------------------------------------------------------------------------------------------------------
+ */
+	
 	
 	private static void afficherArticles(ArrayList<Article> panier) {
 		// TODO:afficher les tostring() de chaque article en plus du nom de l'impressions associee a l'article en question.
