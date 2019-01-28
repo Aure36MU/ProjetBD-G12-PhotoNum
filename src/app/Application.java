@@ -1,29 +1,9 @@
 package src.app;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import src.commande.Article;
-import src.commande.ArticleDAO;
-import src.commande.CatalogueDAO;
-import src.commande.CommandeDAO;
-import src.commande.Stat;
 import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
-import src.impression.Format;
-import src.impression.ImpressionDAO;
-import src.impression.Modele;
-import src.impression.Qualite;
-import src.impression.Type;
-import src.impression.agenda.ModeleAgenda;
-import src.impression.agenda.Ornement;
-import src.impression.calendrier.ModeleCalendrier;
-import src.photo.FichierImage;
-import src.photo.FichierImageDAO;
-import src.photo.Photo;
-import src.photo.PhotoDAO;
-import src.app.*;
+
 
 
 public class Application {

@@ -24,7 +24,7 @@ public class ImpressionDAO {
 	public static int getHigherIdImp(Connection c){
 		try {
 			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idImp) FROM Impression");
+			ResultSet res = state.executeQuery("SELECT max(idImp) FROM Impression;");
 			return res.getInt(0);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -173,16 +173,46 @@ public class ImpressionDAO {
 	 * @param qualite
 	 * @throws SQLException
 	 */
-	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
-
+	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, String modele) throws SQLException {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
 				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
-		
+		switch(type) {
+		case "CALENDRIER":
+			CalendrierDAO.insertCalendrier(conn, (getHigherIdImp(conn)+1), modele);
+			break;
+		case "CADRE":
+			CadreDAO.insertCadre(conn, (getHigherIdImp(conn)+1), modele);
+			break;
+		}
 	}
 	
 
+	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, String modele, String ornement) throws SQLException {
+		Statement state = conn.createStatement();
+		state.executeUpdate("INSERT INTO Impression "
+				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
+			AgendaDAO.insertAgenda(conn, (getHigherIdImp(conn)+1), ornement, modele);
+	}
+	
+	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
+		Statement state = conn.createStatement();
+		state.executeUpdate("INSERT INTO Impression "
+				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
+		TirageDAO.insertTirage(conn, (getHigherIdImp(conn)+1));
+	}
+	
+	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, int photo, String titre) throws SQLException {
+		Statement state = conn.createStatement();
+		state.executeUpdate("INSERT INTO Impression "
+				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
+		AlbumDAO.insertAlbum(conn, photo, titre);
+	}
+	
 	/**
 	 * Modifie une Impression d'un idImp donné dans la base.
 	 * 
