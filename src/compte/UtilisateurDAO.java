@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import src.impression.album.Album;
-
 public class UtilisateurDAO {
 	
 	public static int getHigherId(Connection c){

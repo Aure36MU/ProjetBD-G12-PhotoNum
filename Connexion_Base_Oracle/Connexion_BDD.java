@@ -64,6 +64,7 @@ public class Connexion_BDD {
       // Perform a database operation 
       try {
 
+		Scripts("Connexion_Base_Oracle\\creationBase.sql",connection);
 		Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
 
       } catch (IOException e) {
@@ -77,13 +78,21 @@ public class Connexion_BDD {
   */
   public static void Requete(Connection connection,String req) throws SQLException {
     // Statement and ResultSet are AutoCloseable and closed automatically. 
-    try (Statement statement = connection.createStatement()) {      
-      try (ResultSet resultSet = statement.executeQuery(req)) {
-        System.out.println("---------------------");
-        while (resultSet.next())
-          System.out.println(resultSet.getString(1) + " ");
-            //  + resultSet.getString(2) + " ");       
-      }
+    try (Statement statement = connection.createStatement()) {
+    	statement.setEscapeProcessing(false);
+    	String[] selectReq = req.split(" ");
+    	if (selectReq[0].equals("SELECT")) {
+    		try (ResultSet resultSet = statement.executeQuery(req)) {
+    			System.out.println("==========");
+    			while (resultSet.next())
+    				System.out.println(resultSet.getString(1) + " ");
+            //  + resultSet.getString(2) + " "); 
+    		} 
+    	}else {
+    		boolean resultB = statement.execute(req);
+    		System.out.println("++++++++++");
+    		System.out.println(resultB);
+    	}
     }   
   }
   public static boolean Scripts(String aSQLScriptFilePath,Connection connection) throws IOException,SQLException {

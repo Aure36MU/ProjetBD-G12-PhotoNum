@@ -2,6 +2,7 @@ package src.app;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import src.commande.CatalogueDAO;
 import src.commande.Stat;
@@ -46,8 +47,11 @@ public class UtilitaireGestionnaire {
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
 				case 4:
-					new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectAllUserFromStatut(c, StatutUtilisateur.CLIENT));
-					//fonction gestion clients
+					ArrayList<Utilisateur> users = UtilisateurDAO.selectAllUserFromStatut(c, StatutUtilisateur.CLIENT);
+					new Affichage<Utilisateur>().afficher(users);
+					
+					
+					gererClients(c, );
 					break;
 				case 5:
 					gererCommandeClients(c,utilisateur);
