@@ -65,7 +65,7 @@ public class Connexion_BDD {
       try {
 
 		Scripts("Connexion_Base_Oracle\\creationBase.sql",connection);
-		//Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
+		Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
 
       } catch (IOException e) {
 		// TODO Auto-generated catch block
