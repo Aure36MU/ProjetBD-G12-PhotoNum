@@ -1,7 +1,7 @@
 package src.app;
 import java.util.ArrayList;
 
-public class Utilitaire<T>{
+public class Affichage<T>{
 	
 		public void afficher(ArrayList<T> tab){
 			int i = 0;
