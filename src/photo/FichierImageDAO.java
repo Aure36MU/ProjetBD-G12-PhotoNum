@@ -54,6 +54,12 @@ public class FichierImageDAO {
 		return getFichiersImage(result);
 	}
 	
+	public static ArrayList<FichierImage> selectAllWithOwner(Connection conn) throws SQLException {
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,u.prenom, u.nom  FROM FichierImage NATURAL JOIN Utilisateur u  ;");
+		return getFichiersImage(result);
+	}
+	
 	/**
 	 * Sélectionne tous les fichiers images avec des conditions paramétrées.
 	 * 

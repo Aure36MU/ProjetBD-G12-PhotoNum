@@ -12,6 +12,7 @@ import src.compte.UtilisateurDAO;
 import src.impression.Format;
 import src.impression.Modele;
 import src.impression.Type;
+import src.photo.FichierImage;
 import src.photo.FichierImageDAO;
 
 public class UtilitaireGestionnaire {
@@ -64,13 +65,13 @@ public class UtilitaireGestionnaire {
 		}
 	}
 	
-	private static void gererFichiersClients(Connection c) {
-		new Affichage<Utilisateur>().afficher(FichierImageDAO.selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
-		int idUser = 0;
-		while(!UtilisateurDAO.idExists(c,idUser)){
-			idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
+	private static void gererFichiersClients(Connection c) throws SQLException {
+		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllWithOwner(c));
+		int idFichier = 0;
+		while(!UtilisateurDAO.idExists(c,idFichier)){
+			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
 		}
-		//FichierImageDAO.deleteUtilisateur(c, idUser);
+		FichierImageDAO.deleteFichierImage(c, idFichier);
 	}
 
 	private static void gererClients(Connection c) throws SQLException {
