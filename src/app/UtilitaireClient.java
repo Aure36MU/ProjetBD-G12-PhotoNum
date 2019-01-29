@@ -354,8 +354,10 @@ public class UtilitaireClient {
 	
 	
 	private static void gereInsertImp(Connection c, Utilisateur utilisateur) throws SQLException {
-		boolean votreChoix=false;
-		while(votreChoix==false) {
+		boolean continuer=true;
+		boolean correct = false;
+		while(continuer) {
+			
 			String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
 			String type= Type.definir();
 			String format= Format.definir();
@@ -363,11 +365,22 @@ public class UtilitaireClient {
 			
 			System.out.println("Récapitulatif: ");
 			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
-			boolean leChoix=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
-			if(leChoix) {
-				votreChoix=true;
-				System.out.println("Vous venez de crée votre nouvelle impression");
+			correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
+			
+			while(!correct) {
+				if (LectureClavier.lireOuiNon("Abandonner ? (oui/non)")) {
+					return;
+				}
+				nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
+				type= Type.definir();
+				format= Format.definir();
+				qualite= Qualite.definir();
+				
+				System.out.println("Récapitulatif: ");
+				System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
+				correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
 			}
+			System.out.println("Vous venez de crée votre nouvelle impression");
 			
 			switch(type){ 
 				case "AGENDA":
@@ -407,6 +420,7 @@ public class UtilitaireClient {
 								System.out.println("Vous venez de crée votre nouvelle impression");
 								break;
 			}
+			continuer = LectureClavier.lireOuiNon("Continuer de créer des impressions? (oui/non)");
 		}
 	}
 		

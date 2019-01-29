@@ -82,7 +82,7 @@ public class CommandeDAO {
 	    
 	    public static void updateCommandeCommeEnvoyee(Connection c, int id) throws SQLException {
 	    	Statement stat= c.createStatement();
-			String query= "update Commande set statut = 'ENVOYEE' where idComm='"+id+"'";
+			String query= "update Commande set statutCommande = 'ENVOYEE' where idComm='"+id+"'";
 			stat.executeUpdate(query);
 	    }
 	    
@@ -112,7 +112,7 @@ public class CommandeDAO {
 	    		CatalogueDAO.updateCatalogueQte(c, a.qte, imp.getType().toString(), imp.getFormat().toString(), modele);
 	    		i++;
 	    	}
-			stat.executeUpdate("update Commande set statut = 'PRET_A_L_ENVOI' where idComm='"+id+"'");
+			stat.executeUpdate("update Commande set statutCommande = 'PRET_A_L_ENVOI' where idComm='"+id+"'");
 			c.commit();
 	    }
 	    
@@ -120,7 +120,10 @@ public class CommandeDAO {
 		public static Boolean idExists(Connection c, int idComm) throws SQLException {
 			Statement stat= c.createStatement();
 			ResultSet result =stat.executeQuery( "select count(*) from Commande where idComm='"+idComm+"'");
-			return result.getInt(1)==1;
+			if (result.next()) {
+				return result.getInt(1)==1;
+			}
+			return false;
 		}
 	    
 	    /**
