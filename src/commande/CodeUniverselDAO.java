@@ -44,7 +44,7 @@ public class CodeUniverselDAO {
 	
 	public static ArrayList<CodeUniversel> selectAll(Connection c, int id) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "select * from CodePromo natural join CodeUniversel where idUser="+id+";";
+		String query= "select * from CodePromo natural join CodeUniversel where idUser="+id;
 		ResultSet result =stat.executeQuery(query);
 		return CodeUniverselDAO.getCodeUniversel(result);
 	}

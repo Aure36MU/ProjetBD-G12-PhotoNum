@@ -29,7 +29,7 @@ public class AlbumDAO {
 	public static ArrayList<Album> selectAll(Connection conn, String condition) throws SQLException {
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Album WHERE "+condition+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Album WHERE "+condition);
 		return getAlbums(result);
 
 	}

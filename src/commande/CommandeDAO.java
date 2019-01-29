@@ -20,7 +20,7 @@ public class CommandeDAO {
 		public static ArrayList<Commande> selectAll(Connection conn) throws SQLException {
 
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande;");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande");
 	        
 	        return getCommandes(result);
 	    }
@@ -37,7 +37,7 @@ public class CommandeDAO {
 	    public static ArrayList<Commande> selectAll(Connection conn, String condition) throws SQLException {
 
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE "+condition+";");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE "+condition);
 	        return getCommandes(result);
 
 	    }
@@ -55,7 +55,7 @@ public class CommandeDAO {
 	    public static ArrayList<Commande> selectEnvoyer(Connection conn) throws SQLException {
 
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='ENVOYE';");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='ENVOYE'");
 	        return getCommandes(result);
 
 	    }
@@ -71,7 +71,7 @@ public class CommandeDAO {
 	    public static ArrayList<Commande> selectAllFromUser(Connection conn, int id) throws SQLException {
 
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+id+";");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+id);
 	        return getCommandes(result);
 
 	    }
@@ -94,12 +94,12 @@ public class CommandeDAO {
 	    	conn.setAutoCommit(false);
 	    	
 	    	Statement state = conn.createStatement();
-	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON';");
+	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON'");
 	    	
 	    	if (result.next()) { //Il existe d�j� une commande
-	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp+";");
+	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp);
 	    		if (result.next()) { //Cet article existe d�j� dans le panier
-	    			state.executeUpdate("UPDATE Article SET qte= qte+"+qte+";");
+	    			state.executeUpdate("UPDATE Article SET qte= qte+"+qte);
 	    		} else { //L'Article est � ajouter dans le panier
 	    			try {
 						ArticleDAO.insertArticleFromImpression(conn, idImp, idComm, qte);

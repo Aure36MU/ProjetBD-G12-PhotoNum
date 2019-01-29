@@ -18,7 +18,7 @@ public class CalendrierDAO {
 	public static ArrayList<Calendrier> selectAll(Connection conn) throws SQLException {
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Calendrier;");
+		ResultSet result = state.executeQuery("SELECT * FROM Calendrier");
 		return getCalendriers(result);
 
 
@@ -36,7 +36,7 @@ public class CalendrierDAO {
 	public static ArrayList<Calendrier> selectAll(Connection conn, String condition) throws SQLException {
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Calendrier WHERE "+condition+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Calendrier WHERE "+condition);
 		return getCalendriers(result);
 
 		
@@ -52,7 +52,7 @@ public class CalendrierDAO {
 	 */
 	public static ArrayList<Calendrier> selectAllFromUser(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Calendrier JOIN Impression ON (Calendrier.idImp = Impression.idImp) WHERE Impression.idUser="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Calendrier JOIN Impression ON (Calendrier.idImp = Impression.idImp) WHERE Impression.idUser="+id);
 		return getCalendriers(result);
 	}
 	
@@ -71,7 +71,7 @@ public class CalendrierDAO {
 	 */
 	public static void insertCalendrier(Connection conn, int id, String modeleCalendrier) throws SQLException {
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO Calendrier VALUES('"+id+"', '"+modeleCalendrier+"');");
+		state.executeUpdate("INSERT INTO Calendrier VALUES('"+id+"', '"+modeleCalendrier+"')");
 	}
 	
 	
@@ -85,7 +85,7 @@ public class CalendrierDAO {
 	public static void updateCalendrier(Connection conn, int id, String modeleCalendrier) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("UPDATE Calendrier SET modeleCalendrier='"+modeleCalendrier+"' WHERE idImp="+id+";");
+		state.executeUpdate("UPDATE Calendrier SET modeleCalendrier='"+modeleCalendrier+"' WHERE idImp="+id);
 		
 	}
 	
@@ -99,7 +99,7 @@ public class CalendrierDAO {
 	public static void deleteCalendrier(Connection conn, int id) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("DELETE FROM Calendrier WHERE idImp="+id+";");
+		state.executeUpdate("DELETE FROM Calendrier WHERE idImp="+id);
 		
 	}
 
