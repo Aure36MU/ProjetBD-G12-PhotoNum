@@ -79,7 +79,7 @@ public class AgendaDAO {
 	
 	
 	/**
-	 * Modifie un agenda d'un idImp donn� dans la base.
+	 * Modifie un agenda d'un idImp donne dans la base.
 	 * 
 	 * @param id id impression
 	 * @param modele modele

@@ -4,9 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import src.app.LectureClavier;
-import src.commande.Commande;
-import src.commande.ModeLivraison;
-import src.commande.StatutCommande;
 import src.impression.agenda.Agenda;
 import src.impression.agenda.AgendaDAO;
 import src.impression.album.Album;
@@ -102,12 +99,20 @@ public class ImpressionDAO {
 		return null;
 	}
 	
-	public static Impression selecImpressionFromId(Connection conn, int id) throws SQLException{
-
+	public static Impression selectImpressionFromId(Connection conn, int id) throws SQLException{
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id);
-		if(result.next()){result.}
-		return ;
+		if(result.next()){
+			return new Impression(
+					result.getInt("idImp"),
+					result.getString("nomImp"),
+					result.getInt("nbrPageTotal"),
+					result.getInt("idUser"),
+					Qualite.valueOf(result.getString("qualite")),
+					Type.valueOf(result.getString("type")),
+					Format.valueOf(result.getString("format")));
+		}
+		return null;
 	}
 	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
@@ -346,7 +351,7 @@ public class ImpressionDAO {
 			e.printStackTrace();
 		}
 	}
-	/*
+	
 	public static ArrayList<Impression> getImpressions(ResultSet result) throws SQLException {
         ArrayList<Impression> impressions = new ArrayList<Impression>();
 
@@ -362,7 +367,7 @@ public class ImpressionDAO {
             ));
         }
         return impressions;
-	}*/
+	}
 	
 	
 }

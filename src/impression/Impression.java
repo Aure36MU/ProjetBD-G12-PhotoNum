@@ -1,6 +1,7 @@
 package src.impression;
 
-public abstract class Impression {
+public class Impression {
+
 	private int idImp;
 	private String nomImp;
 	private int nbPages;
@@ -8,6 +9,20 @@ public abstract class Impression {
 	private Qualite qualite;
 	private Type type;
 	private Format format;
+	
+	public Impression() {
+		
+	}
+	
+	public Impression(int idImp, String nomImp, int nbPages, int idUser, Qualite qualite, Type type, Format format) {
+		this.idImp = idImp;
+		this.nomImp = nomImp;
+		this.nbPages = nbPages;
+		this.idUser = idUser;
+		this.qualite = qualite;
+		this.type = type;
+		this.format = format;
+	}
 	
 	public int getIdImp() {
 		return idImp;

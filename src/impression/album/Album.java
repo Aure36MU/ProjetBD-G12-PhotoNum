@@ -8,9 +8,11 @@ public class Album extends Impression {
 	int idImp;
 
 	public Album(int idImp, int photoCouv, String titreCouv) {
+		super();		
+		this.idImp=idImp;
 		this.titreCouv=titreCouv;
 		this.photoCouv=photoCouv;
-		this.idImp=idImp;
+
 	}
 	
 	public String getTitreCouv() {

@@ -8,8 +8,9 @@ public class Agenda extends Impression {
 	Ornement ornement;
 	ModeleAgenda modeleAgenda;
 
-	public Agenda(int idimpression, Ornement ornement , ModeleAgenda modeleAgenda) {
-		this.idImp = idimpression;
+	public Agenda(int idImp, Ornement ornement , ModeleAgenda modeleAgenda) {
+		super();
+		this.idImp = idImp;
 		this.ornement = ornement;
 		this.modeleAgenda = modeleAgenda;
 	}

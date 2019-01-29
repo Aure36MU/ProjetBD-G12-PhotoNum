@@ -123,7 +123,7 @@ public class ArticleDAO {
     	 * Cela fera une requ�te � faire en moins dans la base !*/
     	switch (newImp.getType()) {
 		case CALENDRIER:
-			newModele = CalendrierDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModele().toString();
+			newModele = CalendrierDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleCalendrier().toString();
 			break;
 		case AGENDA:
 			newModele = AgendaDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleAgenda().toString();
