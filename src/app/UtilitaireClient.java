@@ -126,7 +126,7 @@ public class UtilitaireClient {
 				gererUnePhoto(c,utilisateur);
 				break;
 			case 5:
-				FichierImageDAO.selectAll(c, "partage=true");
+				FichierImageDAO.selectAll(c, "partager=1");
 				gererFichierPartager(c, utilisateur);
 				//PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 				break;

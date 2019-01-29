@@ -7,8 +7,9 @@ public class Calendrier extends Impression {
 	int idImp;
 	ModeleCalendrier modele;
 	
-	public Calendrier(int idimpression, ModeleCalendrier modele) {
-		this.idImp = idimpression;
+	public Calendrier(int idImp, ModeleCalendrier modele) {
+		super();
+		this.idImp = idImp;
 		this.modele = modele;
 	}
 

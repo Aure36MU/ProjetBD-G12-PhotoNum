@@ -141,7 +141,7 @@ public class FichierImageDAO {
 	 */
 	private static void update(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,
 			int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
-			PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idUser=?, chemin=?, infoPVue=?, pixelImg=?, partage=?, dateUtilisation=?, fileAttModif=?, fileAttSuppr=?) WHERE idFichier=?");
+			PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idUser=?, chemin=?, infoPVue=?, pixelImg=?, partager=?, dateUtilisation=?, fileAttModif=?, fileAttSuppr=?) WHERE idFichier=?");
 			state.setInt(1, idUser);
 			state.setString(2, chemin);
 			state.setString(3, infoPVue);
@@ -301,7 +301,7 @@ public class FichierImageDAO {
 					result.getString("chemin"),
 					result.getString("infoPVue"),
 					result.getInt("pixelImg"),
-					result.getInt("partage"),
+					result.getInt("partager"),
 					result.getDate("dateUtilisation"),
 					result.getInt("fileAttModif"),
 					result.getInt("fileAttSuppr")
