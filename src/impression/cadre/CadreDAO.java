@@ -41,7 +41,7 @@ public class CadreDAO {
 		return CadreDAO.getCadres(result);
 	}
 	
-	public static ArrayList<Cadre> selectAllFromUserWait(Connection conn, int id) throws SQLException {
+	public static ArrayList<Cadre> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Cadre') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp and i.type='Cadre')");
         return getCadres(result);
