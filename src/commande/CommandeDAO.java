@@ -85,6 +85,7 @@ public class CommandeDAO {
 	    	Statement state = conn.createStatement();
 	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON'");
 	    	
+
 	    	if (result.next()) { //Il existe deja une commande
 	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp);
 	    		if (result.next()) { //Cet article existe deja dans le panier

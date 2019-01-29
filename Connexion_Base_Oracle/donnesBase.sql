@@ -1,7 +1,8 @@
-insert into utilisateur (idUser,prenom,nom,email,mdp) values (1, 'pauline','fauto','p.fauto@mail.fr','12345')
-insert into utilisateur (idUser,prenom,nom,email,mdp) values (2, 'Aurelien','FLASH','AF@mail.fr','12ZD')
-insert into utilisateur (idUser,prenom,nom,email,mdp) values (3, 'THOMAS','Trigger','tt@mail.fr','tt$')
-insert into utilisateur (idUser,prenom,nom,email,mdp) values (4, 'sylvain','me','Smi@mail.us','AZERTY$00')
+insert into utilisateur (idUser,prenom,nom,email,mdp,active,statut) values (1, 'pauline','fauto','p.fauto@mail.fr','12345',1,'CLIENT')
+insert into utilisateur (idUser,prenom,nom,email,mdp,active,statut) values (2, 'Aurelien','FLASH','AF@mail.fr','12ZD',1,'CLIENT')
+insert into utilisateur (idUser,prenom,nom,email,mdp,active,statut) values (3, 'THOMAS','Trigger','tt@mail.fr','tt$',1,'CLIENT')
+insert into utilisateur (idUser,prenom,nom,email,mdp,active,statut) values (4, 'sylvain','me','Smi@mail.us','AZERTY$00',1,'CLIENT')
+insert into utilisateur (idUser,prenom,nom,email,mdp,active,statut) values (5, 'chouette','bidule','a@b.com','truc',1,'GESTIONNAIRE')
 
 insert into adresse (idAdre, rue , codePostal, ville , pays, idUser)  values (1, '16 rue Malifaud' , 38100,'Grenoble' , 'france' , (select idUser from utilisateur where email='p.fauto@mail.fr'))
 insert into adresse (idAdre, rue , codePostal, ville , pays, idUser)  values (2, '16 rue Malifaud' , 38100, 'Grenoble' , 'france' , (select idUser from utilisateur where email='AF@mail.fr'))

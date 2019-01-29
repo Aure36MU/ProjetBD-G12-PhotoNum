@@ -24,7 +24,7 @@ public class FichierImageDAO {
 	public static int getHigherIdFichier(Connection c){
 		try {
 			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idFichier) FROM FichierImage;");
+			ResultSet res = state.executeQuery("SELECT max(idFichier) FROM FichierImage");
 			return res.getInt(0);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -50,13 +50,13 @@ public class FichierImageDAO {
 	 */
 	public static ArrayList<FichierImage> selectAll(Connection conn) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM FichierImage;");
+		ResultSet result = state.executeQuery("SELECT * FROM FichierImage");
 		return getFichiersImage(result);
 	}
 	
 	public static ArrayList<FichierImage> selectAllWithOwner(Connection conn) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,u.prenom, u.nom  FROM FichierImage NATURAL JOIN Utilisateur u  ;");
+		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,u.prenom, u.nom  FROM FichierImage NATURAL JOIN Utilisateur u ");
 		return getFichiersImage(result);
 	}
 	
@@ -71,7 +71,7 @@ public class FichierImageDAO {
 	 */
 	public static ArrayList<FichierImage> selectAll(Connection conn, String condition) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE "+condition+";");
+		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE "+condition);
 		return getFichiersImage(result);
 	}
 	
@@ -86,7 +86,7 @@ public class FichierImageDAO {
 	public static ArrayList<FichierImage> selectAllFromUser(Connection conn, int id) throws SQLException {
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE idUser="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE idUser="+id);
 		return getFichiersImage(result);
 
 	}
@@ -112,7 +112,7 @@ public class FichierImageDAO {
 	public static void insertFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
 			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
 
-		PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+		PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		state.setInt(1, getHigherIdFichier(conn)+1);
 		state.setInt(2, idUser);
 		state.setString(3, chemin);
@@ -145,7 +145,7 @@ public class FichierImageDAO {
 	private static void update(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,
 			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
 
-		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idUser=?, chemin=?, infoPVue=?, pixelImg=?, partage=?, dateUtilisation=?, fileAttModif=?, fileAttSuppr=?) WHERE idFichier=?;");
+		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idUser=?, chemin=?, infoPVue=?, pixelImg=?, partage=?, dateUtilisation=?, fileAttModif=?, fileAttSuppr=?) WHERE idFichier=?");
 		state.setInt(1, idUser);
 		state.setString(2, chemin);
 		state.setString(3, infoPVue);
@@ -212,7 +212,7 @@ public class FichierImageDAO {
 	private static void delete(Connection conn, int id) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("DELETE FROM FichierImage WHERE idFichier="+id+";");
+		state.executeUpdate("DELETE FROM FichierImage WHERE idFichier="+id);
 	}
 	
 
@@ -256,7 +256,7 @@ public class FichierImageDAO {
 	public static void deleteFichierImageModeGestion(Connection conn, int id) throws SQLException {
 		
 		Statement state = conn.createStatement();
-		ResultSet lesCommandes = state.executeQuery("SELECT idComm FROM Commande NATURAL JOIN Article NATURAL JOIN Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE idFichier="+id+";");
+		ResultSet lesCommandes = state.executeQuery("SELECT idComm FROM Commande NATURAL JOIN Article NATURAL JOIN Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE idFichier="+id);
 		
 		FichierImage leFichierImage = selectAll(conn, "idFichier="+id).get(0);
 		if (isSharedAndUsedBySomeone(conn, id)) {
@@ -271,7 +271,7 @@ public class FichierImageDAO {
 					leFichierImage.isFileAttModif(),
 					true);
 			while (lesCommandes.next()) {
-				state.executeQuery("UPDATE Commande SET statutCommande='ANNULEE' WHERE statutCommande<>'ENVOYEE' AND idComm="+lesCommandes.getInt("idComm")+";");
+				state.executeQuery("UPDATE Commande SET statutCommande='ANNULEE' WHERE statutCommande<>'ENVOYEE' AND idComm="+lesCommandes.getInt("idComm"));
 			}
 		} else {
 			delete(conn, id);
@@ -289,7 +289,7 @@ public class FichierImageDAO {
 	 */
 	public static boolean isSharedAndUsedBySomeone(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT count(Impression.id_user) FROM FichierImage NATURAL JOIN Photo NATURAL JOIN Impression_Photo NATURAL JOIN Impression WHERE idFichier="+id+";");
+		ResultSet result = state.executeQuery("SELECT count(Impression.id_user) FROM FichierImage NATURAL JOIN Photo NATURAL JOIN Impression_Photo NATURAL JOIN Impression WHERE idFichier="+id);
 		result.next();
 		return (result.getInt(0) > 1);
 	}

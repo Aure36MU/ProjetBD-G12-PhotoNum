@@ -28,7 +28,7 @@ public class CadreDAO {
 	public static ArrayList<Cadre> selectAll(Connection conn, String condition) throws SQLException {
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Cadre WHERE "+condition+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Cadre WHERE "+condition);
 		return getCadres(result);
 
 		
@@ -57,7 +57,7 @@ public class CadreDAO {
 	public static void insertCadre(Connection conn, int id, String modeleCadre) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO Cadre VALUES("+id+", '"+modeleCadre+"');");
+		state.executeUpdate("INSERT INTO Cadre VALUES("+id+", '"+modeleCadre+"')");
 		
 	}
 	
@@ -72,7 +72,7 @@ public class CadreDAO {
 	public static void updateCadre(Connection conn, int id, String modeleCadre) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("UPDATE Cadre SET modeleCadre='"+modeleCadre+"' WHERE idImp="+id+";");
+		state.executeUpdate("UPDATE Cadre SET modeleCadre='"+modeleCadre+"' WHERE idImp="+id);
 		
 	}
 	
@@ -86,7 +86,7 @@ public class CadreDAO {
 	public static void deleteCadre(Connection conn, int id) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("DELETE FROM Cadre WHERE idImp="+id+";");
+		state.executeUpdate("DELETE FROM Cadre WHERE idImp="+id);
 		
 	}
 	
