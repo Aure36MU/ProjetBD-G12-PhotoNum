@@ -43,7 +43,7 @@ public class AlbumDAO {
 
     public static ArrayList<Album> selectAllFromUserWait(Connection conn, int id) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Album') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Album");
+        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Album') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Album')");
         return getAlbums(result);
     }
 	

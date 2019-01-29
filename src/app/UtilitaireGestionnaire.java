@@ -74,11 +74,15 @@ public class UtilitaireGestionnaire {
 
 	private static void gererClients(Connection c) throws SQLException {
 		new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
-		int idUser = -1;
-		while(!UtilisateurDAO.idExists(c,idUser)){
-			idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
+		int idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
+		while(idUser!=0 && !UtilisateurDAO.idExists(c,idUser)){
+			idUser = LectureClavier.lireEntier("L'id n'existe pas. Réessayez.");
 		}
-		UtilisateurDAO.deleteUtilisateur(c, idUser);
+		if(idUser==0) {
+			return;
+		} else {
+			UtilisateurDAO.deleteUtilisateur(c, idUser);
+		}
 	}
 	
 	private static void gererEnvoiCommande(Connection c) throws SQLException {

@@ -45,7 +45,7 @@ public class TirageDAO {
 	
 	public static ArrayList<Tirage> selectAllFromUserWait(Connection conn, int id) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Tirage') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Tirage");
+        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Tirage') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Tirage')");
         return getTirages(result);
     }
 	
