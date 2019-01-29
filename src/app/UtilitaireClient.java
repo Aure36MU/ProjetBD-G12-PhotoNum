@@ -118,11 +118,11 @@ public class UtilitaireClient {
 				System.out.println("retour au menu precedent");
 				break;
 			case 3:
-				FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser());
+				new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser()));
 				gererUnFichier(c,utilisateur);
 				break;
 			case 4:
-				PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
+				new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
 				gererUnePhoto(c,utilisateur);
 				break;
 			case 5:

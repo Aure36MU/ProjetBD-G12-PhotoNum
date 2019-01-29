@@ -123,7 +123,7 @@ public class CatalogueDAO {
         										+ "JOIN Impression i ON (a.idImp=i.idImp) "
         										+ "NATURAL JOIN Cadre ca"
         										+ "WHERE "+catalogue.format+"=i.format and "+catalogue.modele+"=ca.modele and c.statut<>'Brouillon'; ");
-        nbVentes=result.getInt(0);
+        nbVentes=result.getInt(1);
         return nbVentes;
 	}
 	

@@ -16,6 +16,7 @@ import src.impression.Modele;
 import src.impression.Type;
 import src.photo.FichierImage;
 import src.photo.FichierImageDAO;
+import src.photo.Owners;
 
 public class UtilitaireGestionnaire {
 
@@ -52,9 +53,9 @@ public class UtilitaireGestionnaire {
 					break;
 				case 4:	gererClients(c);
 					break;
-				case 6: 	gererFichiersClients(c);
+				case 5: 	gererFichiersClients(c);
 					break;				
-				case 5:	menuCommandeClients(c,utilisateur);
+				case 6:	menuCommandeClients(c,utilisateur);
 					break;
 				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
 					break;
@@ -64,7 +65,7 @@ public class UtilitaireGestionnaire {
 	}
 	
 	private static void gererFichiersClients(Connection c) throws SQLException {
-		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllWithOwner(c));
+		new Affichage<Owners>().afficher(FichierImageDAO.selectAllWithOwner(c));
 		int idFichier = -1;
 		while(!FichierImageDAO.idExists(c,idFichier)){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
@@ -73,7 +74,7 @@ public class UtilitaireGestionnaire {
 	}
 
 	private static void gererClients(Connection c) throws SQLException {
-		new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
+		new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectWithCondition(c, "statutUtilisateur = 'CLIENT' and active = 1"));
 		int idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
 		while(idUser!=0 && !UtilisateurDAO.idExists(c,idUser)){
 			idUser = LectureClavier.lireEntier("L'id n'existe pas. Réessayez.");

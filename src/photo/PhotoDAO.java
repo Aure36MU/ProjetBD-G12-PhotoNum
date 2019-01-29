@@ -153,6 +153,12 @@ public class PhotoDAO {
 		state.executeUpdate("DELETE FROM Photo WHERE idPh="+id);
 	}
 	
+	
+	public static void deletePhotosFromFichierImage(Connection conn, int id) throws SQLException {
+		Statement state = conn.createStatement();
+		state.executeUpdate("DELETE FROM Photo WHERE idFichier="+id);
+	}
+	
 	/**
 	 * Retourne les objets Photo construits à partir d'un résultat de requête.
 	 * 
