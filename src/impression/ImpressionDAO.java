@@ -23,7 +23,7 @@ public class ImpressionDAO {
 	public static int getHigherIdImp(Connection c){
 		try {
 			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idImp) FROM Impression;");
+			ResultSet res = state.executeQuery("SELECT max(idImp) FROM Impression");
 			return res.getInt(0);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -79,7 +79,7 @@ public class ImpressionDAO {
 	public static Impression selectImpressionFromId(Connection conn, int id) throws SQLException{
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id);
         if (result.next()) {
         	switch (result.getString("type")) {
 			case "CALENDRIER":
@@ -121,7 +121,7 @@ public class ImpressionDAO {
 		ArrayList<FichierImage> tab = new ArrayList<FichierImage>();
 		
 		Statement state = c.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id);
 		
 		while (result.next()) {
 			tab.add(new FichierImage(
@@ -144,7 +144,7 @@ public class ImpressionDAO {
 	public static ArrayList<Photo> selectAllPhotos(Connection c,int id) throws SQLException{
 		ArrayList<Photo> tab = new ArrayList<Photo>();
 		Statement state = c.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id);
 		while (result.next()) {
 			tab.add(new Photo(
 					result.getInt("idPhoto"),
@@ -173,7 +173,7 @@ public class ImpressionDAO {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 		switch(type) {
 		case "CALENDRIER":
 			CalendrierDAO.insertCalendrier(conn, (getHigherIdImp(conn)+1), modele);
@@ -189,7 +189,7 @@ public class ImpressionDAO {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 			AgendaDAO.insertAgenda(conn, (getHigherIdImp(conn)+1), ornement, modele);
 			System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
@@ -198,7 +198,7 @@ public class ImpressionDAO {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 		TirageDAO.insertTirage(conn, (getHigherIdImp(conn)+1));
 		System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
@@ -207,7 +207,7 @@ public class ImpressionDAO {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 		AlbumDAO.insertAlbum(conn, photo, titre);
 		System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
@@ -228,7 +228,7 @@ public class ImpressionDAO {
 	public static void updateImpression(Connection conn, int idImp, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("UPDATE Impression SET nomImp='"+nomImp+"', nbrPageTotal="+nbPages+", idUser="+idUser+", type='"+type+"', format='"+format+"', qualite='"+qualite+"' WHERE idImp="+idImp+";");
+		state.executeUpdate("UPDATE Impression SET nomImp='"+nomImp+"', nbrPageTotal="+nbPages+", idUser="+idUser+", type='"+type+"', format='"+format+"', qualite='"+qualite+"' WHERE idImp="+idImp);
 		
 	}
 
@@ -242,7 +242,7 @@ public class ImpressionDAO {
     public static void deleteImpression(Connection conn, int id) throws SQLException {
 
         Statement state = conn.createStatement();
-        state.executeUpdate("DELETE FROM Impression WHERE idImp="+id+";");
+        state.executeUpdate("DELETE FROM Impression WHERE idImp="+id);
 
     }
 	
@@ -300,7 +300,7 @@ public class ImpressionDAO {
 			i.setQualite(qualite);
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET qualite = '"+qualite+"' "
-								+ "WHERE idImp = '" + i.getIdImp()+"';");
+								+ "WHERE idImp = '" + i.getIdImp()+"'");
 		} catch (SQLException e) {
 			System.out.println("update failed");
 			e.printStackTrace();
@@ -311,7 +311,7 @@ public class ImpressionDAO {
 			i.setFormat(format);
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET format = '"+format+"' "
-								+ "WHERE idImp = '" + i.getIdImp()+"';");
+								+ "WHERE idImp = '" + i.getIdImp()+"'");
 			
 		} catch (SQLException e) {
 			System.out.println("update failed");
@@ -323,7 +323,7 @@ public class ImpressionDAO {
 			i.setNbPages(nb);
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET nbPages = '"+nb+"' "
-								+ "WHERE idImp = '" + i.getIdImp()+"';");
+								+ "WHERE idImp = '" + i.getIdImp()+"'");
 		} catch (SQLException e) {
 			System.out.println("update failed");
 			e.printStackTrace();

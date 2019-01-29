@@ -116,7 +116,7 @@ public class UtilitaireClient {
 			String infoPVue= LectureClavier.lireChaine("Commentaire sur le fichier: ");
 			int pixelImg= LectureClavier.lireEntier("Quel est la taille en pixel : ");	
 			boolean partage= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
-			String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
+			String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/mm/yyyy"));
 			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage, Date.valueOf(dateUse) , false, false);
 			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
 		}
@@ -477,8 +477,8 @@ public class UtilitaireClient {
 				boolean comm=LectureClavier.lireOuiNon("Voulez vous ajouter cette impression dans votre panier?");
 				if(comm) {
 					int qte= LectureClavier.lireEntier("combien d'exemplaire souhaitez vous?");
-					CommandeDAO.ajouterAuPanier(c, utilisateur.getIdUser(), idImp, idComm, qte);
-					ArticleDAO.insertArticleFromImpression(c, idImp, idComm, 1);
+					CommandeDAO.ajouterAuPanier(c, utilisateur.getIdUser(), idImp, qte);
+					//ArticleDAO.insertArticleFromImpression(c, idImp, idComm, 1);
 				}
 			}
 		}else {

@@ -14,8 +14,9 @@ public class CodePersonnelDAO {
 		try {
 			Statement state = c.createStatement();
 			ResultSet res = state.executeQuery("SELECT max(idCodeP) FROM CodePromo");
-			return res.getInt(0);
-			
+			if (res.next()) {
+				return res.getInt(0);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -43,7 +44,7 @@ public class CodePersonnelDAO {
 	
 	public static ArrayList<CodePersonnel> selectAll(Connection c, int id) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "select * from CodePromo natural join CodePersonnel where idUser="+id+";";
+		String query= "select * from CodePromo natural join CodePersonnel where idUser="+id;
 		ResultSet result =stat.executeQuery(query);
 		return CodePersonnelDAO.getCodePersonnel(result);
 	}

@@ -13,7 +13,7 @@ public class CatalogueDAO {
 	public static ArrayList<Catalogue> selectStats(Connection conn) throws SQLException {
 
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT type,format,modele,(select count FROM Catalogue;");
+        ResultSet result = state.executeQuery("SELECT type,format,modele,(select count FROM Catalogue");
         
         return CatalogueDAO.getStat(result);
 
@@ -30,7 +30,7 @@ public class CatalogueDAO {
      */
     public static ArrayList<Catalogue> selectAll(Connection conn, String condition) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Catalogue WHERE "+condition+";");
+        ResultSet result = state.executeQuery("SELECT * FROM Catalogue WHERE "+condition);
         return getCatalogues(result);
     }
 	/**
@@ -43,7 +43,7 @@ public class CatalogueDAO {
 
 	public static ArrayList<Catalogue> selectAll(Connection conn) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Catalogue;");
+        ResultSet result = state.executeQuery("SELECT * FROM Catalogue");
         return getCatalogues(result);
     }
     
@@ -62,7 +62,7 @@ public class CatalogueDAO {
 	}
     public static void simulerLivraison(Connection c, int qteLivraison, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Utilisateur set qteStock= qteStock"+qteLivraison+" where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		String query= "update Catalogue set qteStock= qteStock + "+qteLivraison+" where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
 	}
     

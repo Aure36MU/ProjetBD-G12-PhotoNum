@@ -30,7 +30,7 @@ public class TirageDAO {
 	public static ArrayList<Tirage> selectAll(Connection conn, String condition) throws SQLException {
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Tirage WHERE "+condition+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Tirage WHERE "+condition);
 		return getTirages(result);
 
 		
@@ -45,7 +45,7 @@ public class TirageDAO {
 	
 	public static ArrayList<Tirage> selectAllFromUserWait(Connection conn, int id) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Tirage') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Tirage");
+        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Tirage') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Tirage')");
         return getTirages(result);
     }
 	
@@ -58,7 +58,7 @@ public class TirageDAO {
 	public static void insertTirage(Connection conn, int id) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO Tirage VALUES("+id+");");
+		state.executeUpdate("INSERT INTO Tirage VALUES("+id+")");
 		
 	}
 	
@@ -79,7 +79,7 @@ public class TirageDAO {
 	public static void deleteTirage(Connection conn, int id) throws SQLException {
 
 		Statement state = conn.createStatement();
-		state.executeUpdate("DELETE FROM Tirage WHERE idImp="+id+";");
+		state.executeUpdate("DELETE FROM Tirage WHERE idImp="+id);
 		
 	}
 	

@@ -1,5 +1,6 @@
 package src.photo;
 
+import java.sql.Connection;
 import java.sql.Date;
 
 public class FichierImage {
@@ -102,6 +103,5 @@ public class FichierImage {
 	public String toString(){
 		return "idFichier : "+idFichier+"     idUser : "+idUser+"     nombrePixels : "+pixelImg+"     chemin : "+chemin+"     infoPriseVue : "+infoPVue+"     partage : "+partage+"     dateUtilisation : "+dateUtilisation+"     fileModif : "+fileAttModif+"     fileSuppr : "+fileAttSuppr;
 	}
-
 
 }
