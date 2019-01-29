@@ -16,12 +16,9 @@ public class CommandeDAO {
 		 * @return ArrayList contenant tous les objets Commande
 		 * @throws SQLException
 		 */
-	
 		public static ArrayList<Commande> selectAll(Connection conn) throws SQLException {
-
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande;");
-	        
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande");
 	        return getCommandes(result);
 	    }
 		
@@ -34,46 +31,38 @@ public class CommandeDAO {
 	     * @return ArrayList contenant les objets commande selectionnes
 	     * @throws SQLException
 	     */
-	    public static ArrayList<Commande> selectAll(Connection conn, String condition) throws SQLException {
-
+	    public static ArrayList<Commande> selectPretEnvoi(Connection conn) throws SQLException{
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE "+condition+";");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='PRET_A_L_ENVOI'");
 	        return getCommandes(result);
-
 	    }
 	    
 	    /**
 	     * Selectionne toutes les commandes  envoyee  : represente archivage des commandes deje faites
 	     * Partie de la base exportable dans une zone de stockage
-	     *
 	     * @param conn Connection SQL
 	     * @param condition chaene de caracteres formate comme suit : "condition1 {AND condition2}"
 	     * Exemple : "foo=1 AND bar='bar' AND truc<>42"
 	     * @return ArrayList contenant les objets commande selectionnes
 	     * @throws SQLException
 	     */
-	    public static ArrayList<Commande> selectEnvoyer(Connection conn) throws SQLException {
-
+	    public static ArrayList<Commande> selectEnCours(Connection conn) throws SQLException {
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='ENVOYE';");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='EN_COURS'");
 	        return getCommandes(result);
-
 	    }
 
 	    /**
 	     * Selectionne tous les Commandes crees par un certain utilisateur.
-	     *
 	     * @param conn Connection SQL
 	     * @param id id utilisateur
 	     * @return ArrayList contenant les objets Commande selectionnes
 	     * @throws SQLException
 	     */
 	    public static ArrayList<Commande> selectAllFromUser(Connection conn, int id) throws SQLException {
-
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+id+";");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+id);
 	        return getCommandes(result);
-
 	    }
 	    
 	    
@@ -92,15 +81,15 @@ public class CommandeDAO {
 	     */
 	    public static void ajouterAuPanier(Connection conn, int idUser, int idImp, int idComm, int qte) throws SQLException {
 	    	conn.setAutoCommit(false);
-	    	
+	    	//TODO: isolation level a changer => serialisable pour tout faire d'un coup sans modification.
 	    	Statement state = conn.createStatement();
-	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON';");
+	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON'");
 	    	
-	    	if (result.next()) { //Il existe d�j� une commande
-	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp+";");
-	    		if (result.next()) { //Cet article existe d�j� dans le panier
-	    			state.executeUpdate("UPDATE Article SET qte= qte+"+qte+";");
-	    		} else { //L'Article est � ajouter dans le panier
+	    	if (result.next()) { //Il existe deja une commande
+	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp);
+	    		if (result.next()) { //Cet article existe deja dans le panier
+	    			state.executeUpdate("UPDATE Article SET qte= qte+"+qte);
+	    		} else { //L'Article est a ajouter dans le panier
 	    			try {
 						ArticleDAO.insertArticleFromImpression(conn, idImp, idComm, qte);
 					} catch (Exception e) {
@@ -112,7 +101,6 @@ public class CommandeDAO {
 	    	} else { // Il n'existe pas encore de commande
 	    		state.executeUpdate("INSERT INTO Commande VALUES("+idComm+", "+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
 	    	}
-	    	
 	    	conn.commit();
 	    	
 	    }
