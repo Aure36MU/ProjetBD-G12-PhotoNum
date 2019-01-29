@@ -358,7 +358,7 @@ public class FichierImageDAO {
 	
 	public static Boolean idExists(Connection c, int idFichier) throws SQLException {
 		Statement stat= c.createStatement();
-		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier='"+idFichier+"';");
+		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier='"+idFichier+"'");
 		return result.getInt(0)==1;
 	}
 
