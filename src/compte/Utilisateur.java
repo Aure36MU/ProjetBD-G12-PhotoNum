@@ -8,10 +8,10 @@ public class Utilisateur {
 	String prenom;
 	String mdp;
 	String email;
-	boolean active;
+	int active;
 	StatutUtilisateur statut;
 	
-	public Utilisateur(int idutilisateur, String nom, String prenom, String motdepasse, String adressemail, boolean active, StatutUtilisateur statut) {
+	public Utilisateur(int idutilisateur, String nom, String prenom, String motdepasse, String adressemail, int active, StatutUtilisateur statut) {
 		this.idUser = idutilisateur;
 		this.nom = nom;
 		this.prenom = prenom;
@@ -61,11 +61,11 @@ public class Utilisateur {
 		this.email = email;
 	}
 
-	public boolean isActive() {
+	public int isActive() {
 		return active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(int active) {
 		this.active = active;
 	}
 	

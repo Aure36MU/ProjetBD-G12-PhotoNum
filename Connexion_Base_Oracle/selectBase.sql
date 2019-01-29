@@ -1,5 +1,6 @@
 select * from Utilisateur where email = 'a@b.com'
-select * from Catalogue
+select * from Impression
+select * from tirage
 SELECT max(idImp) FROM Impression
 SELECT max(idUser) FROM Utilisateur
 select * from Impression where type='CALENDRIER'

@@ -173,7 +173,7 @@ public class CommandeDAO {
 	                    result.getInt("idCodeP"),
 	                    result.getDate("dateC"),
 	                    ModeLivraison.valueOf(result.getString("modeLivraison")),
-	                    StatutCommande.valueOf(result.getString("statut"))
+	                    StatutCommande.valueOf(result.getString("statutCommande"))
 	            ));
 	        }
 	        return commandes;

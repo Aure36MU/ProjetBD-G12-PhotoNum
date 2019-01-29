@@ -56,7 +56,7 @@ public class FichierImageDAO {
 	
 	public static ArrayList<FichierImage> selectAllWithOwner(Connection conn) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,u.prenom, u.nom  FROM FichierImage NATURAL JOIN Utilisateur u ");
+		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,prenom, nom  FROM FichierImage NATURAL JOIN Utilisateur ");
 		return getFichiersImage(result);
 	}
 	
@@ -108,17 +108,17 @@ public class FichierImageDAO {
 	 * @throws SQLException
 	 */
 	public static void insertFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
-			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
+			int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
 			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			state.setInt(1, getHigherIdFichier(conn)+1);
 			state.setInt(2, idUser);
 			state.setString(3, chemin);
 			state.setString(4, infoPVue);
 			state.setInt(5, pixelImg);
-			state.setBoolean(6, partage);
+			state.setInt(6, partage);
 			state.setDate(7, dateUtilisation);
-			state.setBoolean(8, fileAttModif);
-			state.setBoolean(9, fileAttSuppr);
+			state.setInt(8, fileAttModif);
+			state.setInt(9, fileAttSuppr);
 			state.executeUpdate();
 	}
 	
@@ -140,16 +140,16 @@ public class FichierImageDAO {
 	 * @throws SQLException
 	 */
 	private static void update(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,
-			int pixelImg, boolean partage, Date dateUtilisation, boolean fileAttModif, boolean fileAttSuppr) throws SQLException {
+			int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
 			PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idUser=?, chemin=?, infoPVue=?, pixelImg=?, partage=?, dateUtilisation=?, fileAttModif=?, fileAttSuppr=?) WHERE idFichier=?");
 			state.setInt(1, idUser);
 			state.setString(2, chemin);
 			state.setString(3, infoPVue);
 			state.setInt(4, pixelImg);
-			state.setBoolean(5, partage);
+			state.setInt(5, partage);
 			state.setDate(6, dateUtilisation);
-			state.setBoolean(7, fileAttModif);
-			state.setBoolean(8, fileAttSuppr);
+			state.setInt(7, fileAttModif);
+			state.setInt(8, fileAttSuppr);
 			state.setInt(9, idFichier);
 			state.executeUpdate();
 	}
@@ -168,7 +168,7 @@ public class FichierImageDAO {
 	 * @param newPartage
 	 * @throws SQLException
 	 */
-	public static void updateFichierImage(Connection conn, int id, String newChemin, String newInfoPVue, int newPixelImg, boolean newPartage) throws SQLException {
+	public static void updateFichierImage(Connection conn, int id, String newChemin, String newInfoPVue, int newPixelImg, int newPartage) throws SQLException {
 		FichierImage leFichierImage = selectAll(conn, "idFichier="+id).get(0);
 		if (isSharedAndUsedBySomeone(conn, id)) {
 			update(conn,
@@ -179,7 +179,7 @@ public class FichierImageDAO {
 					leFichierImage.getPixelImg(),
 					leFichierImage.isPartage(),
 					leFichierImage.getDateUtilisation(),
-					true,
+					1,
 					leFichierImage.isFileAttSuppr());
 		} else {
 			update(conn,
@@ -190,7 +190,7 @@ public class FichierImageDAO {
 					newPixelImg,
 					newPartage,
 					leFichierImage.getDateUtilisation(),
-					true,
+					1,
 					leFichierImage.isFileAttSuppr());
 		}
 	}
@@ -229,7 +229,7 @@ public class FichierImageDAO {
 					leFichierImage.isPartage(),
 					leFichierImage.getDateUtilisation(),
 					leFichierImage.isFileAttModif(),
-					true);
+					1);
 		} else {
 			delete(conn, id);
 		}
@@ -259,7 +259,7 @@ public class FichierImageDAO {
 					leFichierImage.isPartage(),
 					leFichierImage.getDateUtilisation(),
 					leFichierImage.isFileAttModif(),
-					true);
+					1);
 			while (lesCommandes.next()) {
 				state.executeQuery("UPDATE Commande SET statutCommande='ANNULEE' WHERE statutCommande<>'ENVOYEE' AND idComm="+lesCommandes.getInt("idComm"));
 			}
@@ -301,10 +301,10 @@ public class FichierImageDAO {
 					result.getString("chemin"),
 					result.getString("infoPVue"),
 					result.getInt("pixelImg"),
-					result.getBoolean("partage"),
+					result.getInt("partage"),
 					result.getDate("dateUtilisation"),
-					result.getBoolean("fileAttModif"),
-					result.getBoolean("fileAttSuppr")
+					result.getInt("fileAttModif"),
+					result.getInt("fileAttSuppr")
 					));			
 		}
 		return fichiersimage;
@@ -320,7 +320,7 @@ public class FichierImageDAO {
 	 * @throws SQLException
 	 */
 	public static void uploadFichierImage(Connection conn, int idUser, String chemin, String infoPVue, int pixelImg) throws SQLException {
-		insertFichierImage(conn, idUser, chemin, infoPVue, pixelImg, false, Date.valueOf(today()), false, false);
+		insertFichierImage(conn, idUser, chemin, infoPVue, pixelImg, 0, Date.valueOf(today()), 0, 0);
 
 	}
 

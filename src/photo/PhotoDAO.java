@@ -62,7 +62,7 @@ public class PhotoDAO {
 	 */
 	public static ArrayList<Photo> selectAllFromUser(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN FichierImage ON (Photo.idFichier = FichierImage.idFichier) WHERE FichierImage.idUser="+id+" OR FichierImage.partage=true");
+		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN FichierImage ON (Photo.idFichier = FichierImage.idFichier) WHERE FichierImage.idUser="+id+" OR FichierImage.partage=1");
 		return getPhotos(result);
 	}
 	

@@ -47,9 +47,9 @@ public class AlbumDAO {
         return getAlbums(result);
     }
 	
-	public static void insertAlbum(Connection c, int photo, String titre) throws SQLException {
+	public static void insertAlbum(Connection c, int idi, int photo, String titre) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "insert into Album (photoCouv , titreCouv) values ('"+photo+"','"+titre+"')";
+		String query= "insert into Album (idImp, photoCouv , titreCouv) values ("+idi+", '"+photo+"','"+titre+"')";
 		stat.executeUpdate(query);
 	}
 

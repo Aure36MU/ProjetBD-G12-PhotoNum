@@ -99,7 +99,7 @@ public class ArticleDAO {
     public static ArrayList<Article> selectAllFromPanier(Connection conn, int idUser) throws SQLException {
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Article a INNER JOIN Commande c ON (a.idComm = c.idComm) "
-        									+ "WHERE c.statutCommande = 'BROUILLON' AND c.idUser = '" +idUser+ "')");
+        									+ "WHERE c.statutCommande = 'BROUILLON' AND c.idUser = " +idUser);
         return getArticles(result);
     }
     

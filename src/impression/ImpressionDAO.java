@@ -132,10 +132,10 @@ public class ImpressionDAO {
 					result.getString("chemin"),
 					result.getString("infoPVue"),
 					result.getInt("pixelImg"),
-					result.getBoolean("partage"),
+					result.getInt("partage"),
 					result.getDate("dateUtilisation"),
-					result.getBoolean("fileAttModif"),
-					result.getBoolean("fileAttSuppr")
+					result.getInt("fileAttModif"),
+					result.getInt("fileAttSuppr")
 					));
 		}
 		
@@ -176,15 +176,16 @@ public class ImpressionDAO {
 	 */
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, String modele) throws SQLException {
 		Statement state = conn.createStatement();
+		int newId = getHigherIdImp(conn)+1;
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 		switch(type) {
 		case "CALENDRIER":
-			CalendrierDAO.insertCalendrier(conn, (getHigherIdImp(conn)+1), modele);
+			CalendrierDAO.insertCalendrier(conn, newId, modele);
 			break;
 		case "CADRE":
-			CadreDAO.insertCadre(conn, (getHigherIdImp(conn)+1), modele);
+			CadreDAO.insertCadre(conn, newId, modele);
 			break;
 		}
 	}
@@ -192,26 +193,29 @@ public class ImpressionDAO {
 
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, String modele, String ornement) throws SQLException {
 		Statement state = conn.createStatement();
+		int newId = getHigherIdImp(conn)+1;
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
-			AgendaDAO.insertAgenda(conn, (getHigherIdImp(conn)+1), ornement, modele);
+				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+			AgendaDAO.insertAgenda(conn, newId, ornement, modele);
 	}
 	
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
 		Statement state = conn.createStatement();
+		int newId = getHigherIdImp(conn)+1;
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
-		TirageDAO.insertTirage(conn, (getHigherIdImp(conn)+1));
+				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+		TirageDAO.insertTirage(conn, newId);
 	}
 	
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, int photo, String titre) throws SQLException {
 		Statement state = conn.createStatement();
+		int newId = getHigherIdImp(conn)+1;
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
-		AlbumDAO.insertAlbum(conn, photo, titre);
+				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+		AlbumDAO.insertAlbum(conn, newId, photo, titre);
 	}
 	
 	/**
@@ -254,21 +258,21 @@ public class ImpressionDAO {
 		//sinon on renvoie une Exception.
 		try {
 			if (to.equals("Agenda")) { 
-				throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+				throw new Exception("Impossible de convertir du type +"+from.getClass().getName()+" vers "+to);
 			} else if (to.equals("Album")) { 
 				if (from instanceof Cadre)
-					throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+					throw new Exception("Impossible de convertir du type +"+from.getClass().getName()+" vers "+to);
 				String titre = LectureClavier.lireChaine("Quel titre d'album voulez-vous ?");
-				AlbumDAO.insertAlbum(c, selectAllPhotos(c, from.getIdImp()).get(0).getIdPh(), titre);
+				AlbumDAO.insertAlbum(c, from.getIdImp(), selectAllPhotos(c, from.getIdImp()).get(0).getIdPh(), titre);
 			} else if (to.equals("Cadre")) {
 				String modeleCadre = LectureClavier.lireChaine("Quel modèle de cadre voulez-vous ?");
 				CadreDAO.insertCadre(c, from.getIdImp(), modeleCadre);
 			} else if (to.equals("Calendrier")) { 
-				throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+				throw new Exception("Impossible de convertir du type +"+from.getClass().getName()+" vers "+to);
 			} else if (to.equals("Tirage")) {  
 				TirageDAO.insertTirage(c, from.getIdImp());
 			} else { 
-				throw new Exception("Impression "+to+" is not recognized");
+				throw new Exception("Type d'impression "+to+" non reconnu.");
 			}
 		} catch (SQLException e) {
 			System.out.println("insert failed");
