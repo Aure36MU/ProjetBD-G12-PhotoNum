@@ -1,29 +1,8 @@
 package src.app;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import src.commande.Article;
-import src.commande.ArticleDAO;
-import src.commande.CatalogueDAO;
-import src.commande.CommandeDAO;
-import src.commande.Stat;
 import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
-import src.impression.Format;
-import src.impression.ImpressionDAO;
-import src.impression.Modele;
-import src.impression.Qualite;
-import src.impression.Type;
-import src.impression.agenda.ModeleAgenda;
-import src.impression.agenda.Ornement;
-import src.impression.calendrier.ModeleCalendrier;
-import src.photo.FichierImage;
-import src.photo.FichierImageDAO;
-import src.photo.Photo;
-import src.photo.PhotoDAO;
-import src.app.*;
 
 
 public class Application {
@@ -31,13 +10,6 @@ public class Application {
 	static String USER;
 	static String PASSWD;
 	static Connection c; 
-
-	/* TODO se référer à StatutUtilisateur.definir() qui fait essentiellement la même chose en interactif
-	public static StatutUtilisateur choixStatut(){
-		System.out.println("Vous pouvez vous inscrire en temps que client ou en tant que gestionnaire.");
-		return StatutUtilisateur.valueOf(LectureClavier.lireChaine("CLIENT ou GESTIONNAIRE ?"));
-	}
-	*/
 
 	private static Utilisateur inscription(Connection c) throws SQLException{
 		System.out.println("***********************");
@@ -71,16 +43,6 @@ public class Application {
 		}
 		return utilisateur;
 	}
-	
-	
-	//revoir l'organisation de ce menu et 
-	
-/*-----------------------------------------------------------------------------------------------------------------------------
- * -----------------------------------------Partie de Pauline------------------------------------------------------------------
- * --------------------------------------------Impression-------------------------------------------------------------------
- * -----------------------------------------------------------------------------------------------------------------------------
- */
-	
 	
 	public static void main(String[] args) throws SQLException {
 		try{
@@ -122,12 +84,7 @@ public class Application {
 			e.printStackTrace();
 		}
 	}
-	
 
-	
-	
-	
-	
 	/*
 	 * Consulter tous utilisateurs
 Supprimer ⇔ désactiver un client
@@ -135,7 +92,5 @@ Consulter tous fichiers images et leur createur
 Suppression fichiers images 
 Consulter commandes (filtrer par article → filtrage dans ArticleDAO)
 1*/
-
-
 
 }
