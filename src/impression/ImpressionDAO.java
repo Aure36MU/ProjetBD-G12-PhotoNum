@@ -4,9 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import src.app.LectureClavier;
-import src.commande.Commande;
-import src.commande.ModeLivraison;
-import src.commande.StatutCommande;
 import src.impression.agenda.Agenda;
 import src.impression.agenda.AgendaDAO;
 import src.impression.album.Album;

@@ -21,11 +21,11 @@ public class Calendrier extends Impression {
 		this.idImp = idImp;
 	}
 
-	public ModeleCalendrier getModele() {
+	public ModeleCalendrier getModeleCalendrier() {
 		return modele;
 	}
 
-	public void setModele(ModeleCalendrier modele) {
+	public void setModeleCalendrier(ModeleCalendrier modele) {
 		this.modele = modele;
 	}
 

@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import src.impression.Impression;
 import src.impression.ImpressionDAO;
 import src.impression.agenda.Agenda;
+import src.impression.agenda.AgendaDAO;
+import src.impression.cadre.Cadre;
+import src.impression.cadre.CadreDAO;
+import src.impression.calendrier.Calendrier;
+import src.impression.calendrier.CalendrierDAO;
 
 public class CommandeDAO {
 	
@@ -88,11 +93,21 @@ public class CommandeDAO {
 	    	int i=0; Article a; Impression imp; String modele;
 	    	while (i<articles.size()){
 	    		a = articles.get(i);
-	    		imp = ImpressionDAO.selecImpressionFromId(c, id);
+	    		imp = ImpressionDAO.selectImpressionFromId(c, id);
 	    		switch(imp.getType().toString()){
 	    			case "AGENDA" : 
-	    				Agenda agenda = 
+	    				Agenda agenda = AgendaDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+	    				modele = agenda.getModeleAgenda().toString();
 	    				break;
+	    			case "CADRE" : 
+	    				Cadre cadre = CadreDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+	    				modele = cadre.getModeleCadre().toString();
+	    				break;
+	    			case "CALENDRIER" : 
+	    				Calendrier calendrier = CalendrierDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+	    				modele = calendrier.getModeleCalendrier().toString();
+	    				break;
+	    			default : modele = "AUCUN";
 	    		}
 	    		CatalogueDAO.updateCatalogueQte(c, a.qte, imp.getType().toString(), imp.getFormat().toString(), modele);
 	    		i++;
