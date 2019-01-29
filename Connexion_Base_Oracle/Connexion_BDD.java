@@ -64,8 +64,10 @@ public class Connexion_BDD {
       // Perform a database operation 
       try {
 
-    	Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
-    	Scripts("Connexion_Base_Oracle\\creationBase.sql",connection);
+    	//Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
+    	//Scripts("Connexion_Base_Oracle\\creationBase.sql",connection);
+    	//Scripts("Connexion_Base_Oracle\\donnesBase.sql",connection);
+    	Scripts("Connexion_Base_Oracle\\selectBase.sql",connection);
     	//Scripts("Connexion_Base_Oracle\\triggerBase.sql",connection);
 
       } catch (IOException e) {
@@ -82,12 +84,15 @@ public class Connexion_BDD {
     try (Statement statement = connection.createStatement()) {
     	statement.setEscapeProcessing(false);
     	String[] selectReq = req.split(" ");
-    	if (selectReq[0].equals("SELECT")) {
+    	if (selectReq[0].equalsIgnoreCase("SELECT")) {
     		try (ResultSet resultSet = statement.executeQuery(req)) {
     			System.out.println("==========");
-    			while (resultSet.next())
-    				System.out.println(resultSet.getString(1) + " ");
-            //  + resultSet.getString(2) + " "); 
+		          while (resultSet.next()) {
+		              for (int i = 1; i < resultSet.getMetaData().getColumnCount() + 1; i++) {
+		                System.out.print(" " + resultSet.getMetaData().getColumnName(i) + "=" + resultSet.getObject(i));
+		              }
+		              System.out.println("");
+		            }
     		} 
     	}else {
     		boolean resultB = statement.execute(req);
@@ -105,8 +110,8 @@ public class Connexion_BDD {
 				  Requete(connection,str);
 					System.out.println("requete effectuée");
 			  } catch (Exception e) {
-				  System.err.println("Failed to Execute " + aSQLScriptFilePath +". The error is "+ e.getMessage());
-				  System.err.println("requete en erreur :" +str);
+				  System.err.println("Failed to Execute " + aSQLScriptFilePath +". The error is "+ e.getMessage() + "requete en erreur :" +str);
+				  System.err.println("");
 			  }
 
 		  }
