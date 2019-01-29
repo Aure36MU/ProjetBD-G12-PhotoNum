@@ -93,38 +93,31 @@ public class CatalogueDAO {
 	public static int getNbVentes(Connection conn, Catalogue catalogue) throws SQLException {
 		int nbVentes = 0;
 		Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT sum(a.qte) FROM Commande c "
+		String query = "SELECT sum(a.qte) FROM Commande c "
         		+ "JOIN Article a ON (c.idComm=a.idComm) "
-        		+ "JOIN Impression i ON (a.idImp=i.idImp) "
-        		+ "NATURAL JOIN Agenda ag"
-        		+ "WHERE "+catalogue.format+"=i.format and "+catalogue.modele+"=ag.modele and "
-        		+catalogue.type+"=ag.type and c.statut<>'Brouillon' "
-        				+ "UNION "
-        				+ "SELECT sum(a.qte) FROM Commande c "
-        				+ "JOIN Article a ON (c.idComm=a.idComm) "
-        				+ "JOIN Impression i ON (a.idImp=i.idImp) "
-        				+ "NATURAL JOIN Album al"
-        				+ "WHERE "+catalogue.format+"=i.format and c.statut<>'Brouillon' "
-        						+ "UNION "
-        						+ "SELECT sum(a.qte) FROM Commande c "
-        						+ "JOIN Article a ON (c.idComm=a.idComm) "
-        						+ "JOIN Impression i ON (a.idImp=i.idImp) "
-        						+ "NATURAL JOIN Tirage t"
-        						+ "WHERE "+catalogue.format+"=i.format and c.statut<>'Brouillon' "
-        								+ "UNION "
-        								+ "SELECT sum(a.qte) FROM Commande c "
-        								+ "JOIN Article a ON (c.idComm=a.idComm) "
-        								+ "JOIN Impression i ON (a.idImp=i.idImp) "
-        								+ "NATURAL JOIN Calendrier ca"
-        								+ "WHERE "+catalogue.format+"=i.format and "+catalogue.modele+"=ca.modele and c.statut<>'Brouillon' "
-        										+ "UNION "
-        										+ "SELECT sum(a.qte) FROM Commande c "
-        										+ "JOIN Article a ON (c.idComm=a.idComm) "
-        										+ "JOIN Impression i ON (a.idImp=i.idImp) "
-        										+ "NATURAL JOIN Cadre ca"
-        										+ "WHERE "+catalogue.format+"=i.format and "+catalogue.modele+"=ca.modele and c.statut<>'Brouillon'; ");
-        nbVentes=result.getInt(0);
-        return nbVentes;
+        		+ "JOIN Impression i ON (a.idImp=i.idImp) ";
+		String where = "WHERE "+catalogue.format+"=i.format and "
+        											+catalogue.type+"=i.type and "
+        											+ catalogue.modele;
+		
+		switch(catalogue.type){
+				case "AGENDA" : 
+					where += " = Agenda.modeleAgenda";
+					query += "NATURAL JOIN Agenda "+where;
+					break;
+				case "CALENDRIER" : 
+					where += " = Calendrier.modeleCalendrier";
+					query += "NATURAL JOIN Calendrier"+where;
+					break;
+				case "CADRE" : 
+					where += " = Cadre.modeleCadre";
+					query += "NATURAL JOIN Cadre" +where;
+					break;
+				default : ;
+				query +=  "c.statut<>'Brouillon'";
+		}
+		ResultSet result = state.executeQuery(query);        		
+        return result.getInt(0); //nbVentes
 	}
 	
 	public static ArrayList<Stat> getStat(Connection conn, ArrayList<Catalogue> catalogues) throws SQLException {
