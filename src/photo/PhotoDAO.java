@@ -14,8 +14,9 @@ public class PhotoDAO {
 		try {
 			Statement state = c.createStatement();
 			ResultSet res = state.executeQuery("SELECT max(idPh) FROM Photo");
-			return res.getInt(0);
-			
+			if (res.next()) {
+				return res.getInt(1);
+			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

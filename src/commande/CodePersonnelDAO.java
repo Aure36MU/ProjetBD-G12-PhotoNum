@@ -15,7 +15,7 @@ public class CodePersonnelDAO {
 			Statement state = c.createStatement();
 			ResultSet res = state.executeQuery("SELECT max(idCodeP) FROM CodePromo");
 			if (res.next()) {
-				return res.getInt(0);
+				return res.getInt(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

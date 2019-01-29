@@ -23,7 +23,9 @@ public class FichierImageDAO {
 		try {
 			Statement state = c.createStatement();
 			ResultSet res = state.executeQuery("SELECT max(idFichier) FROM FichierImage");
-			return res.getInt(0);
+			if (res.next()) {
+				return res.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

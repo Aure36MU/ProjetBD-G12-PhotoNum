@@ -24,7 +24,9 @@ public class ImpressionDAO {
 		try {
 			Statement state = c.createStatement();
 			ResultSet res = state.executeQuery("SELECT max(idImp) FROM Impression");
-			return res.getInt(0);
+			if (res.next()) {
+				return res.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

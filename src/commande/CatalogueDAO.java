@@ -131,7 +131,7 @@ public class CatalogueDAO {
 	      ArrayList<Stat> stats = new ArrayList<Stat>();
 	      Catalogue c;
 	      	int i = 0;
-	        while (catalogues.get(i)!=null) {
+	        while (i < catalogues.size()) {
 	        	c = catalogues.get(i);
 	            stats.add(new Stat(c.type, c.format, c.modele, getNbVentes(conn,c)));
 	        	i++;
