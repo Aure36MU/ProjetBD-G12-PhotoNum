@@ -140,12 +140,14 @@ public class UtilitaireClient {
 	}
 	private static void gererAjoutFichier(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean continuer= true;
-		while(continuer==true);{
-			String chemin= LectureClavier.lireChaine("Ou ce trouve votre fichier? ");
-			String infoPVue= LectureClavier.lireChaine("Commentaire sur le fichier: ");
-			int pixelImg= LectureClavier.lireEntier("Quel est la taille en pixel : ");	
-			boolean partage= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
-			String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/mm/yyyy"));
+		while(continuer==true){
+			
+			String 		chemin 		= LectureClavier.lireChaine("Ou ce trouve votre fichier? ");
+			String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
+			int 			pixelImg 		= LectureClavier.lireEntier("Quel est la taille en pixel : ");	
+			boolean partage 		= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
+			String 		dateUse 		= LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/mm/yyyy"));
+			
 			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage?1:0, Date.valueOf(dateUse) , 0, 0);
 			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
 		}
@@ -480,10 +482,7 @@ public class UtilitaireClient {
 					ArrayList<Photo> tab =PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 					new Affichage<Photo>().afficher(tab);
 					int ph= LectureClavier.lireEntier("Quel photo voulez vous ajoutez?");
-					int j=0;
-					while(j<tab.size() && tab.get(j).getIdPh()!=ph) {
-						j++;
-					}
+					int j=0;		while(j<tab.size() && tab.get(j).getIdPh()!=ph) {	j++;	}
 					if(j<tabImp.size()) {
 						String txt= LectureClavier.lireChaine("Quel text voulez vous ajoutez a la photo?");
 						int nb= LectureClavier.lireEntier("Combien de fois voulez vous cette photo?");
@@ -491,13 +490,13 @@ public class UtilitaireClient {
 						Impression_PhotoDAO.insert(c, ph, idImp, page, txt, nb);
 						choix = LectureClavier.lireEntier("Voulez vous faire autre chose? (0: Ajouter/ 1:Retiré / 2: Finir)");
 					}else {
-						System.out.println("Vous n'avez pas selectionner une photo que vous possedez");
+						System.out.println("Vous n'avez pas selectionne une photo que vous possedez");
 					}
 					break;
 				case 1:
-					int num = LectureClavier.lireEntier("Quel page voulez vous retiré?");
+					int num = LectureClavier.lireEntier("Quel page voulez vous retirer?");
 					Impression_PhotoDAO.deletePage(c, idImp, num);
-					choix = LectureClavier.lireEntier("Voulez vous faire autre chose? (0: Ajouter/ 1:Retiré / 2: Finir)");
+					choix = LectureClavier.lireEntier("Voulez vous faire autre chose? (0: Ajouter/ 1:Retirer / 2: Finir)");
 					break;
 				case 2:
 					boucle=false;

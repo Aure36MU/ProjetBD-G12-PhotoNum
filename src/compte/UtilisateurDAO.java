@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.app.Affichage;
+import src.app.LectureClavier;
+
 public class UtilisateurDAO {
 	
 	public static int getHigherId(Connection c){
@@ -33,14 +36,14 @@ public class UtilisateurDAO {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur";
 		ResultSet result =stat.executeQuery(query);
-		return UtilisateurDAO.getUtilisateurs(result);
+		return getUtilisateurs(result);
 	}
 	
 	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, StatutUtilisateur statut) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where statutUtilisateur='"+statut+"'";
 		ResultSet result =stat.executeQuery(query);
-		return UtilisateurDAO.getUtilisateurs(result);
+		return getUtilisateurs(result);
 	}
 
 	public static Boolean idExists(Connection c, int idUser) throws SQLException {
@@ -53,7 +56,7 @@ public class UtilisateurDAO {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where "+condition;
 		ResultSet result =stat.executeQuery(query);
-		return UtilisateurDAO.getUtilisateurs(result);
+		return getUtilisateurs(result);
 	}
 	
 	public static void deleteUtilisateur(Connection c, String mail) throws SQLException {
@@ -93,5 +96,19 @@ public class UtilisateurDAO {
 			return null;
 		}
 		return utilisateurs;
+	}
+
+
+	public static void gererClients(Connection c) throws SQLException {
+		new Affichage<Utilisateur>().afficher(selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
+		int idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
+		while(idUser!=0 && !idExists(c,idUser)){
+			idUser = LectureClavier.lireEntier("L'id n'existe pas. Réessayez.");
+		}
+		if(idUser==0) {
+			return;
+		} else {
+			deleteUtilisateur(c, idUser);
+		}
 	}
 }

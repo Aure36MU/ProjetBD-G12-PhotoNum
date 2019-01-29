@@ -50,38 +50,16 @@ public class UtilitaireGestionnaire {
 					int newPrix = LectureClavier.lireEntier("Nouveau prix ?");
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
-				case 4:	gererClients(c);
+				case 4:	UtilisateurDAO.gererClients(c);
 					break;
-				case 6: 	gererFichiersClients(c);
+				case 5: 	FichierImageDAO.gererFichiersClients(c);
 					break;				
-				case 5:	menuCommandeClients(c,utilisateur);
+				case 6:	menuCommandeClients(c,utilisateur);
 					break;
 				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
 					break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
-		}
-	}
-	
-	private static void gererFichiersClients(Connection c) throws SQLException {
-		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllWithOwner(c));
-		int idFichier = -1;
-		while(!FichierImageDAO.idExists(c,idFichier)){
-			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
-		}
-		FichierImageDAO.deleteFichierImage(c, idFichier);
-	}
-
-	private static void gererClients(Connection c) throws SQLException {
-		new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
-		int idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
-		while(idUser!=0 && !UtilisateurDAO.idExists(c,idUser)){
-			idUser = LectureClavier.lireEntier("L'id n'existe pas. Réessayez.");
-		}
-		if(idUser==0) {
-			return;
-		} else {
-			UtilisateurDAO.deleteUtilisateur(c, idUser);
 		}
 	}
 	

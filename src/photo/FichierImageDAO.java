@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import src.app.Affichage;
 import src.app.LectureClavier;
 import java.sql.Date;
 
@@ -341,4 +343,13 @@ public class FichierImageDAO {
 		return result.getInt(0)==1;
 	}
 
+	public static void gererFichiersClients(Connection c) throws SQLException {
+		new Affichage<FichierImage>().afficher(selectAllWithOwner(c));
+		int idFichier = -1;
+		while(!idExists(c,idFichier)){
+			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+		}
+		deleteFichierImage(c, idFichier);
+	}
+	
 }
