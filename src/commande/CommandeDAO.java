@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import src.impression.Impression;
+import src.impression.ImpressionDAO;
+import src.impression.agenda.Agenda;
 
 public class CommandeDAO {
 	
@@ -83,11 +85,16 @@ public class CommandeDAO {
 	    	Statement stat= c.createStatement();
 	    	c.setAutoCommit(false);	    	
 	    	ArrayList<Article> articles = ArticleDAO.selectAllFromCommande(c,id);
-	    	int i=0; Article a; Impression imp; String type,format,modele;
+	    	int i=0; Article a; Impression imp; String modele;
 	    	while (i<articles.size()){
 	    		a = articles.get(i);
-	    		imp = ;
-	    		CatalogueDAO.updateCatalogueQte( c, a.qte, type, format, modele);
+	    		imp = ImpressionDAO.selecImpressionFromId(c, id);
+	    		switch(imp.getType().toString()){
+	    			case "AGENDA" : 
+	    				Agenda agenda = 
+	    				break;
+	    		}
+	    		CatalogueDAO.updateCatalogueQte(c, a.qte, imp.getType().toString(), imp.getFormat().toString(), modele);
 	    		i++;
 	    	}
 			stat.executeUpdate("update Commande set statut = 'PRET_A_L_ENVOI' where idComm='"+id+"'");
@@ -145,9 +152,8 @@ public class CommandeDAO {
 				}
 	    	}
 	    	conn.commit();
-	    	
 	    }
-	    
+
 		public static int getHigherId(Connection c){
 			try {
 				Statement state = c.createStatement();
@@ -168,7 +174,6 @@ public class CommandeDAO {
 	     */
 		public static ArrayList<Commande> getCommandes(ResultSet result) throws SQLException {
 	        ArrayList<Commande> commandes = new ArrayList<Commande>();
-
 	        while (result.next()) {
 	            commandes.add(new Commande(
 	                    result.getInt("idComm"),

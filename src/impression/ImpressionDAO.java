@@ -106,8 +106,7 @@ public class ImpressionDAO {
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id);
-		if(result.next()){result.}
-		return ;
+		return result.getImpressions
 	}
 	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
@@ -346,7 +345,7 @@ public class ImpressionDAO {
 			e.printStackTrace();
 		}
 	}
-	/*
+	
 	public static ArrayList<Impression> getImpressions(ResultSet result) throws SQLException {
         ArrayList<Impression> impressions = new ArrayList<Impression>();
 
@@ -362,7 +361,7 @@ public class ImpressionDAO {
             ));
         }
         return impressions;
-	}*/
+	}
 	
 	
 }
