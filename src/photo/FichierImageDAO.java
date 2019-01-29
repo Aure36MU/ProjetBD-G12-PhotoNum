@@ -355,5 +355,11 @@ public class FichierImageDAO {
 		int pixelImg = LectureClavier.lireEntier("Entrez la dimension de l'image :");
 		uploadFichierImage(conn, idUser, chemin, infoPVue, pixelImg);
 	}
+	
+	public static Boolean idExists(Connection c, int idFichier) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier='"+idFichier+"';");
+		return result.getInt(0)==1;
+	}
 
 }

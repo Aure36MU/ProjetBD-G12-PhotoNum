@@ -66,7 +66,7 @@ public class UtilitaireGestionnaire {
 	private static void gererFichiersClients(Connection c) throws SQLException {
 		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllWithOwner(c));
 		int idFichier = -1;
-		while(!UtilisateurDAO.idExists(c,idFichier)){
+		while(!FichierImage.idExists(c,idFichier)){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
 		}
 		FichierImageDAO.deleteFichierImage(c, idFichier);
