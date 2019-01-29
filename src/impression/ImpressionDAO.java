@@ -143,10 +143,8 @@ public class ImpressionDAO {
 	
 	public static ArrayList<Photo> selectAllPhotos(Connection c,int id) throws SQLException{
 		ArrayList<Photo> tab = new ArrayList<Photo>();
-		
 		Statement state = c.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id+";");
-		
 		while (result.next()) {
 			tab.add(new Photo(
 					result.getInt("idPhoto"),
@@ -154,7 +152,6 @@ public class ImpressionDAO {
 					result.getString("retouche")
 					));
 		}
-		
 		return tab;
 	}
 
@@ -194,6 +191,7 @@ public class ImpressionDAO {
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
 				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
 			AgendaDAO.insertAgenda(conn, (getHigherIdImp(conn)+1), ornement, modele);
+			System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
 	
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
@@ -202,6 +200,7 @@ public class ImpressionDAO {
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
 				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
 		TirageDAO.insertTirage(conn, (getHigherIdImp(conn)+1));
+		System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
 	
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, int photo, String titre) throws SQLException {
@@ -210,6 +209,7 @@ public class ImpressionDAO {
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
 				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
 		AlbumDAO.insertAlbum(conn, photo, titre);
+		System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
 	
 	/**

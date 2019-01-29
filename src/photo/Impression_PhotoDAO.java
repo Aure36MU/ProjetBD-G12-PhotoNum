@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import src.commande.Catalogue;
 
-public class Inpression_PhotoDAO {
+public class Impression_PhotoDAO {
 
 	public static void insert(Connection conn, int idPh, int idImp, int num, String text, int nbEx) throws SQLException {
 		Statement state = conn.createStatement();
@@ -44,17 +44,17 @@ public class Inpression_PhotoDAO {
 		state.executeUpdate();
 	}
 	
-	private static void deleteId(Connection conn, int idImp, int idPh) throws SQLException {
+	public static void deleteId(Connection conn, int idImp, int idPh) throws SQLException {
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM Impression_Photo WHERE idPh="+idPh+" and idImp="+ idImp +";");
 	}
 	
-	private static void deletePage(Connection conn, int idImp, int num) throws SQLException {
+	public static void deletePage(Connection conn, int idImp, int num) throws SQLException {
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM Impression_Photo WHERE num_page="+num+" and idImp="+ idImp +";");
 	}
 	
-	private static void deleteAll(Connection conn, int id) throws SQLException {
+	public static void deleteAll(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM Impression_Photo WHERE idImp="+id+";");
 	}
