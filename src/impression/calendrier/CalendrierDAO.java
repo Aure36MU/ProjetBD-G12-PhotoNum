@@ -58,7 +58,7 @@ public class CalendrierDAO {
 	
 	public static ArrayList<Calendrier> selectAllFromUserWait(Connection conn, int id) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Calendrier') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Calendrier");
+        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Calendrier') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Calendrier')");
         return getCalendriers(result);
     }
 	

@@ -176,7 +176,7 @@ public class ImpressionDAO {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "'");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 		switch(type) {
 		case "CALENDRIER":
 			CalendrierDAO.insertCalendrier(conn, (getHigherIdImp(conn)+1), modele);
@@ -192,7 +192,7 @@ public class ImpressionDAO {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "'");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 			AgendaDAO.insertAgenda(conn, (getHigherIdImp(conn)+1), ornement, modele);
 	}
 	
@@ -200,7 +200,7 @@ public class ImpressionDAO {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "'");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 		TirageDAO.insertTirage(conn, (getHigherIdImp(conn)+1));
 	}
 	
@@ -208,7 +208,7 @@ public class ImpressionDAO {
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "'");
+				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 		AlbumDAO.insertAlbum(conn, photo, titre);
 	}
 	

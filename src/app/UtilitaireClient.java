@@ -113,7 +113,7 @@ public class UtilitaireClient {
 			String infoPVue= LectureClavier.lireChaine("Commentaire sur le fichier: ");
 			int pixelImg= LectureClavier.lireEntier("Quel est la taille en pixel : ");	
 			boolean partage= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
-			String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
+			String dateUse = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/mm/yyyy"));
 			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage, Date.valueOf(dateUse) , false, false);
 			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
 		}
@@ -339,7 +339,7 @@ public class UtilitaireClient {
 			System.out.println("Récapitulatif: ");
 			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
 			String leChoix=LectureClavier.lireChaine("Cela vous conviens? (oui/non)");
-			if(leChoix=="oui") {
+			if(leChoix.equals("oui")) {
 				//ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite );
 				votreChoix=true;
 				System.out.println("Vous venez de crée votre nouvelle impression");

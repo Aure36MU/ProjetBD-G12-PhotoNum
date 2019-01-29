@@ -35,10 +35,10 @@ public class FichierImageDAO {
 	
 	/** Renvoie la date du jour pour utilisation avec la base de données.
 	 * 
-	 * @return La date du jour formatté comme suit : "yyyy-mm-dd"
+	 * @return La date du jour formatté comme suit : "dd/mm/yyyy"
 	 */
 	public static String today() {
-		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/mm/yyyy"));
 	}
 	
 	/**
