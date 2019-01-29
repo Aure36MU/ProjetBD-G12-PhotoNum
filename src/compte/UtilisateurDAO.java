@@ -12,7 +12,9 @@ public class UtilisateurDAO {
 		try {
 			Statement state = c.createStatement();
 			ResultSet res = state.executeQuery("SELECT max(idUser) FROM Utilisateur");
-			return res.getInt(0);
+			if (res.next()) {
+				return res.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -22,7 +24,7 @@ public class UtilisateurDAO {
 	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, String statut) throws SQLException {
 		Statement stat= c.createStatement();
 		int id = (getHigherId(c)+1);
-		String query= "insert into Utilisateur (idUser, nom , prenom, mdp , mail, active, statut) values ('"+id+"','"+nom+"','"+prenom+"','"+mdp+"','"+mail+"','"+true+"','"+statut+"')";
+		String query= "insert into Utilisateur (idUser, nom , prenom, mdp , email, active, statut) values ("+id+",'"+nom+"','"+prenom+"','"+mdp+"','"+mail+"', 1,'"+statut+"')";
 		stat.executeUpdate(query);
 		return new Utilisateur(id, nom, prenom, mdp, mail, true,StatutUtilisateur.valueOf(statut));
 	}
