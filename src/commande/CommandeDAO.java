@@ -65,6 +65,30 @@ public class CommandeDAO {
 	        return getCommandes(result);
 	    }
 	    
+	    public static void updateCommandeCommeEnvoyee(Connection c, int id) throws SQLException {
+	    	Statement stat= c.createStatement();
+			String query= "update Commande set statut = 'ENVOYEE' where idComm='"+id+"'";
+			stat.executeUpdate(query);
+	    }
+	    
+	    public static void updateCommandeCommeImprimee(Connection c, int id) throws SQLException {
+	    	Statement stat= c.createStatement();
+	    	c.setAutoCommit(false);	    	
+	    	//TODO : decrementer stock.
+	    	
+	    	String query= "update Commande set statut = 'PRET_A_L_ENVOI' where idComm='"+id+"'";
+			stat.executeUpdate(query);	    	
+			
+			stat.executeUpdate("update Commande set statut = 'PRET_A_L_ENVOI' where idComm='"+id+"'");
+			c.commit();
+	    }
+	    
+	    
+		public static Boolean idExists(Connection c, int idComm) throws SQLException {
+			Statement stat= c.createStatement();
+			ResultSet result =stat.executeQuery( "select count(*) from Commande where idComm='"+idComm+"'");
+			return result.getInt(0)==1;
+		}
 	    
 	    /**
 	     * Ajoute un nouvel Article au panier, sous les conditions suivantes :

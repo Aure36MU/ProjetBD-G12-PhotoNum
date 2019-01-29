@@ -35,44 +35,6 @@ public class UtilisateurDAO {
 		ResultSet result =stat.executeQuery(query);
 		return UtilisateurDAO.getUtilisateurs(result);
 	}
-	/*
-	public static Utilisateur selectAllFromUser(Connection c, int idu) throws SQLException {
-		Statement stat= c.createStatement();
-		String query= "select * from Utilisateur where idUser='"+idu+"' ";
-		ResultSet result =stat.executeQuery(query);
-		
-		if(result.next()){	return new Utilisateur(
-				result.getInt("idUser"),
-				result.getString("nom"),
-				result.getString("prenom"),
-				result.getString("mdp"),
-				result.getString("email"),
-				result.getBoolean("active"),
-				StatutUtilisateur.valueOf(result.getString("statut"))
-			);
-		}else{
-			return null;
-		}
-	}
-	
-	public static Utilisateur selectUserCondition(Connection c, String condition) throws SQLException {
-		Statement stat= c.createStatement();
-		String query= "select * from Utilisateur where "+condition;
-		ResultSet result =stat.executeQuery(query);
-		if(result.next()){	return new Utilisateur(
-				result.getInt("idUser"),
-				result.getString("nom"),
-				result.getString("prenom"),
-				result.getString("mdp"),
-				result.getString("email"),
-				result.getBoolean("active"),
-				StatutUtilisateur.valueOf(result.getString("statut"))
-			);
-		}else{
-			return null;
-		}
-	}
-	*/
 	
 	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, StatutUtilisateur statut) throws SQLException {
 		Statement stat= c.createStatement();
