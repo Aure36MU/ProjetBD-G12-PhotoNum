@@ -32,32 +32,23 @@ public class UtilitaireGestionnaire {
 			int choixAction = LectureClavier.lireEntier("7 : Voir les statistiques de vente ");
 
 			switch(choixAction){ 
-				case 1:  
-					utilisateur = null;
+				case 1:  utilisateur = null;
 					System.out.println("Vous avez ete deconnecte");
 					break;
 				case 2:
-					String type = Type.definir();
-					String format = Format.definir();
-					String modele = Modele.definir();
-					int qteLivraison = LectureClavier.lireEntier("Combien en avez vous reçus ?");
+					String type = Type.definir();		String format = Format.definir();			String modele = Modele.definir();
+					int qteLivraison = LectureClavier.lireEntier("Combien en avez vous reçu ?");
 					CatalogueDAO.simulerLivraison( c,  qteLivraison,  type,  format,  modele);
 					break;
 				case 3:
-					type = Type.definir();
-					format = Format.definir();
-					modele = Modele.definir();
+					type = Type.definir();			format = Format.definir();		modele = Modele.definir();
 					int newPrix = LectureClavier.lireEntier("Nouveau prix ?");
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
-				case 4:	UtilisateurDAO.gererClients(c);
-					break;
-				case 5: 	FichierImageDAO.gererFichiersClients(c);
-					break;				
-				case 6:	menuCommandeClients(c,utilisateur);
-					break;
-				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
-					break;
+				case 4:	UtilisateurDAO.gererClients(c);																											break;
+				case 5: 	FichierImageDAO.gererFichiersClients(c);																							break;				
+				case 6:	menuCommandeClients(c,utilisateur);																								break;
+				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));				break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
@@ -99,7 +90,7 @@ public class UtilitaireGestionnaire {
 					break;
 				case 3:	gererEnvoiCommande(c);				break;
 				case 4:	gererImpressionCommande(c);		break;				
-			default : System.out.println("Veuillez faire un choix. ");
+				default : System.out.println("Veuillez faire un choix. ");
 			}	
 		}
 	}
