@@ -3,11 +3,12 @@ package src.impression.cadre;
 import src.impression.Impression;
 import src.impression.cadre.ModeleCadre;
 
-public class Cadre extends Impression {
+public class Cadre  extends Impression {
 	ModeleCadre modeleCadre;
 	int idImp;
 
 	public Cadre(ModeleCadre modeleCadre, int idImp){
+		super();
 		this.modeleCadre = modeleCadre;
 		this.idImp = idImp;
 	}

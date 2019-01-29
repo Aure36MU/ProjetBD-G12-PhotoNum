@@ -102,12 +102,21 @@ public class ImpressionDAO {
 		return null;
 	}
 	
-	public static Impression selecImpressionFromId(Connection conn, int id) throws SQLException{
+	public static Impression selectImpressionFromId(Connection conn, int id) throws SQLException{
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id);
-		if(result.next()){result.}
-		return ;
+		if(result.next()){
+			return new Impression(
+					result.getInt("idImp"),
+					result.getString("nomImp"),
+					result.getInt("nbrPageTotal"),
+					result.getInt("idUser"),
+					Qualite.valueOf(result.getString("qualite")),
+					Type.valueOf(result.getString("type")),
+					Format.valueOf(result.getString("format")));
+		}
+		return null;
 	}
 	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
