@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.impression.Impression;
+
 public class CommandeDAO {
 	
 	
@@ -81,9 +83,10 @@ public class CommandeDAO {
 	    	Statement stat= c.createStatement();
 	    	c.setAutoCommit(false);	    	
 	    	ArrayList<Article> articles = ArticleDAO.selectAllFromCommande(c,id);
-	    	int i=0; Article a; String type,format,modele;
+	    	int i=0; Article a; Impression imp; String type,format,modele;
 	    	while (i<articles.size()){
 	    		a = articles.get(i);
+	    		imp = ;
 	    		CatalogueDAO.updateCatalogueQte( c, a.qte, type, format, modele);
 	    		i++;
 	    	}

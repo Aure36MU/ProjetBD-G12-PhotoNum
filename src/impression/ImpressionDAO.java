@@ -4,6 +4,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import src.app.LectureClavier;
+import src.commande.Commande;
+import src.commande.ModeLivraison;
+import src.commande.StatutCommande;
 import src.impression.agenda.Agenda;
 import src.impression.agenda.AgendaDAO;
 import src.impression.album.Album;
@@ -76,7 +79,7 @@ public class ImpressionDAO {
 		return tab;
 	}
 	
-	public static Impression selectImpressionFromId(Connection conn, int id) throws SQLException{
+	public static Impression selectSousImpressionFromId(Connection conn, int id) throws SQLException{
 
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id);
@@ -97,6 +100,14 @@ public class ImpressionDAO {
 		return null;
 	}
 	
+	public static Impression selecImpressionFromId(Connection conn, int id) throws SQLException{
+
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id);
+		if(result.next()){result.}
+		return ;
+	}
+	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
 		tab.addAll(CalendrierDAO.selectAllFromUser(c,idUser));
@@ -107,13 +118,13 @@ public class ImpressionDAO {
 		return tab;
 	}
 	
-	public static ArrayList<Impression> selectAllFromUserImpressionWait(Connection c,int idUser) throws SQLException{
+	public static ArrayList<Impression> selectAllFromUserImpressionNotArticle(Connection c,int idUser) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
-		tab.addAll(CalendrierDAO.selectAllFromUserWait(c,idUser));
-		tab.addAll(AgendaDAO.selectAllFromUserWait(c,idUser));
-		tab.addAll(TirageDAO.selectAllFromUserWait(c,idUser));
-		tab.addAll(CadreDAO.selectAllFromUserWait(c,idUser));
-		tab.addAll(AlbumDAO.selectAllFromUserWait(c,idUser));
+		tab.addAll(CalendrierDAO.selectAllFromUserNotArticle(c,idUser));
+		tab.addAll(AgendaDAO.selectAllFromUserNotArticle(c,idUser));
+		tab.addAll(TirageDAO.selectAllFromUserNotArticle(c,idUser));
+		tab.addAll(CadreDAO.selectAllFromUserNotArticle(c,idUser));
+		tab.addAll(AlbumDAO.selectAllFromUserNotArticle(c,idUser));
 		return tab;
 	}
 	
@@ -329,6 +340,23 @@ public class ImpressionDAO {
 			e.printStackTrace();
 		}
 	}
+	/*
+	public static ArrayList<Impression> getImpressions(ResultSet result) throws SQLException {
+        ArrayList<Impression> impressions = new ArrayList<Impression>();
+
+        while (result.next()) {
+        	impressions.add(new Impression(
+                    result.getInt("idImp"),
+                    result.getString("nomImp"),
+                    result.getInt("nbPages"),
+                    result.getInt("idUser"),
+                    Qualite.valueOf(result.getString("qualite")),
+                    Type.valueOf(result.getString("type")),
+                    Format.valueOf(result.getString("format"))
+            ));
+        }
+        return impressions;
+	}*/
 	
 	
 }

@@ -318,7 +318,7 @@ public class UtilitaireClient {
 				System.out.println("retour au menu precedent");
 				break;
 			case 3:
-				ArrayList<Impression> tab =ImpressionDAO.selectAllFromUserImpressionWait(c,utilisateur.getIdUser());
+				ArrayList<Impression> tab =ImpressionDAO.selectAllFromUserImpressionNotArticle(c,utilisateur.getIdUser());
 				new Affichage<Impression>().afficher(tab);
 				gererModifImpression(c,utilisateur);
 				break;

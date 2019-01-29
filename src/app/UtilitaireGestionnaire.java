@@ -122,8 +122,7 @@ public class UtilitaireGestionnaire {
 				case 3:	gererEnvoiCommande(c);				break;
 				case 4:	gererImpressionCommande(c);		break;				
 			default : System.out.println("Veuillez faire un choix. ");
-			}
-			
+			}	
 		}
 	}
 	
