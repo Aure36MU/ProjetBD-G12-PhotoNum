@@ -50,12 +50,7 @@ public class UtilitaireClient {
 					gererFichierImages(c,utilisateur);
 					break;
 				case 4:
-					ArrayList<Article> panier = new ArrayList<Article>();
-					panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
-					if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); }
-					else{
-						new Affichage<Article>().afficher(panier);
-					}
+					gererPanier(c, utilisateur);
 					//TODO : Valider la commande + payer
 					break;
 				case 5:
@@ -63,6 +58,38 @@ public class UtilitaireClient {
 					break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
+		}
+	}
+	
+	public static void gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
+		ArrayList<Article> panier = new ArrayList<Article>();
+		panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+		if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); }
+		else{
+			new Affichage<Article>().afficher(panier);
+		}
+		System.out.println("*****************************************************************************");
+		System.out.println("Que voulez vous faire ?");
+		System.out.println("1 : Modifier la quantité.");
+		System.out.println("2 : Retiré un article.");
+		int choixAction = LectureClavier.lireEntier("3 : Valider la commande.");
+		switch(choixAction){ 
+		case 1:  
+
+			break;
+		case 2:  
+
+			break;
+		case 3:
+			boolean payer=LectureClavier.lireOuiNon("Voulez vous payer votre commande?");
+			if(payer) {
+				System.out.println("Vous avez payer bravo");
+			}
+			break;
+		case 4:
+
+			break;
+		default : System.out.println("Veuillez faire un choix. ");
 		}
 	}
 	
@@ -478,7 +505,6 @@ public class UtilitaireClient {
 				if(comm) {
 					int qte= LectureClavier.lireEntier("combien d'exemplaire souhaitez vous?");
 					CommandeDAO.ajouterAuPanier(c, utilisateur.getIdUser(), idImp, qte);
-					//ArticleDAO.insertArticleFromImpression(c, idImp, idComm, 1);
 				}
 			}
 		}else {
