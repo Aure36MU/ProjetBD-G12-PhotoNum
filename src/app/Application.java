@@ -72,7 +72,7 @@ public class Application {
 					break;
 				default : System.out.println("Veuillez faire un choix. ");
 				}
-				if(utilisateur.getStatut() == StatutUtilisateur.valueOf("STATUT")){
+				if(utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
 					UtilitaireClient.menuClient(c, utilisateur);
 				}else {
 					UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
