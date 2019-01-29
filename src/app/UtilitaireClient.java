@@ -445,8 +445,5 @@ public class UtilitaireClient {
 					}
 			}
 		} else {	System.out.println("Vous n'avez pas selectionner une impression que vous possedez");}
-		
 	}
-	
-
 }
