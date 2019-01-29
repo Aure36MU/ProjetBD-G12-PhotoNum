@@ -77,10 +77,24 @@ public class UtilitaireClient {
 		int choixAction = LectureClavier.lireEntier("3 : Valider la commande.");
 		switch(choixAction){ 
 		case 1:  
-
+			int addArt= LectureClavier.lireEntier("Quel article souhaitez vous en plus/en moins?");
+			String moinPlus= LectureClavier.lireChaine("Vous souhaitez en plus ou en moins de :" + addArt + "? (moins/plus"); 
+			if(moinPlus.equals("moins")) {
+				//TODO: ArticleDAO.
+			}else {
+				if(moinPlus.equals("plus")) {
+					//TODO: ArticleDAO
+				}else {
+					System.out.println("Vous avez mal écris plus ou moins");
+				}
+			}
 			break;
 		case 2:  
-
+			int retirArt= LectureClavier.lireEntier("Quel article souhaitez vous retirer?");
+			boolean choix=LectureClavier.lireOuiNon(retirArt +"Est celui que vous souhaitez retiré?");
+			if(choix) {
+				//TODO: ArticleDAO.
+			}
 			break;
 		case 3:
 			boolean payer=LectureClavier.lireOuiNon("Voulez vous payer votre commande?");
