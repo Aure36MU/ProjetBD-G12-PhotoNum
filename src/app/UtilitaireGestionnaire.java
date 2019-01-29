@@ -54,7 +54,7 @@ public class UtilitaireGestionnaire {
 					break;
 				case 6: 	gererFichiersClients(c);
 					break;				
-				case 5:	gererCommandeClients(c,utilisateur);
+				case 5:	menuCommandeClients(c,utilisateur);
 					break;
 				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
 					break;
@@ -66,7 +66,7 @@ public class UtilitaireGestionnaire {
 	private static void gererFichiersClients(Connection c) throws SQLException {
 		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllWithOwner(c));
 		int idFichier = -1;
-		while(!UtilisateurDAO.idExists(c,idFichier)){
+		while(!FichierImageDAO.idExists(c,idFichier)){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
 		}
 		FichierImageDAO.deleteFichierImage(c, idFichier);
@@ -85,7 +85,25 @@ public class UtilitaireGestionnaire {
 		}
 	}
 	
-	private static void gererCommandeClients(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static void gererEnvoiCommande(Connection c) throws SQLException {
+		new Affichage<Commande>().afficher(CommandeDAO.selectPretEnvoi(c));
+		int idComm = -1;
+		while(!CommandeDAO.idExists(c,idComm)){
+			idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
+		}
+		CommandeDAO.updateCommandeCommeEnvoyee(c, idComm);
+	}
+	
+	private static void gererImpressionCommande(Connection c) throws SQLException {
+		new Affichage<Commande>().afficher(CommandeDAO.selectEnCours(c));
+		int idComm = -1;
+		while(!CommandeDAO.idExists(c,idComm)){
+			idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
+		}
+		CommandeDAO.updateCommandeCommeImprimee(c, idComm);
+	}
+	
+	private static void menuCommandeClients(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -94,24 +112,15 @@ public class UtilitaireGestionnaire {
 			System.out.println("2 : Retourner au menu precedent.");
 			System.out.println("3 : Notifier l'envoi d'une commande.");
 			int choixAction = LectureClavier.lireEntier("4 : Lancer l'impression d'une commande.");
-
 			switch(choixAction){ 
-			case 1:  
-				utilisateur = null;
-				back = true;
-				System.out.println("Vous avez ete deconnecte");
-				break;
-			case 2:
-				back = true;
-				System.out.println("retour au menu precedent");
-				break;
-			case 3:
-				new Affichage<Commande>().afficher(CommandeDAO.selectPretEnvoi(c));
-				break;
-			case 4:
-				new Affichage<Commande>().afficher(CommandeDAO.selectEnCours(c));
-				break;
-				
+				case 1:  	utilisateur = null;	back = true;
+					System.out.println("Vous avez ete deconnecte");
+					break;
+				case 2:	back = true;
+					System.out.println("retour au menu precedent");
+					break;
+				case 3:	gererEnvoiCommande(c);				break;
+				case 4:	gererImpressionCommande(c);		break;				
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 			
