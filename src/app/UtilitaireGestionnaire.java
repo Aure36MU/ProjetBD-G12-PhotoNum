@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import src.commande.CatalogueDAO;
+import src.commande.Commande;
+import src.commande.CommandeDAO;
 import src.commande.Stat;
 import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
@@ -79,15 +81,15 @@ public class UtilitaireGestionnaire {
 		UtilisateurDAO.deleteUtilisateur(c, idUser);
 	}
 	
-	private static void gererCommandeClients(Connection c, Utilisateur utilisateur) {
+	private static void gererCommandeClients(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
 			System.out.println("1 : Se deconnecter.");
 			System.out.println("2 : Retourner au menu precedent.");
-			System.out.println("3 : Consulter la liste des commandes clients en cours.");
-			int choixAction = LectureClavier.lireEntier("4 : Creer une nouvelle impression.\"");
+			System.out.println("3 : Notifier l'envoi d'une commande.");
+			int choixAction = LectureClavier.lireEntier("4 : Lancer l'impression d'une commande.");
 
 			switch(choixAction){ 
 			case 1:  
@@ -100,10 +102,10 @@ public class UtilitaireGestionnaire {
 				System.out.println("retour au menu precedent");
 				break;
 			case 3:
-				
+				new Affichage<Commande>().afficher(CommandeDAO.selectPretEnvoi(c));
 				break;
 			case 4:
-				
+				new Affichage<Commande>().afficher(CommandeDAO.selectEnCours(c));
 				break;
 				
 			default : System.out.println("Veuillez faire un choix. ");
