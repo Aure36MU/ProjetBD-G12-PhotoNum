@@ -90,7 +90,6 @@ public class CatalogueDAO {
 	}
 
 	public static int getNbVentes(Connection conn, Catalogue catalogue) throws SQLException {
-		int nbVentes = 0;
 		Statement state = conn.createStatement();
 		String query = "SELECT sum(a.qte) FROM Commande c "
         		+ "JOIN Article a ON (c.idComm=a.idComm) "
