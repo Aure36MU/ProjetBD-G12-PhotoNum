@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.app.Affichage;
+import src.app.LectureClavier;
 import src.impression.Impression;
 import src.impression.ImpressionDAO;
 import src.impression.agenda.Agenda;
@@ -16,8 +18,7 @@ import src.impression.calendrier.Calendrier;
 import src.impression.calendrier.CalendrierDAO;
 
 public class CommandeDAO {
-	
-	
+
 		/**
 		 * Selectionne tous les Commandes (quels que soient leurs modeles) sans conditions.
 		 *
@@ -205,4 +206,21 @@ public class CommandeDAO {
 	        return commandes;
 		}
 
+		public static void gererEnvoiCommande(Connection c) throws SQLException {
+			new Affichage<Commande>().afficher(selectPretEnvoi(c));
+			int idComm = -1;
+			while(!idExists(c,idComm)){
+				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
+			}
+			updateCommandeCommeEnvoyee(c, idComm);
+		}
+		
+		public static void gererImpressionCommande(Connection c) throws SQLException {
+			new Affichage<Commande>().afficher(selectEnCours(c));
+			int idComm = -1;
+			while(!idExists(c,idComm)){
+				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
+			}
+			updateCommandeCommeImprimee(c, idComm);
+		}
 }

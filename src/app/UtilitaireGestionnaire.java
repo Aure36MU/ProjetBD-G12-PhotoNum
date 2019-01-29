@@ -2,19 +2,16 @@ package src.app;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import src.commande.CatalogueDAO;
 import src.commande.Commande;
 import src.commande.CommandeDAO;
 import src.commande.Stat;
-import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
 import src.compte.UtilisateurDAO;
 import src.impression.Format;
 import src.impression.Modele;
 import src.impression.Type;
-import src.photo.FichierImage;
 import src.photo.FichierImageDAO;
 import src.photo.Owners;
 
@@ -59,25 +56,6 @@ public class UtilitaireGestionnaire {
 		}
 	}
 	
-
-	private static void gererEnvoiCommande(Connection c) throws SQLException {
-		new Affichage<Commande>().afficher(CommandeDAO.selectPretEnvoi(c));
-		int idComm = -1;
-		while(!CommandeDAO.idExists(c,idComm)){
-			idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
-		}
-		CommandeDAO.updateCommandeCommeEnvoyee(c, idComm);
-	}
-	
-	private static void gererImpressionCommande(Connection c) throws SQLException {
-		new Affichage<Commande>().afficher(CommandeDAO.selectEnCours(c));
-		int idComm = -1;
-		while(!CommandeDAO.idExists(c,idComm)){
-			idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
-		}
-		CommandeDAO.updateCommandeCommeImprimee(c, idComm);
-	}
-	
 	private static void menuCommandeClients(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
@@ -94,8 +72,8 @@ public class UtilitaireGestionnaire {
 				case 2:	back = true;
 					System.out.println("retour au menu precedent");
 					break;
-				case 3:	gererEnvoiCommande(c);				break;
-				case 4:	gererImpressionCommande(c);		break;				
+				case 3:	CommandeDAO.gererEnvoiCommande(c);				break;
+				case 4:	CommandeDAO.gererImpressionCommande(c);		break;				
 				default : System.out.println("Veuillez faire un choix. ");
 			}	
 		}

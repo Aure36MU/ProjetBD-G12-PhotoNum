@@ -346,7 +346,7 @@ public class UtilitaireClient {
 			case 3:	int imp=LectureClavier.lireEntier("Quel impression voulez vous continuer?");
 							gererInsertPhoto(c,utilisateur,imp);
 							break;
-			case 4:	gererDeleteImp(c,utilisateur);		break;
+			case 4:	ImpressionDAO.gererDeleteImp(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 		}		
@@ -459,17 +459,5 @@ public class UtilitaireClient {
 					}
 			}
 		} else {	System.out.println("Vous n'avez pas selectionner une impression que vous possedez");}
-		
-	}
-	
-	private static void gererDeleteImp(Connection c, Utilisateur utilisateur) throws SQLException {
-		int impSupp=LectureClavier.lireEntier("Quel impression voulez vous supprimer?");
-		ArrayList <Impression> tabImp = ImpressionDAO.selectAllFromUser(c, utilisateur.getIdUser());
-		int i=0;	while(i<tabImp.size() && tabImp.get(i).getIdImp()!=impSupp) {i++;}
-		
-		if(i<tabImp.size()) {
-			boolean sur=LectureClavier.lireOuiNon("Vous êtes sur de vouloir supprimer:" + impSupp + "?");
-			if(sur) {ImpressionDAO.deleteImpression(c, impSupp);}
-		} else {	System.out.println("Vous n'avez pas selectionner une impression que vous controler");	}
 	}
 }
