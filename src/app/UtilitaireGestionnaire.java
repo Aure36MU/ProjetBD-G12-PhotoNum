@@ -33,29 +33,24 @@ public class UtilitaireGestionnaire {
 			int choixAction = LectureClavier.lireEntier("7 : Voir les statistiques de vente ");
 
 			switch(choixAction){ 
-				case 1:  
-					utilisateur = null;
+				case 1:  utilisateur = null;
 					System.out.println("Vous avez ete deconnecte");
 					break;
 				case 2:
-					String type = Type.definir();
-					String format = Format.definir();
-					String modele = Modele.definir();
-					int qteLivraison = LectureClavier.lireEntier("Combien en avez vous reçus ?");
+					String type = Type.definir();		String format = Format.definir();			String modele = Modele.definir();
+					int qteLivraison = LectureClavier.lireEntier("Combien en avez vous reçu ?");
 					CatalogueDAO.simulerLivraison( c,  qteLivraison,  type,  format,  modele);
 					break;
 				case 3:
-					type = Type.definir();
-					format = Format.definir();
-					modele = Modele.definir();
+					type = Type.definir();			format = Format.definir();		modele = Modele.definir();
 					int newPrix = LectureClavier.lireEntier("Nouveau prix ?");
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
-				case 4:	gererClients(c);
+				case 4:	UtilisateurDAO.gererClients(c);		
 					break;
-				case 5: 	gererFichiersClients(c);
+				case 5: 	FichierImageDAO.gererFichiersClients(c);
 					break;				
-				case 6:	menuCommandeClients(c,utilisateur);
+				case 6:	menuCommandeClients(c,utilisateur);	
 					break;
 				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
 					break;
@@ -64,28 +59,7 @@ public class UtilitaireGestionnaire {
 		}
 	}
 	
-	private static void gererFichiersClients(Connection c) throws SQLException {
-		new Affichage<Owners>().afficher(FichierImageDAO.selectAllWithOwner(c));
-		int idFichier = -1;
-		while(!FichierImageDAO.idExists(c,idFichier)){
-			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
-		}
-		FichierImageDAO.deleteFichierImage(c, idFichier);
-	}
 
-	private static void gererClients(Connection c) throws SQLException {
-		new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectWithCondition(c, "statutUtilisateur = 'CLIENT' and active = 1"));
-		int idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
-		while(idUser!=0 && !UtilisateurDAO.idExists(c,idUser)){
-			idUser = LectureClavier.lireEntier("L'id n'existe pas. Réessayez.");
-		}
-		if(idUser==0) {
-			return;
-		} else {
-			UtilisateurDAO.deleteUtilisateur(c, idUser);
-		}
-	}
-	
 	private static void gererEnvoiCommande(Connection c) throws SQLException {
 		new Affichage<Commande>().afficher(CommandeDAO.selectPretEnvoi(c));
 		int idComm = -1;
@@ -122,7 +96,7 @@ public class UtilitaireGestionnaire {
 					break;
 				case 3:	gererEnvoiCommande(c);				break;
 				case 4:	gererImpressionCommande(c);		break;				
-			default : System.out.println("Veuillez faire un choix. ");
+				default : System.out.println("Veuillez faire un choix. ");
 			}	
 		}
 	}
