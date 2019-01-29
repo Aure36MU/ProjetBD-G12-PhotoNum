@@ -121,7 +121,7 @@ public class CommandeDAO {
 		public static Boolean idExists(Connection c, int idComm) throws SQLException {
 			Statement stat= c.createStatement();
 			ResultSet result =stat.executeQuery( "select count(*) from Commande where idComm='"+idComm+"'");
-			return result.getInt(0)==1;
+			return result.getInt(1)==1;
 		}
 	    
 	    /**

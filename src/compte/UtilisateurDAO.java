@@ -49,7 +49,10 @@ public class UtilisateurDAO {
 	public static Boolean idExists(Connection c, int idUser) throws SQLException {
 		Statement stat= c.createStatement();
 		ResultSet result =stat.executeQuery( "select count(*) from Utilisateur where idUser='"+idUser+"'");
-		return result.getInt(0)==1;
+		if(result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
 	}
 	
 	public static ArrayList<Utilisateur> selectWithCondition(Connection c, String condition) throws SQLException {

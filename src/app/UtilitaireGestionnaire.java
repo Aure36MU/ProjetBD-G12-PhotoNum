@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import src.commande.CatalogueDAO;
+import src.commande.Commande;
 import src.commande.CommandeDAO;
 import src.commande.Stat;
 import src.compte.Utilisateur;
@@ -12,6 +13,7 @@ import src.impression.Format;
 import src.impression.Modele;
 import src.impression.Type;
 import src.photo.FichierImageDAO;
+import src.photo.Owners;
 
 public class UtilitaireGestionnaire {
 
@@ -41,14 +43,18 @@ public class UtilitaireGestionnaire {
 					int newPrix = LectureClavier.lireEntier("Nouveau prix ?");
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
-				case 4:	UtilisateurDAO.gererClients(c);																											break;
-				case 5: 	FichierImageDAO.gererFichiersClients(c);																							break;				
-				case 6:	menuCommandeClients(c,utilisateur);																								break;
-				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));				break;
+				case 4:	UtilisateurDAO.gererClients(c);		
+					break;
+				case 5: 	FichierImageDAO.gererFichiersClients(c);
+					break;				
+				case 6:	menuCommandeClients(c,utilisateur);	
+					break;
+				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
+					break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
-	} 
+	}
 	
 	private static void menuCommandeClients(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;

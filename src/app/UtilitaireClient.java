@@ -93,25 +93,32 @@ public class UtilitaireClient {
 			System.out.println("5 : Consulter la liste des fichiers partages.");
 			int choixAction = LectureClavier.lireEntier("6 : Ajouter un nouveau fichier.");
 
-			switch(choixAction){ 
-			case 1:  	utilisateur = null;
-							back = true;
-							System.out.println("Vous avez ete deconnecte");
-							break;
-			case 2:  	back = true;
-							break;
-			case 3:	FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser());
-							gererUnFichier(c,utilisateur);
-							break;
-			case 4: 	PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
-							gererUnePhoto(c,utilisateur);
-							break;
-			case 5:	FichierImageDAO.selectAll(c, "partager=1");
-							gererFichierPartager(c, utilisateur);
-							//PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
-							break;
-			case 6:	gererAjoutFichier(c,utilisateur);
-							break;
+			switch(choixAction){
+			case 1:  
+				utilisateur = null;
+				back = true;
+				System.out.println("Vous avez ete deconnecte");
+				break;
+			case 2:  
+				back = true;
+				System.out.println("retour au menu precedent");
+				break;
+			case 3:
+				new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser()));
+				gererUnFichier(c,utilisateur);
+				break;
+			case 4:
+				new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
+				gererUnePhoto(c,utilisateur);
+				break;
+			case 5:
+				FichierImageDAO.selectAll(c, "partager=1");
+				gererFichierPartager(c, utilisateur);
+				//PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
+				break;
+			case 6:
+				gererAjoutFichier(c,utilisateur);
+				break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 		}

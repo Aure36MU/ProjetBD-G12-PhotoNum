@@ -56,10 +56,23 @@ public class FichierImageDAO {
 		return getFichiersImage(result);
 	}
 	
-	public static ArrayList<FichierImage> selectAllWithOwner(Connection conn) throws SQLException {
+	public static ArrayList<Owners> selectAllWithOwner(Connection conn) throws SQLException {
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,prenom, nom  FROM FichierImage NATURAL JOIN Utilisateur ");
-		return getFichiersImage(result);
+
+
+		ArrayList<Owners> owners = new ArrayList<Owners>();
+		while (result.next()) {
+			owners.add(new Owners(result.getInt("idFichier"),
+					result.getString("chemin"),
+					result.getString("infoPVue"),
+					result.getInt("partager"),
+					result.getDate("dateUtilisation"),
+					result.getString("prenom"),
+					result.getString("nom"))
+					);			
+		}
+		return owners;
 	}
 	
 	/**
@@ -206,6 +219,8 @@ public class FichierImageDAO {
 	 * @throws SQLException
 	 */
 	private static void delete(Connection conn, int id) throws SQLException {
+		Impression_PhotoDAO.deleteAllFromFichierImage(conn, id);
+		PhotoDAO.deletePhotosFromFichierImage(conn, id);
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM FichierImage WHERE idFichier="+id);
 	}
@@ -281,9 +296,11 @@ public class FichierImageDAO {
 	 */
 	public static boolean isSharedAndUsedBySomeone(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT count(Impression.id_user) FROM FichierImage NATURAL JOIN Photo NATURAL JOIN Impression_Photo NATURAL JOIN Impression WHERE idFichier="+id);
-		result.next();
-		return (result.getInt(0) > 1);
+		ResultSet result = state.executeQuery("SELECT count(idUser) FROM FichierImage NATURAL JOIN Photo NATURAL JOIN Impression_Photo NATURAL JOIN Impression WHERE idFichier="+id);
+		if(result.next()) {
+			return (result.getInt(1) > 1);
+		}
+		return false;
 	}
 
 
@@ -340,11 +357,14 @@ public class FichierImageDAO {
 	public static Boolean idExists(Connection c, int idFichier) throws SQLException {
 		Statement stat= c.createStatement();
 		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier='"+idFichier+"'");
-		return result.getInt(0)==1;
+		if (result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
 	}
 
 	public static void gererFichiersClients(Connection c) throws SQLException {
-		new Affichage<FichierImage>().afficher(selectAllWithOwner(c));
+		new Affichage<Owners>().afficher(selectAllWithOwner(c));
 		int idFichier = -1;
 		while(!idExists(c,idFichier)){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");

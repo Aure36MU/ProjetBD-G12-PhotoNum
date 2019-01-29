@@ -88,8 +88,7 @@ public class CatalogueDAO {
         }
         return Catalogues;
 	}
-	//a modifier
-	/*---------------------------------------------------------------------------------------------------*/
+
 	public static int getNbVentes(Connection conn, Catalogue catalogue) throws SQLException {
 		int nbVentes = 0;
 		Statement state = conn.createStatement();
