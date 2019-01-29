@@ -65,6 +65,12 @@ public class CommandeDAO {
 	        return getCommandes(result);
 	    }
 	    
+	    public static Commande selectWithId(Connection conn, int id) throws SQLException {
+	        Statement state = conn.createStatement();
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idComm="+id);
+	        return getCommandes(result).get(0);
+	    }
+	    
 	    public static void updateCommandeCommeEnvoyee(Connection c, int id) throws SQLException {
 	    	Statement stat= c.createStatement();
 			String query= "update Commande set statut = 'ENVOYEE' where idComm='"+id+"'";
@@ -74,11 +80,13 @@ public class CommandeDAO {
 	    public static void updateCommandeCommeImprimee(Connection c, int id) throws SQLException {
 	    	Statement stat= c.createStatement();
 	    	c.setAutoCommit(false);	    	
-	    	//TODO : decrementer stock.
-	    	
-	    	String query= "update Commande set statut = 'PRET_A_L_ENVOI' where idComm='"+id+"'";
-			stat.executeUpdate(query);	    	
-			
+	    	ArrayList<Article> articles = ArticleDAO.selectAllFromCommande(c,id);
+	    	int i=0; Article a; String type,format,modele;
+	    	while (i<articles.size()){
+	    		a = articles.get(i);
+	    		CatalogueDAO.updateCatalogueQte( c, a.qte, type, format, modele);
+	    		i++;
+	    	}
 			stat.executeUpdate("update Commande set statut = 'PRET_A_L_ENVOI' where idComm='"+id+"'");
 			c.commit();
 	    }
@@ -103,14 +111,15 @@ public class CommandeDAO {
 	     * @param qte
 	     * @throws SQLException 
 	     */
-	    public static void ajouterAuPanier(Connection conn, int idUser, int idImp, int idComm, int qte) throws SQLException {
+	    public static void ajouterAuPanier(Connection conn, int idUser, int idImp, int qte) throws SQLException {
 	    	conn.setAutoCommit(false);
 	    	//TODO: isolation level a changer => serialisable pour tout faire d'un coup sans modification.
 	    	Statement state = conn.createStatement();
-	    	ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON'");
+	    	ResultSet result = state.executeQuery("SELECT idComm FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON'");
 	    	
 
-	    	if (result.next()) { //Il existe deja une commande
+	    	if (result.next()) { //Il existe deja un panier
+	    		int idComm = result.getInt(1);
 	    		result = state.executeQuery("SELECT * FROM Article WHERE idImp="+idImp);
 	    		if (result.next()) { //Cet article existe deja dans le panier
 	    			state.executeUpdate("UPDATE Article SET qte= qte+"+qte);
@@ -124,12 +133,26 @@ public class CommandeDAO {
 	    		}
 
 	    	} else { // Il n'existe pas encore de commande
-	    		state.executeUpdate("INSERT INTO Commande VALUES("+idComm+", "+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
+	    		state.executeUpdate("INSERT INTO Commande VALUES("+(getHigherId(conn)+1)+", "+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
+	    		try {
+					ArticleDAO.insertArticleFromImpression(conn, idImp, (getHigherId(conn)+1), qte);
+				} catch (Exception e) {
+					// EXCEPTION stock insuffisant !
+					e.printStackTrace();
+				}
 	    	}
 	    	conn.commit();
 	    	
 	    }
 	    
+		public static int getHigherId(Connection c){
+			try {
+				Statement state = c.createStatement();
+				ResultSet res = state.executeQuery("SELECT max(idComm) FROM Commande");
+				return res.getInt(1);
+			} catch (SQLException e) { e.printStackTrace();	}
+			return 0;
+		}
 	    
 	    /**
 	     * Retourne les objets Commande construits e partir d'un resultat de requete.
