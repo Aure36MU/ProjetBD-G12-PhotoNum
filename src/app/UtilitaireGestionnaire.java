@@ -25,8 +25,8 @@ public class UtilitaireGestionnaire {
 			System.out.println("2 : Enregistrer une livraison");
 			System.out.println("3 : Modifier le prix d'un article du catalogue.");
 			System.out.println("4 : Gerer les clients (suppression).");
-			System.out.println("5 : Gerer les commandes clients.");
-			System.out.println("6 : Gerer les fichiers et le nom de leur propriétaire (controle de contenu).");
+			System.out.println("5 : Gerer les fichiers et le nom de leur propriétaire (controle de contenu).");
+			System.out.println("6 : Gerer les commandes clients.");
 			int choixAction = LectureClavier.lireEntier("7 : Voir les statistiques de vente ");
 
 			switch(choixAction){ 
@@ -48,17 +48,13 @@ public class UtilitaireGestionnaire {
 					int newPrix = LectureClavier.lireEntier("Nouveau prix ?");
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
-				case 4:
-					gererClients(c);
+				case 4:	gererClients(c);
 					break;
-				case 5:
-					gererCommandeClients(c,utilisateur);
+				case 6: 	gererFichiersClients(c);
+					break;				
+				case 5:	gererCommandeClients(c,utilisateur);
 					break;
-				case 6:
-					gererFichiersClients(c);
-					break;
-				case 7:
-					new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
+				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));
 					break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
@@ -67,7 +63,7 @@ public class UtilitaireGestionnaire {
 	
 	private static void gererFichiersClients(Connection c) throws SQLException {
 		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllWithOwner(c));
-		int idFichier = 0;
+		int idFichier = -1;
 		while(!UtilisateurDAO.idExists(c,idFichier)){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
 		}
@@ -76,7 +72,7 @@ public class UtilitaireGestionnaire {
 
 	private static void gererClients(Connection c) throws SQLException {
 		new Affichage<Utilisateur>().afficher(UtilisateurDAO.selectWithCondition(c, "statut = 'CLIENT' and active = 1"));
-		int idUser = 0;
+		int idUser = -1;
 		while(!UtilisateurDAO.idExists(c,idUser)){
 			idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
 		}
