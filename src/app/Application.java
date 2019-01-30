@@ -7,8 +7,8 @@ import src.compte.UtilisateurDAO;
 
 public class Application {
 	static final String CONN_URL = "jdbc:oracle:thin:@im2ag-oracle.e.ujf-grenoble.fr:1521:im2ag";
-	static String USER;
-	static String PASSWD;
+	 static String USER = "bourreta";
+	 static String PASSWD = "cv570ewUGA";
 	static Connection c; 
 
 	private static Utilisateur inscription(Connection c) throws SQLException{
@@ -32,8 +32,17 @@ public class Application {
 		System.out.println("      CONNEXION ");
 		System.out.println("**********************");
 
-		String mail = LectureClavier.lireChaine("Pour vous connecter, saisissez votre mail : ");
-		Utilisateur utilisateur = UtilisateurDAO.selectWithCondition(c, "email = '"+mail+"'").get(0);
+		String mail = "";
+		Utilisateur utilisateur = null;
+		while(utilisateur == null) {
+			mail = LectureClavier.lireChaine("Pour vous connecter, saisissez votre mail : ");
+			try {
+				utilisateur = UtilisateurDAO.selectWithCondition(c, "email = '"+mail+"'").get(0);
+			} catch (IndexOutOfBoundsException ie) {
+				
+			}
+		}
+		
 		String mdp = "";
 		while(!mdp.equals(utilisateur.getMdp())){
 			mdp = LectureClavier.lireChaine("Veuillez entrer le mot de passe correspondant ou entrez \"return to menu\" pour retourner au Menu Principal");
@@ -46,8 +55,8 @@ public class Application {
 	
 	public static void main(String[] args) throws SQLException {
 		try{
-			USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
-			PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
+			//USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
+			//PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
 
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());  	    
 			System.out.print("Connecting to the database... "); 
@@ -70,14 +79,16 @@ public class Application {
 					utilisateur = inscription(c);
 					System.out.println("Vous avez ete inscrit.");
 					break;
-				default : System.out.println("Veuillez faire un choix. ");
+				default : 
 				}
-				if(utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
-					UtilitaireClient.menuClient(c, utilisateur);
-				}else {
-					UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
-				}
-			} 
+			}
+		
+			System.out.println("Veuillez faire un choix. ");
+			if(utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
+				UtilitaireClient.menuClient(c, utilisateur);
+			}else {
+				UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
+			}
 			c.close();
 		}
 		catch (Exception e) {

@@ -111,7 +111,7 @@ public class PhotoDAO {
 	 * @throws SQLException
 	 */
 	public static void updatePhoto(Connection conn, int idPh, int idFichier, String retouche) throws SQLException {
-		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idFichier=?, retouche=?) WHERE idPh=?");
+		PreparedStatement state = conn.prepareStatement("UPDATE Photo SET idFichier=?, retouche=? WHERE idPh=?");
 		state.setInt(1, idFichier);
 		state.setString(2, retouche);
 		state.setInt(3, idPh);
