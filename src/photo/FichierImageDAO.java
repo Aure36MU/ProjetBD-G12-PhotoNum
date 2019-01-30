@@ -322,8 +322,17 @@ public class FichierImageDAO {
 		}
 		return false;
 	}
+	
+	public static Boolean BelongToUser(Connection c, int idFichier, int idUser) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier='"+idFichier+"' and idUser = '"+idUser+"'");
+		if (result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
+	}
 
-	public static void gererFichiersClients(Connection c) throws SQLException {
+	public static void supprimerUnFichierClient(Connection c) throws SQLException {
 		new Affichage<Owners>().afficher(selectAllWithOwner(c));
 		int idFichier = -1;
 		while(!idExists(c,idFichier)){

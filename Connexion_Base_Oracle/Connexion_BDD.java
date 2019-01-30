@@ -91,17 +91,26 @@ public class Connexion_BDD {
     	if ((selectReq[0].equals("SELECT"))|| (selectReq[0].equals("select" ))) {
     		try (ResultSet resultSet = statement.executeQuery(req)) {
     			System.out.println("==========");
+    			//NE PAS ENLEVER CECI !!!
     			while (resultSet.next()) {
 		              for (int i = 1; i < resultSet.getMetaData().getColumnCount() + 1; i++) {
 		                System.out.print(" " + resultSet.getMetaData().getColumnName(i) + "=" + resultSet.getObject(i));
 		              }
 		              System.out.println("");
-}
+    			}
+    			/////
+
     		} 
     	}else {
-    		boolean resultB = statement.execute(req);
-    		System.out.println("++++++++++");
-    	}
+    		try {
+    			boolean resultB = statement.execute(req);
+    			System.out.println("++++++++++");
+    		}catch(Exception e)
+    		{
+    			e.printStackTrace();
+    			System.out.println("EXCEPTION LANCE PAR LE TRIGGER ET CAPTURE PAR L APPLICATION");
+    		}
+    		}
     }   
   }
   public static boolean Scripts(String aSQLScriptFilePath,Connection connection) throws IOException,SQLException {
