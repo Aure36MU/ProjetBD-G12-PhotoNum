@@ -65,11 +65,12 @@ public class Connexion_BDD {
       try {
 
     	//Scripts("Connexion_Base_Oracle\\nettoyageBase.sql",connection);
-    	//Scripts("Connexion_Base_Oracle\\creationBase.sql",connection);
+    	//Scripts("Connexion_Base_Oracle\\RestoreBase.sql",connection);
+    	  
     	//Scripts("Connexion_Base_Oracle\\donnesBase.sql",connection);
     	Scripts("Connexion_Base_Oracle\\selectBase.sql",connection);
     	//Scripts("Connexion_Base_Oracle\\triggerBase.sql",connection);
-    	//Scripts("Connexion_Base_Oracle\\RestoreBase.sql",connection);
+    	
     	//Scripts("Connexion_Base_Oracle\\RestoreDonnees.sql",connection);
 
       } catch (IOException e) {
@@ -93,9 +94,9 @@ public class Connexion_BDD {
     				System.out.println(resultSet.getString(1) + " " 
     						+resultSet.getString(2) + " "
     				+resultSet.getString(3) + " "
-    				/*+resultSet.getString(4) + " "
+    				+resultSet.getString(4) + " "
     				+resultSet.getString(5) + " "
-    				+resultSet.getString(6) + " "
+    				/*+resultSet.getString(6) + " "
     				+resultSet.getString(7) + " "
     				*/); 
     		} 

@@ -18,3 +18,11 @@ DROP TABLE ALBUM CASCADE CONSTRAINTS
 DROP TABLE AGENDA CASCADE CONSTRAINTS
 DROP TABLE IMPRESSION_PHOTO CASCADE CONSTRAINTS
 SELECT table_name FROM user_tables
+drop sequence idPh_seq
+drop sequence idAdre_seq
+drop sequence idUser_seq
+drop sequence idCodeP_seq
+drop sequence idFichier_seq
+drop sequence idImp_seq
+drop sequence idArt_seq
+drop sequence idComm_seq
