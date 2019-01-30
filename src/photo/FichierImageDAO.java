@@ -292,19 +292,6 @@ public class FichierImageDAO {
 		return fichiersimage;
 	}
 
-	/** Permet d'insérer un nouveau FichierImage à partir de certains paramètres.*
-	 * Les autres (partage, fileAttModif, fileAttSuppr) prennent des valeurs par défaut.
-	 * @param conn Connection
-	 * @param idUser id utilisateur
-	 * @param chemin chemin de l'image
-	 * @param infoPVue infos prise de vue
-	 * @param pixelImg dimensions de l'image
-	 * @throws SQLException
-	 */
-	public static void uploadFichierImage(Connection conn, int idUser, String chemin, String infoPVue, int pixelImg) throws SQLException {
-		insertFichierImage(conn, idUser, chemin, infoPVue, pixelImg, 0, Date.valueOf(today()), 0, 0);
-	}
-
 	/**
 	 * Version interactive de uploadFichierImage. Demande à l'utilisateur un chemin, les infos de prise de vue et la dimension de l'image.
 	 * @throws SQLException 
@@ -313,7 +300,7 @@ public class FichierImageDAO {
 		String chemin = LectureClavier.lireChaine("Entrez un chemin :");
 		String infoPVue = LectureClavier.lireChaine("Entrez les infos de prise de vue :");
 		int pixelImg = LectureClavier.lireEntier("Entrez la dimension de l'image :");
-		uploadFichierImage(conn, idUser, chemin, infoPVue, pixelImg);
+		insertFichierImage(conn, idUser, chemin, infoPVue, pixelImg, 0, Date.valueOf(today()), 0, 0);
 	}
 	
 	public static Boolean idExists(Connection c, int idFichier) throws SQLException {
@@ -334,21 +321,62 @@ public class FichierImageDAO {
 		return false;
 	}
 
+	public static Boolean isShared(Connection c, int idFichier) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier = '"+idFichier+"' and partager = 1");
+		if (result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
+	}
+	
 	public static void supprimerUnFichierClient(Connection c) throws SQLException {
 		new Affichage<Owners>().afficher(selectAllWithOwner(c));
-		int idFichier = -1;
+		int idFichier = -2;
 		while(!idExists(c,idFichier)){
-			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
+			if(idFichier==-1) {return;}
 		}
 		deleteFichierImage(c, idFichier);
+		System.out.println("fichier supprime !");
 	}
+	
 	public static void supprimerUnFichierClient(Connection c, Utilisateur u) throws SQLException {
 		new Affichage<FichierImage>().afficher(selectAllFromUser(c, u.getIdUser()));
-		int idFichier = -1;
+		int idFichier = -2;
 		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, u.getIdUser())){
-			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
+			if(idFichier==-1) {return;}
 		}
 		deleteFichierImage(c, idFichier);
+		System.out.println("fichier supprime !");
+	}
+	
+	public static void modifierFichier(Connection c, Utilisateur utilisateur) throws SQLException {
+		int idFichier = -1;
+		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, utilisateur.getIdUser())){
+			idFichier = LectureClavier.lireEntier("Pour modifier un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+		}
+		FichierImage f = selectAll(c, "idFichier=" + idFichier).get(0);
+		boolean back = false;
+		while (!back){
+			System.out.println(" \n"+f.toString());
+			if(LectureClavier.lireOuiNon("modifier les infos de prise de vue ?")){
+				f.setInfoPVue(LectureClavier.lireChaine("Nouvelles infos ?"));
+			}
+			if(LectureClavier.lireOuiNon("modifier le chemin ?")){
+				f.setChemin(LectureClavier.lireChaine("Nouveau chemin ?"));			
+			}
+			if(LectureClavier.lireOuiNon("modifier le partage ?")){
+				f.setPartage(1-f.isPartage());
+			}
+			if(LectureClavier.lireOuiNon("Sauvegarder les changements ?")){
+				updateFichierImage(c, idFichier, f.getChemin(), f.getInfoPVue(), f.getPixelImg(), f.isPartage());
+			} else {
+				back = true;
+			}
+		}
+		
 	}
 	
 }

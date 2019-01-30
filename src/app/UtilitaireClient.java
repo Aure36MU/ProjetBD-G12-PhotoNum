@@ -30,57 +30,70 @@ import src.photo.PhotoDAO;
 
 public class UtilitaireClient {
 
-	static void menuClient(Connection c, Utilisateur utilisateur) throws SQLException {
-		while(utilisateur != null){
-			System.out.println("*****************************************************************************");
-			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Se deconnecter.");
-			System.out.println("2 : Gerer mes impressions.");
-			System.out.println("3 : Gerer mes fichiers.");
-			System.out.println("4 : Gerer mon panier.");
-			int choixAction = LectureClavier.lireEntier("5 : Voir mon historique de commandes.");
-
-			switch(choixAction){ 
-				case 1:  	utilisateur = null;		System.out.println("Vous avez ete deconnecte");			break;
-				case 2:	gererImpression(c,utilisateur);				break;
-				case 3:	gererFichierImages(c,utilisateur);		break;
-				case 4:	gererPanier(c, utilisateur);					break;
-				case 5:
-					ArrayList<Commande> commandes = CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());
-					new Affichage<Commande>().afficher(commandes);		break;
-				default : System.out.println("Veuillez faire un choix. ");
-			}
-		}
-	}
-	
-	public static void gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
+//	static void menuClient(Connection c, Utilisateur utilisateur) throws SQLException {
+//		while(utilisateur != null){
+//			System.out.println("*****************************************************************************");
+//			System.out.println("Que voulez vous faire ?");
+//			System.out.println("1 : Se deconnecter.");
+//			System.out.println("2 : Gerer mes impressions.");
+//			System.out.println("3 : Gerer mes fichiers.");
+//			System.out.println("4 : Gerer mon panier.");
+//			int choixAction = LectureClavier.lireEntier("5 : Voir mon historique de commandes.");
+//
+//			switch(choixAction){ 
+//				case 1:  	utilisateur = null;		System.out.println("Vous avez ete deconnecte");			break;
+//				case 2:	gererImpression(c,utilisateur);				break;
+//				case 3:	gererFichierImages(c,utilisateur);		break;
+//				case 4:	gererPanier(c, utilisateur);					break;
+//				case 5:
+//					ArrayList<Commande> commandes = CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());
+//					new Affichage<Commande>().afficher(commandes);		break;
+//				default : System.out.println("Veuillez faire un choix. ");
+//			}
+//		}
+//	}
+//	
+//	public static void gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
+//		
+//		boolean back = false;
+//		while(!back){
+//			ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+//				if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); return; }
+//				else{	new Affichage<Article>().afficher(panier);
+//							
+//						System.out.println("*****************************************************************************");
+//						System.out.println("Que voulez vous faire ?");
+//						System.out.println("1 : Revenir au menu precedent.");
+//						System.out.println("2 : Modifier la quantité d'un article.");
+//						System.out.println("3 : Retirer un article.");
+//						int choixAction = LectureClavier.lireEntier("4 : Valider la commande.");
+//							
+//						switch(choixAction){ 
+//								case 1: back = true; 							break;
+//								case 2: ArticleDAO.ModifierQuantite(c);			break;
+//								case 3: ArticleDAO.SupprimerUnArticle(c);		break;
+//								case 4:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
+//										if(payer) {System.out.println("Vous avez paye :)"); }
+//										break;
+//								default : System.out.println("Veuillez faire un choix. ");
+//							}
+//				}
+//		}
+//	}
+	private static void gererAjoutFichier(Connection c, Utilisateur utilisateur) throws SQLException {
+	boolean continuer= true;
+	while(continuer==true){
 		
-		boolean back = false;
-		while(!back){
-			ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
-				if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); return; }
-				else{	new Affichage<Article>().afficher(panier);
-							
-							System.out.println("*****************************************************************************");
-							System.out.println("Que voulez vous faire ?");
-							System.out.println("1 : Revenir au menu precedent.");
-							System.out.println("2 : Modifier la quantité d'un article.");
-							System.out.println("3 : Retirer un article.");
-							int choixAction = LectureClavier.lireEntier("4 : Valider la commande.");
-							
-							switch(choixAction){ 
-										case 1: 		back = true; 											break;
-										case 2:  		ArticleDAO.ModifierQuantite(c);			break;
-										case 3:  		ArticleDAO.SupprimerUnArticle(c);		break;
-										case 4:	
-											boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
-											if(payer) {System.out.println("Vous avez paye :)"); }
-											break;
-										default : System.out.println("Veuillez faire un choix. ");
-							}
-				}
-		}
+		String 		chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
+		String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
+		int 		pixelImg 	= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
+		boolean 	partage 	= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
+		String 		dateUse 	= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		
+		FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage?1:0, Date.valueOf(dateUse) , 0, 0);
+		continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
 	}
+}
 	
 	private static void gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
@@ -107,7 +120,7 @@ public class UtilitaireClient {
 			case 4:	new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
 							gererUnePhoto(c,utilisateur);
 							break;
-			case 5:	new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
+			case 5:	
 							gererFichierPartages(c, utilisateur);
 							break;
 			case 6:	gererAjoutFichier(c,utilisateur);		break;
@@ -116,36 +129,29 @@ public class UtilitaireClient {
 		}
 		
 	}
-	private static void gererAjoutFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		boolean continuer= true;
-		while(continuer==true){
-			
-			String 		chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
-			String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
-			int 			pixelImg 		= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
-			boolean partage 		= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
-			String 		dateUse 		= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-			
-			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage?1:0, Date.valueOf(dateUse) , 0, 0);
-			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
-		}
-	}
+
 
 	private static void gererFichierPartages(Connection c, Utilisateur utilisateur) throws SQLException {
-		System.out.println("*****************************");
-		System.out.println("  voici vos fichiers partages : ");
-		System.out.println("****************************** ");
-		while(LectureClavier.lireOuiNon("Voulez vous modifier le partage d'un fichier ?")){
-			c.setAutoCommit(false);
+		System.out.println("**********************************************************");
+		System.out.println("             fichiers partages disponibles : ");
+		System.out.println("********************************************************** ");
+		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
+		utiliserFichierPourPhoto(c, utilisateur);
+		
+	}
+
+	public static void utiliserFichierPourPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
+		if(LectureClavier.lireOuiNon("Voulez vous utiliser un de ces fichiers ?")) {
 			int idFichier = -1;
-			while(!FichierImageDAO.idExists(c,idFichier)){
-				idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+			while(!FichierImageDAO.idExists(c,idFichier) || !(FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser()) || FichierImageDAO.isShared(c,idFichier))){
+				idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
+				if(idFichier == -1) {return;}
 			}
-			Statement state = c.createStatement();
-			state.executeUpdate("UPDATE FichierImage SET (partager = (1-partager)) WHERE idFichier = '" +idFichier+"'");
-			
-			c.commit();
-			c.setAutoCommit(true);
+			String retouche = LectureClavier.lireChaine("quelle retouche apporter au fichier ?");
+			PhotoDAO.insertPhoto(c, idFichier, retouche);
+			System.out.println("Votre photo a ete cree");
+		} else {
+			return;
 		}
 	}
 	
@@ -167,72 +173,14 @@ public class UtilitaireClient {
 				case 2:  	back = true;
 								System.out.println("retour au menu precedent");
 								break;
-				case 3:	gereModifFichier(c,utilisateur);			break;
-				case 4:	gereSupprFichier(c,utilisateur);			break;
-				case 5:	gereRetoucheFichier(c,utilisateur);		break;
+				case 3:	FichierImageDAO.modifierFichier(c,utilisateur);								break;
+				case 4:	FichierImageDAO.supprimerUnFichierClient(c, utilisateur);	break;
+				case 5:	utiliserFichierPourPhoto(c,utilisateur);					break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
 	}
 	
-	private static void gereModifFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int idFichier = -1;
-		while(!FichierImageDAO.idExists(c,idFichier) || !FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser())){
-			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
-		}
-		FichierImage f = FichierImageDAO.selectAll(c, "idFichier=" + idFichier).get(0);
-		boolean back = false;
-		while (!back){
-			System.out.println(" \n"+f.toString());
-			if(LectureClavier.lireOuiNon("modifier les infos de prise de vue ?")){
-				f.setInfoPVue(LectureClavier.lireChaine("Nouvelles infos ?"));
-			}
-			if(LectureClavier.lireOuiNon("modifier le chemin ?")){
-				f.setChemin(LectureClavier.lireChaine("Nouveau chemin ?"));			
-			}
-			if(LectureClavier.lireOuiNon("modifier le partage ?")){
-				f.setPartage(1-f.isPartage());
-			}
-			if(LectureClavier.lireOuiNon("Sauvegarder les changements ?")){
-				FichierImageDAO.updateFichierImage(c, idFichier, f.getChemin(), f.getInfoPVue(), f.getPixelImg(), f.isPartage());
-			} else {
-				back = true;
-			}
-		}
-		
-	}
-	
-	private static void gereSupprFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous supprimer ? (Entre le numero du fichier)");
-		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
-		if(utilisateur.getIdUser()==tab.get(0).getIdUser()) {
-			System.out.println("Le fichier que vous souhaitez supprimer est: "+ tab.get(0).getIdFichier() + " avec comme chemin :"+ tab.get(0).getChemin());
-			boolean choix = LectureClavier.lireOuiNon("Voulez vous supprimer ce fichier?");
-			
-			if(choix) {			FichierImageDAO.deleteFichierImage(c, tab.get(0).getIdFichier());
-										System.out.println("Fichier supprimer avec succes!");
-			}
-		}else {
-			System.out.println("Vous n'avez pas le droit de supprimer ce fichier, il n'est pas a vous");
-		}
-	}
-	
-	private static void gereRetoucheFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous retoucher? (Entrez le numero du fichier)");
-		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
-		if((utilisateur.getIdUser()==tab.get(0).getIdUser()) || (tab.get(0).isPartage()==1)) {
-			System.out.println("Le fichier que vous souhaitez retoucher est: "+ tab.get(0).getIdFichier() + " avec comme chemin :"+ tab.get(0).getChemin());
-			boolean choix = LectureClavier.lireOuiNon("Voulez vous retoucher ce fichier?");
-			if(choix) {
-				String retouche = LectureClavier.lireChaine("Quelles retouches voulez vous faire?");
-				PhotoDAO.insertPhoto(c, tab.get(0).getIdFichier(), retouche);
-				System.out.println("Fichier retouche avec succes!");
-			}
-		}else {
-			System.out.println("Vous n'avez pas le droit de retoucher ce fichier, il n'est pas a vous et il n'est pas en libre service");
-		}
-	}
-	 
 	private static void gererUnePhoto(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
@@ -250,13 +198,13 @@ public class UtilitaireClient {
 				case 2:  	back = true;
 								System.out.println("retour au menu precedent");
 								break;
-				case 3:	gereModifPhoto(c,utilisateur);			break;
-				case 4:	gereSupprPhoto(c,utilisateur);			break;
+				case 3:	modifierPhoto(c,utilisateur);			break;
+				case 4:	supprimerPhoto(c,utilisateur);			break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
 	}
-	private static void gereModifPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static void modifierPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
 		int photo = LectureClavier.lireEntier("Quelle photo voulez vous modifier? (Entrez le numero de la photo)");
 		ArrayList<Photo> tab = PhotoDAO.selectAll(c, "idPh=" + photo);
 		System.out.println("La photo que vous souhaitez modifier est: "+ tab.get(0).getIdPh() + " du fichier :"+ tab.get(0).getIdFichier() + " avec la retouche :" + tab.get(0).getRetouche());
@@ -270,7 +218,7 @@ public class UtilitaireClient {
 		}
 	}
 	
-	private static void gereSupprPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static void supprimerPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
 		int photo = LectureClavier.lireEntier("Quel photo voulez vous supprimer? (Entrez le numero de la photo)");
 		ArrayList<Photo> tab = PhotoDAO.selectAll(c, "idPh=" + photo);
 		
@@ -282,136 +230,8 @@ public class UtilitaireClient {
 			//TODO : tu fais quoi sinon ? tu reviens comment en arriere ?
 		}
 	}
-
-	private static void gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
-
-		boolean back = false;
-		while(!back){
-			System.out.println("*****************************************************************************");
-			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Se deconnecter.");
-			System.out.println("2 : Retourner au menu precedent.");
-			System.out.println("3 : Consulter la liste de mes impressions.");
-			int choixAction = LectureClavier.lireEntier("4 : Creer une nouvelle impression.");
-
-			switch(choixAction){ 
-			case 1:  	utilisateur = null;
-							back = true;
-							System.out.println("Vous avez ete deconnecte");
-							break;
-			case 2:  	back = true;
-							System.out.println("retour au menu precedent");
-							break;
-			case 3:	ArrayList<Impression> tab =ImpressionDAO.selectAllFromUserImpressionNotArticle(c,utilisateur.getIdUser());
-							new Affichage<Impression>().afficher(tab);
-							gererModifImpression(c,utilisateur);
-							break;
-			case 4:	gereInsertImp(c,utilisateur);		break;
-			default : System.out.println("Veuillez faire un choix. ");
-			}
-		}		
-	}
-
-	private static void gererModifImpression(Connection c, Utilisateur utilisateur) throws SQLException {
-
-		boolean back = false;
-		while(!back){
-			System.out.println("*****************************************************************************");
-			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Se deconnecter.");
-			System.out.println("2 : Retourner au menu precedent.");
-			System.out.println("3 : Continuer une impression.");
-			int choixAction = LectureClavier.lireEntier("4 : Supprimer une impression.");
-
-			switch(choixAction){ 
-			case 1:  	utilisateur = null;
-							back = true;
-							System.out.println("Vous avez ete deconnecte");
-							break;
-			case 2:  	back = true;
-							System.out.println("retour au menu precedent");
-							break;
-			case 3:	int imp=LectureClavier.lireEntier("Quel impression voulez vous continuer?");
-							gererInsertPhoto(c,utilisateur,imp);
-							break;
-			case 4:	ImpressionDAO.gererDeleteImp(c,utilisateur);		break;
-			default : System.out.println("Veuillez faire un choix. ");
-			}
-		}		
-	}
 	
-	
-	private static void gereInsertImp(Connection c, Utilisateur utilisateur) throws SQLException {
-		boolean continuer=true;
-		boolean correct = false;
-		while(continuer) {
-			
-			String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
-			String type= Type.definir();
-			String format= Format.definir();
-			String qualite= Qualite.definir();
-			
-			System.out.println("Récapitulatif: ");
-			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
-			correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
-			
-			while(!correct) {
-				if (LectureClavier.lireOuiNon("Abandonner ? (oui/non)")) {
-					return;
-				}
-				nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
-				type= Type.definir();
-				format= Format.definir();
-				qualite= Qualite.definir();
-				
-				System.out.println("Récapitulatif: ");
-				System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
-				correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
-			}
-
-			switch(type){ 
-				case "AGENDA":
-								String modeleAgenda= ModeleAgenda.definir();
-								String ornement = Ornement.definir();
-								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,ornement,modeleAgenda );
-								System.out.println("Vous venez de creer votre nouvelle impression");
-								break;
-				case "CALENDRIER":
-								String modeleCalendrier = ModeleCalendrier.definir();
-								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,modeleCalendrier);
-								System.out.println("Vous venez de creer votre nouvelle impression");
-								break;
-				case "ALBUM":
-								String titreCouv=LectureClavier.lireChaine("Quel nom souhaitez vous sur la couverture?: ");
-								ArrayList<Photo> tab =PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
-								int i=0;
-								boolean trouve=false;
-								new Affichage<Photo>().afficher(tab);
-								while(trouve==false) {
-									int photo= LectureClavier.lireEntier("Quel photo voulez vous mettre en couverture? Entrez le numero de la photo");
-									while(i<tab.size() && tab.get(i).getIdPh()!=photo) {i++;}
-									if(i<tab.size()) {
-										trouve=true;
-										ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,photo,titreCouv );
-									}else {	System.out.println("Vous n'avez pas selectionne une photo que vous possedez"); }
-								}	
-								System.out.println("Vous venez de creer votre nouvelle impression");
-								break;	
-				case "CADRE":
-								String modeleCadre = ModeleCadre.definir();
-								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,modeleCadre);
-								System.out.println("Vous venez de creer votre nouvelle impression");
-								break;
-				case "TIRAGE":
-								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite);
-								System.out.println("Vous venez de creer votre nouvelle impression");
-								break;
-			}
-			continuer = LectureClavier.lireOuiNon("Continuer de créer des impressions? (oui/non)");
-		}
-	}
-		
-	private static void gererInsertPhoto(Connection c, Utilisateur utilisateur, int idImp) throws SQLException {
+	private static void creationPhoto(Connection c, Utilisateur utilisateur, int idImp) throws SQLException {
 		ArrayList <Impression> tabImp = ImpressionDAO.selectAllFromUser(c, utilisateur.getIdUser());
 		int i=0;	while(i<tabImp.size() && tabImp.get(i).getIdImp()!=idImp) {i++;}
 		
@@ -447,4 +267,135 @@ public class UtilitaireClient {
 			}
 		} else {	System.out.println("Vous n'avez pas selectionne une impression que vous possedez");}
 	}
+
+
+//	private static void gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
+//
+//		boolean back = false;
+//		while(!back){
+//			System.out.println("*****************************************************************************");
+//			System.out.println("Que voulez vous faire ?");
+//			System.out.println("1 : Se deconnecter.");
+//			System.out.println("2 : Retourner au menu precedent.");
+//			System.out.println("3 : Consulter la liste de mes impressions.");
+//			int choixAction = LectureClavier.lireEntier("4 : Creer une nouvelle impression.");
+//
+//			switch(choixAction){ 
+//			case 1:  	utilisateur = null;
+//							back = true;
+//							System.out.println("Vous avez ete deconnecte");
+//							break;
+//			case 2:  	back = true;
+//							System.out.println("retour au menu precedent");
+//							break;
+//			case 3:	ArrayList<Impression> tab =ImpressionDAO.selectAllFromUserImpressionNotArticle(c,utilisateur.getIdUser());
+//							new Affichage<Impression>().afficher(tab);
+//							gererModifImpression(c,utilisateur);
+//							break;
+//			case 4:	gereInsertImp(c,utilisateur);		break;
+//			default : System.out.println("Veuillez faire un choix. ");
+//			}
+//		}		
+//	}
+//
+//	private static void gererModifImpression(Connection c, Utilisateur utilisateur) throws SQLException {
+//
+//		boolean back = false;
+//		while(!back){
+//			System.out.println("*****************************************************************************");
+//			System.out.println("Que voulez vous faire ?");
+//			System.out.println("1 : Se deconnecter.");
+//			System.out.println("2 : Retourner au menu precedent.");
+//			System.out.println("3 : Continuer une impression.");
+//			int choixAction = LectureClavier.lireEntier("4 : Supprimer une impression.");
+//
+//			switch(choixAction){ 
+//			case 1:  	utilisateur = null;
+//							back = true;
+//							System.out.println("Vous avez ete deconnecte");
+//							break;
+//			case 2:  	back = true;
+//							System.out.println("retour au menu precedent");
+//							break;
+//			case 3:	int imp=LectureClavier.lireEntier("Quel impression voulez vous continuer?");
+//							gererInsertPhoto(c,utilisateur,imp);
+//							break;
+//			case 4:	ImpressionDAO.gererDeleteImp(c,utilisateur);		break;
+//			default : System.out.println("Veuillez faire un choix. ");
+//			}
+//		}		
+//	}
+//	
+//	
+//	private static void gereInsertImp(Connection c, Utilisateur utilisateur) throws SQLException {
+//		boolean continuer=true;
+//		boolean correct = false;
+//		while(continuer) {
+//			
+//			String nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
+//			String type= Type.definir();
+//			String format= Format.definir();
+//			String qualite= Qualite.definir();
+//			
+//			System.out.println("Récapitulatif: ");
+//			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
+//			correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
+//			
+//			while(!correct) {
+//				if (LectureClavier.lireOuiNon("Abandonner ? (oui/non)")) {
+//					return;
+//				}
+//				nomI= LectureClavier.lireChaine("Quel nom souhaitez vous pour votre impression?: ");
+//				type= Type.definir();
+//				format= Format.definir();
+//				qualite= Qualite.definir();
+//				
+//				System.out.println("Récapitulatif: ");
+//				System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
+//				correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
+//			}
+//
+//			switch(type){ 
+//				case "AGENDA":
+//								String modeleAgenda= ModeleAgenda.definir();
+//								String ornement = Ornement.definir();
+//								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,ornement,modeleAgenda );
+//								System.out.println("Vous venez de creer votre nouvelle impression");
+//								break;
+//				case "CALENDRIER":
+//								String modeleCalendrier = ModeleCalendrier.definir();
+//								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,modeleCalendrier);
+//								System.out.println("Vous venez de creer votre nouvelle impression");
+//								break;
+//				case "ALBUM":
+//								String titreCouv=LectureClavier.lireChaine("Quel nom souhaitez vous sur la couverture?: ");
+//								ArrayList<Photo> tab =PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
+//								int i=0;
+//								boolean trouve=false;
+//								new Affichage<Photo>().afficher(tab);
+//								while(trouve==false) {
+//									int photo= LectureClavier.lireEntier("Quel photo voulez vous mettre en couverture? Entrez le numero de la photo");
+//									while(i<tab.size() && tab.get(i).getIdPh()!=photo) {i++;}
+//									if(i<tab.size()) {
+//										trouve=true;
+//										ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,photo,titreCouv );
+//									}else {	System.out.println("Vous n'avez pas selectionne une photo que vous possedez"); }
+//								}	
+//								System.out.println("Vous venez de creer votre nouvelle impression");
+//								break;	
+//				case "CADRE":
+//								String modeleCadre = ModeleCadre.definir();
+//								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,modeleCadre);
+//								System.out.println("Vous venez de creer votre nouvelle impression");
+//								break;
+//				case "TIRAGE":
+//								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite);
+//								System.out.println("Vous venez de creer votre nouvelle impression");
+//								break;
+//			}
+//			continuer = LectureClavier.lireOuiNon("Continuer de créer des impressions? (oui/non)");
+//		}
+//	}
+//		
+	
 }
