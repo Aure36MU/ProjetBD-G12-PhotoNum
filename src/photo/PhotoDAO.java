@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.app.Affichage;
+import src.app.LectureClavier;
+import src.compte.Utilisateur;
+
 public class PhotoDAO {
 	
 
@@ -154,4 +158,47 @@ public class PhotoDAO {
 		return photos;
 	}
 
+	
+	public static void supprimerPhoto(Connection c, Utilisateur u) throws SQLException {
+		int idPh = -2;
+		while(!idExists(c,idPh)){
+			idPh = LectureClavier.lireEntier("Pour selectionner une photo, entrez son idPh (dans la liste ci-dessus ou -1 pour annuler).");
+			if(idPh==-1) {return;}
+		}
+		deletePhoto(c, idPh);
+		System.out.println("Photo supprime !");
+	}
+	
+	public static Boolean idExists(Connection c, int idPh) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from Photo where idPh='"+idPh+"'");
+		if (result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
+	}
+
+	public static void modifierPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
+		int idPh = -2;
+		while(!idExists(c,idPh)){
+			idPh = LectureClavier.lireEntier("Pour selectionner une photo, entrez son idPh (dans la liste ci-dessus ou -1 pour annuler).");
+			if(idPh==-1) {return;}
+		}
+		Photo p = selectAll(c, "idPh='" + idPh+"'").get(0);
+		boolean back = false;
+		while (!back){
+			System.out.println(" \n"+p.toString());
+			if(LectureClavier.lireOuiNon("modifier la retouche ?")){
+				p.setRetouche(LectureClavier.lireChaine("Nouvelles retouches ?"));
+			}
+			if(LectureClavier.lireOuiNon("Sauvegarder les changements ?")){
+				updatePhoto(c, p.getIdPh(), p.getIdFichier(), p.getRetouche());
+			} else {
+				back = true;
+			}
+		}
+		
+	}
+	
+	
 }
