@@ -8,24 +8,13 @@ import java.util.ArrayList;
 
 public class CatalogueDAO {
 
-
-	/*---------------------------------------------------------------------------------------------------
-	public static ArrayList<Catalogue> selectStats(Connection conn) throws SQLException {
-
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT type,format,modele,(select count FROM Catalogue");
-        
-        return CatalogueDAO.getStat(result);
-
-    }
-	---------------------------------------------------------------------------------------------------*/
     /**
-     * S�lectionne toutes les Catalogues  avec des conditions param�tres.
+     * Selectionne toutes les Catalogues  avec des conditions parametres.
      *
      * @param conn Connection SQL
-     * @param condition cha�ne de caract�res format� comme suit : "condition1 {AND condition2}"
+     * @param condition chaine de caracteres formate comme suit : "condition1 {AND condition2}"
      * Exemple : "foo=1 AND bar='bar' AND truc<>42"
-     * @return ArrayList contenant les objets Catalogue s�lectionn�s
+     * @return ArrayList contenant les objets Catalogue selectionnes
      * @throws SQLException
      */
     public static ArrayList<Catalogue> selectAll(Connection conn, String condition) throws SQLException {
@@ -34,7 +23,7 @@ public class CatalogueDAO {
         return getCatalogues(result);
     }
 	/**
-	 * S�lectionne tous les Catalogues (quels que soient leurs mod�les) sans conditions.
+	 * Selectionne tous les Catalogues (quels que soient leurs modeles) sans conditions.
 	 *
 	 * @param conn Connection SQL
 	 * @return ArrayList contenant tous les objets Catalogue
@@ -67,9 +56,9 @@ public class CatalogueDAO {
 	}
     
     /**
-     * Retourne les objets Catalogue construits � partir d'un r�sultat de requ�te.
+     * Retourne les objets Catalogue construits e partir d'un resultat de requete.
      *
-     * @param result le ResultSet de la requ�te SQL
+     * @param result le ResultSet de la requete SQL
      * @return ArrayList contenant les objets Catalogue
      * @throws SQLException
      */
@@ -99,21 +88,21 @@ public class CatalogueDAO {
         											+ catalogue.modele;
 		
 		switch(catalogue.type){
-				case "AGENDA" : 
-					where += " = Agenda.modeleAgenda";
-					query += "NATURAL JOIN Agenda "+where;
-					break;
+				case "AGENDA" : 			where += " = Agenda.modeleAgenda";
+														query += "NATURAL JOIN Agenda "+where;
+														break;
 				case "CALENDRIER" : 
-					where += " = Calendrier.modeleCalendrier";
-					query += "NATURAL JOIN Calendrier"+where;
-					break;
+														where += " = Calendrier.modeleCalendrier";
+														query += "NATURAL JOIN Calendrier"+where;
+														break;
 				case "CADRE" : 
-					where += " = Cadre.modeleCadre";
-					query += "NATURAL JOIN Cadre" +where;
-					break;
-				default : ;
-				query +=  "c.statut<>'Brouillon'";
+														where += " = Cadre.modeleCadre";
+														query += "NATURAL JOIN Cadre" +where;
+														break;
+				default :							where += " = 'AUCUN'" ;
+														query += where;
 		}
+		query +=  " AND c.statut<>'Brouillon'";
 		ResultSet result = state.executeQuery(query);        		
         return result.getInt(0); //nbVentes
 	}
@@ -129,6 +118,4 @@ public class CatalogueDAO {
 	        }
         return stats;
 	}
-
-	/*---------------------------------------------------------------------------------------------------*/
 }

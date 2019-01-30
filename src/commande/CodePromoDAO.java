@@ -9,25 +9,12 @@ import java.util.Date;
 
 public class CodePromoDAO {
 
-	public static int getHigherIdCodeP(Connection c){
-		try {
-			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idCodeP) FROM CodePromo");
-			if (res.next()) {
-				return res.getInt(1);
-			}						
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
 	public static void createCodePromo(Connection c, Date dateAcqui, Date dateUtil, String code, int taux, int idUser){
 		try {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO CodePromo "
-					+ "(idCodeP,dateAcqui,dateUtil,code,taux,idUser)"
-					+ "VALUES ("+(getHigherIdCodeP(c)+1)+ ", " + dateAcqui + ", " + dateUtil + ", " + code + ", " + taux + ", " + idUser + "); " );
+					+ "(dateAcqui,dateUtil,code,taux,idUser)"
+					+ "VALUES ("+ ", " + dateAcqui + ", " + dateUtil + ", " + code + ", " + taux + ", " + idUser + "); " );
 			
 			
 		} catch (SQLException e) {
