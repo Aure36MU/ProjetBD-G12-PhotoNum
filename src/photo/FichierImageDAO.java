@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import src.app.Affichage;
 import src.app.LectureClavier;
+import src.compte.Utilisateur;
+
 import java.sql.Date;
 
 
