@@ -38,7 +38,7 @@ public class CadreDAO {
 	
 	public static ArrayList<Cadre> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Cadre') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp and i.type='Cadre')");
+        ResultSet result = state.executeQuery("SELECT * FROM Cadre c INNER JOIN Impression i ON c.idImp=i.idImp WHERE i.idUser="+id+" AND c.idImp NOT IN (select idImp FROM Article)");
         return getCadres(result);
     }
 	
@@ -84,7 +84,7 @@ public class CadreDAO {
 		try {
 			while (result.next()) {
 				cadres.add(new Cadre(
-					ModeleCadre.valueOf(result.getString("modele")),
+					ModeleCadre.valueOf(result.getString("modeleCadre")),
 					result.getInt("idImp")
 				));
 			}
