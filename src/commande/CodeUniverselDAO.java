@@ -13,7 +13,7 @@ public class CodeUniverselDAO {
 		try {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO CodeUniversel "
-					+ "(idCodeP,dateAcqui,dateUtil,code,taux)"
+					+ "(dateAcqui,dateUtil,code,taux)"
 					+ "VALUES ("+dateAcqui+ ", " +dateUtil+ ", " +code+ ", " +taux+ ") " );
 		} catch (SQLException e) {
 			System.out.println("creation failed");

@@ -1,11 +1,13 @@
 package src.commande;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.app.LectureClavier;
 import src.impression.Impression;
 import src.impression.ImpressionDAO;
 import src.impression.agenda.AgendaDAO;
@@ -89,13 +91,58 @@ public class ArticleDAO {
         return getArticles(result);
     }
     
+	public static Boolean idExists(Connection c, int idArticle) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from Article where idArt='"+idArticle+"'");
+		if (result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
+	}
+	
+	public static void ModifierQuantite(Connection conn) throws SQLException {
+		conn.setAutoCommit(false);
+		int idArticle = -1;
+		while(!idExists(conn,idArticle)){
+			idArticle = LectureClavier.lireEntier("Pour selectionner un Article, entrez son idArticle (dans la liste présentée ci-dessus).");
+		}
+		int Qte = LectureClavier.lireEntier("Combien d'exemplaire voulez vous ?");
+		PreparedStatement state = conn.prepareStatement("UPDATE Article SET (qte=?,) WHERE idArt=?");
+		state.setInt(1, Qte);
+		state.setInt(2, idArticle);
+		state.executeUpdate();
+		
+		conn.commit();
+		conn.setAutoCommit(true);
+	}
+	
+	public static void SupprimerUnArticle(Connection conn) throws SQLException {
+		conn.setAutoCommit(false);
+		int idArticle = -1;
+		while(!idExists(conn,idArticle)){
+			idArticle = LectureClavier.lireEntier("Pour supprimer un Article, entrez son idArticle (dans la liste présentée ci-dessus).");
+		}
+		deleteArticle(conn, idArticle);
+		conn.commit();
+		conn.setAutoCommit(true);
+	}
+	
     
-    /**
+    
+    private static void deleteArticle(Connection conn, int idArticle){
+		try {
+			Statement state = conn.createStatement();
+			state.executeUpdate("DELETE FROM Article WHERE idArt="+idArticle);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
      * A partir d'un id impression, id commande et quantitï¿½,
      * retrouve les informations nï¿½cessaires sur l'Impression,
      * vï¿½rifie dans le Catalogue le prix de cette Impression et son stock,
      * puis ajoute un nouvel Article dans la base.
-     * 
      * @param conn
      * @param idImp
      * @param idComm

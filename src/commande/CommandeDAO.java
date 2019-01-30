@@ -124,7 +124,7 @@ public class CommandeDAO {
 					}
 	    		}
 	    	} else { // Il n'existe pas encore de commande
-	    		state.executeUpdate("INSERT INTO Commande VALUES("+", "+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
+	    		state.executeUpdate("INSERT INTO Commande (idUser,idCodeP, dateC,modeLivraison,statutCommande) VALUES("+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
 	    		try {
 					ArticleDAO.insertArticleFromImpression(conn, idImp, selectWithStatut(conn,"BROUILLON").get(0).idComm, qte);
 				} catch (Exception e) {

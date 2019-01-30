@@ -16,7 +16,6 @@ import java.sql.Date;
 public class FichierImageDAO {
 	
 	/** Renvoie la date du jour pour utilisation avec la base de données.
-	 * 
 	 * @return La date du jour formatté comme suit : "yyyy-MM-dd"
 	 */
 	public static String today() {
@@ -96,7 +95,7 @@ public class FichierImageDAO {
 	 */
 	public static void insertFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
 			int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
-			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage (idUser,chemin,infoPVue,pixelImg,partage,dateUtilisation,fileAttModif,fileAttSuppr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			state.setInt(1, idUser);
 			state.setString(2, chemin);
 			state.setString(3, infoPVue);
@@ -323,8 +322,17 @@ public class FichierImageDAO {
 		}
 		return false;
 	}
+	
+	public static Boolean BelongToUser(Connection c, int idFichier, int idUser) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier='"+idFichier+"' and idUser = '"+idUser+"'");
+		if (result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
+	}
 
-	public static void gererFichiersClients(Connection c) throws SQLException {
+	public static void supprimerUnFichierClient(Connection c) throws SQLException {
 		new Affichage<Owners>().afficher(selectAllWithOwner(c));
 		int idFichier = -1;
 		while(!idExists(c,idFichier)){

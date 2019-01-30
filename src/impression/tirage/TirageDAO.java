@@ -48,7 +48,7 @@ public class TirageDAO {
 	 */
 	public static void insertTirage(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO Tirage VALUES("+id+")");
+		state.executeUpdate("INSERT INTO Tirage (idImp) VALUES("+id+")");
 	}
 	
 	/**
