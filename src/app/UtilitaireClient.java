@@ -35,9 +35,9 @@ public class UtilitaireClient {
 			System.out.println("Que voulez vous faire ?");
 			System.out.println("1 : Se deconnecter.");
 			System.out.println("2 : Gerer mes impressions.");
-			System.out.println("3 : Gerer mes fichiers images.");
-			System.out.println("4 : Voir le contenu de mon panier.");
-			int choixAction = LectureClavier.lireEntier("5 : voir mon historique de commandes.");
+			System.out.println("3 : Gerer mes fichiers.");
+			System.out.println("4 : Gerer mon panier.");
+			int choixAction = LectureClavier.lireEntier("5 : Voir mon historique de commandes.");
 
 			switch(choixAction){ 
 				case 1:  	utilisateur = null;		System.out.println("Vous avez ete deconnecte");			break;
@@ -54,27 +54,29 @@ public class UtilitaireClient {
 	
 	public static void gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
 		ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
-		
-		if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); }
-		else{	new Affichage<Article>().afficher(panier);	}
-		
-		System.out.println("*****************************************************************************");
-		System.out.println("Que voulez vous faire ?");
-		System.out.println("1 : Modifier la quantité.");
-		System.out.println("2 : Retirer un article.");
-		int choixAction = LectureClavier.lireEntier("3 : Valider la commande.");
-		
-		switch(choixAction){ 
-		case 1:  //TODO:
-
-			break;
-		case 2:  //TODO:
-
-			break;
-		case 3:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
-						if(payer) {System.out.println("Vous avez paye :)"); }
-						break;
-		default : System.out.println("Veuillez faire un choix. ");
+		boolean back = false;
+		while(!back){
+				if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); }
+				else{	new Affichage<Article>().afficher(panier);
+							
+							System.out.println("*****************************************************************************");
+							System.out.println("Que voulez vous faire ?");
+							System.out.println("1 : Revenir au menu precedent.");
+							System.out.println("2 : Modifier la quantité d'un article.");
+							System.out.println("3 : Retirer un article.");
+							int choixAction = LectureClavier.lireEntier("4 : Valider la commande.");
+							
+							switch(choixAction){ 
+										case 1: 		back = true; 											break;
+										case 2:  		ArticleDAO.ModifierQuantite(c);			break;
+										case 3:  		ArticleDAO.SupprimerUnArticle(c);		break;
+										case 4:	
+											boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
+											if(payer) {System.out.println("Vous avez paye :)"); }
+											break;
+										default : System.out.println("Veuillez faire un choix. ");
+							}
+				}
 		}
 	}
 	
@@ -85,7 +87,7 @@ public class UtilitaireClient {
 			System.out.println("Que voulez vous faire ?");
 			System.out.println("1 : Se deconnecter.");
 			System.out.println("2 : Retourner au menu precedent.");
-			System.out.println("3 : Consulter la liste de mes fichiers de base.");
+			System.out.println("3 : Consulter la liste de mes fichiers.");
 			System.out.println("4 : Consulter la liste de mes photos.");
 			System.out.println("5 : Consulter la liste des fichiers partages.");
 			int choixAction = LectureClavier.lireEntier("6 : Ajouter un nouveau fichier.");
@@ -105,7 +107,6 @@ public class UtilitaireClient {
 							break;
 			case 5:	new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
 							gererFichierPartager(c, utilisateur);
-							//PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 							break;
 			case 6:	gererAjoutFichier(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
@@ -117,9 +118,9 @@ public class UtilitaireClient {
 		boolean continuer= true;
 		while(continuer==true){
 			
-			String 		chemin 		= LectureClavier.lireChaine("Ou ce trouve votre fichier? ");
+			String 		chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
 			String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
-			int 			pixelImg 		= LectureClavier.lireEntier("Quel est la taille en pixel : ");	
+			int 			pixelImg 		= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
 			boolean partage 		= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
 			String 		dateUse 		= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			
@@ -179,22 +180,22 @@ public class UtilitaireClient {
 	}
 	
 	private static void gereModifFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous modifier? (Entre le numero du fichier)");
+		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous modifier? (Entrez le numero du fichier)");
 		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
 		if(utilisateur.getIdUser()==tab.get(0).getIdUser()) {
 			int part=tab.get(0).isPartage();
-			System.out.println("Votre photo est partager: "+ part);
+			System.out.println("Votre photo est partagee : "+ part);
 			boolean choix1 = LectureClavier.lireOuiNon("Voulez vous modifier le partage?");
 			boolean choix2 = LectureClavier.lireOuiNon("Voulez vous modifier le commentaire?");
 			if(choix1) {	part= 1- (tab.get(0).isPartage());	}
 			else{
 				if(choix2) {
-					String comm= LectureClavier.lireChaine("Quel est le nouveau commentaire?");
+					String comm= LectureClavier.lireChaine("Quel est le nouveau commentaire ?");
 					FichierImageDAO.updateFichierImage(c, fichier, tab.get(0).getChemin(), comm, tab.get(0).getPixelImg(), part);
-					System.out.println("Fichier modifier avec succes!");
+					System.out.println("Fichier modifie avec succes!");
 				} else {
 					FichierImageDAO.updateFichierImage(c, fichier, tab.get(0).getChemin(), tab.get(0).getInfoPVue(), tab.get(0).getPixelImg(), part);
-					System.out.println("Fichier modifier avec succes!");
+					System.out.println("Fichier modifie avec succes!");
 					//TODO : what the fuck ? faut que tu m'explique cette méthode thomas elle fait nimp avec les if.
 				}
 			}
@@ -203,7 +204,7 @@ public class UtilitaireClient {
 	}
 	
 	private static void gereSupprFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous supprimer? (Entre le numero du fichier)");
+		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous supprimer ? (Entre le numero du fichier)");
 		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
 		if(utilisateur.getIdUser()==tab.get(0).getIdUser()) {
 			System.out.println("Le fichier que vous souhaitez supprimer est: "+ tab.get(0).getIdFichier() + " avec comme chemin :"+ tab.get(0).getChemin());
@@ -218,18 +219,18 @@ public class UtilitaireClient {
 	}
 	
 	private static void gereRetoucheFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous retoucher? (Entre le numero du fichier)");
+		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous retoucher? (Entrez le numero du fichier)");
 		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
 		if((utilisateur.getIdUser()==tab.get(0).getIdUser()) || (tab.get(0).isPartage()==1)) {
 			System.out.println("Le fichier que vous souhaitez retoucher est: "+ tab.get(0).getIdFichier() + " avec comme chemin :"+ tab.get(0).getChemin());
 			boolean choix = LectureClavier.lireOuiNon("Voulez vous retoucher ce fichier?");
 			if(choix) {
-				String retouche = LectureClavier.lireChaine("Quelles retouche voulez vous faire?");
+				String retouche = LectureClavier.lireChaine("Quelles retouches voulez vous faire?");
 				PhotoDAO.insertPhoto(c, tab.get(0).getIdFichier(), retouche);
-				System.out.println("Fichier retoucher avec succes!");
+				System.out.println("Fichier retouche avec succes!");
 			}
 		}else {
-			System.out.println("Vous n'avez pas le droit de retoucher ce fichier, il n'est pas e vous et il n'est pas en libre service");
+			System.out.println("Vous n'avez pas le droit de retoucher ce fichier, il n'est pas a vous et il n'est pas en libre service");
 		}
 	}
 	
@@ -258,12 +259,12 @@ public class UtilitaireClient {
 		}
 	}
 	private static void gereModifPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
-		int photo = LectureClavier.lireEntier("Quelle photo voulez vous modifier? (Entre le numero de la photo)");
+		int photo = LectureClavier.lireEntier("Quelle photo voulez vous modifier? (Entrez le numero de la photo)");
 		ArrayList<Photo> tab = PhotoDAO.selectAll(c, "idPh=" + photo);
 		System.out.println("La photo que vous souhaitez modifier est: "+ tab.get(0).getIdPh() + " du fichier :"+ tab.get(0).getIdFichier() + " avec la retouche :" + tab.get(0).getRetouche());
 		
 		boolean choix = LectureClavier.lireOuiNon("Voulez vous modifier cette photo?");
-		if(choix) {	String retouche = LectureClavier.lireChaine("Quelles retouche voulez vous faire?");
+		if(choix) {	String retouche = LectureClavier.lireChaine("Quelles retouches voulez vous faire?");
 							PhotoDAO.updatePhoto(c, tab.get(0).getIdPh(), tab.get(0).getIdFichier(), retouche);
 		}
 		else{
@@ -272,13 +273,13 @@ public class UtilitaireClient {
 	}
 	
 	private static void gereSupprPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
-		int photo = LectureClavier.lireEntier("Quel photo voulez vous supprimer? (Entre le numero de la photo)");
+		int photo = LectureClavier.lireEntier("Quel photo voulez vous supprimer? (Entrez le numero de la photo)");
 		ArrayList<Photo> tab = PhotoDAO.selectAll(c, "idPh=" + photo);
 		
 		System.out.println("La photo que vous souhaitez supprimer est: "+ tab.get(0).getIdPh() + " du fichier :"+ tab.get(0).getIdFichier());
 		boolean choix = LectureClavier.lireOuiNon("Voulez vous supprimer cette photo?");
 		if(choix) {		PhotoDAO.deletePhoto(c, tab.get(0).getIdPh());
-								System.out.println("Photo supprimer avec succes!");
+								System.out.println("Photo supprimee avec succes!");
 		}else {
 			//TODO : tu fais quoi sinon ? tu reviens comment en arriere ?
 		}
@@ -369,19 +370,18 @@ public class UtilitaireClient {
 				System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
 				correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
 			}
-			System.out.println("Vous venez de crée votre nouvelle impression");
-			
+
 			switch(type){ 
 				case "AGENDA":
 								String modeleAgenda= ModeleAgenda.definir();
 								String ornement = Ornement.definir();
 								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,ornement,modeleAgenda );
-								System.out.println("Vous venez de crée votre nouvelle impression");
+								System.out.println("Vous venez de creer votre nouvelle impression");
 								break;
 				case "CALENDRIER":
 								String modeleCalendrier = ModeleCalendrier.definir();
 								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,modeleCalendrier);
-								System.out.println("Vous venez de crée votre nouvelle impression");
+								System.out.println("Vous venez de creer votre nouvelle impression");
 								break;
 				case "ALBUM":
 								String titreCouv=LectureClavier.lireChaine("Quel nom souhaitez vous sur la couverture?: ");
@@ -390,23 +390,23 @@ public class UtilitaireClient {
 								boolean trouve=false;
 								new Affichage<Photo>().afficher(tab);
 								while(trouve==false) {
-									int photo= LectureClavier.lireEntier("Quel photo voulez vous mettre en couverture? Entrée le numero de la photo");
+									int photo= LectureClavier.lireEntier("Quel photo voulez vous mettre en couverture? Entrez le numero de la photo");
 									while(i<tab.size() && tab.get(i).getIdPh()!=photo) {i++;}
 									if(i<tab.size()) {
 										trouve=true;
 										ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,photo,titreCouv );
-									}else {	System.out.println("Vous n'avez pas selectionner une photo que vous possedez"); }
+									}else {	System.out.println("Vous n'avez pas selectionne une photo que vous possedez"); }
 								}	
 								System.out.println("Vous venez de creer votre nouvelle impression");
 								break;	
 				case "CADRE":
 								String modeleCadre = ModeleCadre.definir();
 								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,modeleCadre);
-								System.out.println("Vous venez de crée votre nouvelle impression");
+								System.out.println("Vous venez de creer votre nouvelle impression");
 								break;
 				case "TIRAGE":
 								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite);
-								System.out.println("Vous venez de crée votre nouvelle impression");
+								System.out.println("Vous venez de creer votre nouvelle impression");
 								break;
 			}
 			continuer = LectureClavier.lireOuiNon("Continuer de créer des impressions? (oui/non)");
@@ -415,23 +415,23 @@ public class UtilitaireClient {
 		
 	private static void gererInsertPhoto(Connection c, Utilisateur utilisateur, int idImp) throws SQLException {
 		ArrayList <Impression> tabImp = ImpressionDAO.selectAllFromUser(c, utilisateur.getIdUser());
-		int i=0;
-		while(i<tabImp.size() && tabImp.get(i).getIdImp()!=idImp) {i++;}
+		int i=0;	while(i<tabImp.size() && tabImp.get(i).getIdImp()!=idImp) {i++;}
+		
 		if(i<tabImp.size()) {
-			int choix = LectureClavier.lireEntier("Voulez vous ajouter ou retiré une photo d'une page? (0: Ajouter/ 1:Retiré / 2: Finir)");
+			int choix = LectureClavier.lireEntier("Voulez vous ajouter ou retirer une photo d'une page? (0: Ajouter/ 1:Retirer / 2: Finir)");
 			boolean boucle=true;
 			while(boucle) {
 					switch(choix) {
 						case 0:	ArrayList<Photo> tab =PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 										new Affichage<Photo>().afficher(tab);
-										int ph= LectureClavier.lireEntier("Quel photo voulez vous ajoutez?");
+										int ph= LectureClavier.lireEntier("Quel photo voulez vous ajouter?");
 										int j=0;		while(j<tab.size() && tab.get(j).getIdPh()!=ph) {	j++;	}
 										if(j<tabImp.size()) {
-														String txt= LectureClavier.lireChaine("Quel text voulez vous ajoutez a la photo?");
-														int nb= LectureClavier.lireEntier("Combien de fois voulez vous cette photo?");
-														int page= LectureClavier.lireEntier("Sur quel page?");
+														String txt		= LectureClavier.lireChaine("Quel texte voulez vous ajouter a la photo?");
+														int nb			= LectureClavier.lireEntier("Combien de fois voulez vous cette photo?");
+														int page		= LectureClavier.lireEntier("Sur quel page?");
 														Impression_PhotoDAO.insert(c, ph, idImp, page, txt, nb);
-														choix = LectureClavier.lireEntier("Voulez vous faire autre chose? (0: Ajouter/ 1:Retiré / 2: Finir)");
+														choix 			= LectureClavier.lireEntier("Voulez vous faire autre chose? (0: Ajouter/ 1:Retirer / 2: Finir)");
 										}else {		System.out.println("Vous n'avez pas selectionne une photo que vous possedez");	}
 										break;
 										
@@ -443,10 +443,10 @@ public class UtilitaireClient {
 						case 2:	boucle=false;	 break;
 					}
 					boolean comm=LectureClavier.lireOuiNon("Voulez vous ajouter cette impression dans votre panier?");
-					if(comm) {		int qte= LectureClavier.lireEntier("combien d'exemplaire souhaitez vous?");
+					if(comm) {		int qte= LectureClavier.lireEntier("combien d'exemplaires souhaitez vous?");
 											CommandeDAO.ajouterAuPanier(c, utilisateur.getIdUser(), idImp, qte);
 					}
 			}
-		} else {	System.out.println("Vous n'avez pas selectionner une impression que vous possedez");}
+		} else {	System.out.println("Vous n'avez pas selectionne une impression que vous possedez");}
 	}
 }

@@ -94,7 +94,7 @@ public class PhotoDAO {
 	 */
 //TODO : verifier que l'insert fonctionne
 	public static void insertPhoto(Connection conn, int idFichier, String retouche) throws SQLException {
-		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo VALUES ( ?, ?)");
+		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo (idFichier,retouche) VALUES ( ?, ?)");
 		state.setInt(1, idFichier);
 		state.setString(2, retouche);
 		state.executeUpdate();

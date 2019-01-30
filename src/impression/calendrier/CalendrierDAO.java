@@ -100,6 +100,4 @@ public class CalendrierDAO {
 		}
 		return calendriers;
 	}
-
-
 }
