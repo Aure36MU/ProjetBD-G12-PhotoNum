@@ -334,11 +334,14 @@ public class FichierImageDAO {
 
 	public static void supprimerUnFichierClient(Connection c) throws SQLException {
 		new Affichage<Owners>().afficher(selectAllWithOwner(c));
+		boolean back = false;
 		int idFichier = -1;
-		while(!idExists(c,idFichier)){
+		while((!idExists(c,idFichier))&&(!back)){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+			if (idFichier == -1) back=true;
 		}
 		deleteFichierImage(c, idFichier);
+		System.out.println("fichier supprime");
 	}
 	
 }
