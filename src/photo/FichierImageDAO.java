@@ -25,9 +25,9 @@ public class FichierImageDAO {
 	 * @return ArrayList contenant les objets FichierImage sélectionnés
 	 * @throws SQLException 
 	 */
-	public static ArrayList<FichierImage> selectAll(Connection conn, int idFichier) throws SQLException {
+	public static ArrayList<FichierImage> selectAll(Connection conn, String condition) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE idFichier = '"+idFichier+"'");
+		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE "+condition);
 		return getFichiersImage(result);
 	}
 	
@@ -134,7 +134,7 @@ public class FichierImageDAO {
 	 * @throws SQLException
 	 */
 	public static void updateFichierImage(Connection conn, int id, String newChemin, String newInfoPVue, int newPixelImg, int newPartage) throws SQLException {
-		FichierImage leFichierImage = selectAll(conn,id).get(0);
+		FichierImage leFichierImage = selectAll(conn, "idFichier='"+id+"'").get(0);
 		if (isSharedAndUsedBySomeone(conn, id)) {
 			update(conn,
 					leFichierImage.getIdFichier(),
@@ -183,7 +183,7 @@ public class FichierImageDAO {
 	 * @throws SQLException 
 	 */
 	public static void deleteFichierImage(Connection conn, int id) throws SQLException {
-		FichierImage leFichierImage = selectAll(conn,id).get(0);
+		FichierImage leFichierImage = selectAll(conn, "idFichier='"+id+"'").get(0);
 		if (isSharedAndUsedBySomeone(conn, id)) {
 			update(conn,
 					leFichierImage.getIdFichier(),
@@ -211,7 +211,7 @@ public class FichierImageDAO {
 	public static void deleteFichierImageModeGestion(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
 		ResultSet lesCommandes = state.executeQuery("SELECT idComm FROM Commande NATURAL JOIN Article NATURAL JOIN Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE idFichier="+id);
-		FichierImage leFichierImage = selectAll(conn,id).get(0);
+		FichierImage leFichierImage = selectAll(conn, "idFichier='"+id+"'").get(0);
 		if (isSharedAndUsedBySomeone(conn, id)) {
 			update(conn,
 					leFichierImage.getIdFichier(),
@@ -336,7 +336,7 @@ public class FichierImageDAO {
 		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, utilisateur.getIdUser())){
 			idFichier = LectureClavier.lireEntier("Pour modifier un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
 		}
-		FichierImage f = selectAll(c, idFichier).get(0);
+		FichierImage f = selectAll(c, "idFichier=" + idFichier).get(0);
 		boolean back = false;
 		while (!back){
 			System.out.println(" \n"+f.toString());
