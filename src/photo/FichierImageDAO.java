@@ -342,7 +342,6 @@ public class FichierImageDAO {
 	}
 	
 	public static void supprimerUnFichierClient(Connection c, Utilisateur u) throws SQLException {
-		new Affichage<FichierImage>().afficher(selectAllFromUser(c, u.getIdUser()));
 		int idFichier = -2;
 		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, u.getIdUser())){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
