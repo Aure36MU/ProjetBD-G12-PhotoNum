@@ -10,19 +10,6 @@ import java.util.ArrayList;
 public class PhotoDAO {
 	
 
-	public static int getHigherIdFichier(Connection c){
-		try {
-			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idPh) FROM Photo");
-			if (res.next()) {
-				return res.getInt(1);
-			}			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
 	/**
 	 * Sélectionne toutes les photos sans conditions.
 	 * 
@@ -112,12 +99,11 @@ public class PhotoDAO {
 	 * @param retouche
 	 * @throws SQLException
 	 */
-
+//TODO : verifier que l'insert fonctionne
 	public static void insertPhoto(Connection conn, int idFichier, String retouche) throws SQLException {
-		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo VALUES (?, ?, ?)");
-		state.setInt(1, getHigherIdFichier(conn)+1);
-		state.setInt(2, idFichier);
-		state.setString(3, retouche);
+		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo VALUES ( ?, ?)");
+		state.setInt(1, idFichier);
+		state.setString(2, retouche);
 		state.executeUpdate();
 	}
 	
