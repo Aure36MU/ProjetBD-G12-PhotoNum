@@ -142,7 +142,7 @@ public class UtilitaireClient {
 				idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
 			}
 			Statement state = c.createStatement();
-			state.executeUpdate("UPDATE FichierImage SET (partager = (1-partager)) WHERE idFichier = '" +idFichier+"'");
+			state.executeUpdate("UPDATE FichierImage SET partager = 1-partager WHERE idFichier = " +idFichier);
 			
 			c.commit();
 			c.setAutoCommit(true);
