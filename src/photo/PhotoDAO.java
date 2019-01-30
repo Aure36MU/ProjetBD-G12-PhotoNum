@@ -12,13 +12,11 @@ public class PhotoDAO {
 
 	/**
 	 * Sélectionne toutes les photos sans conditions.
-	 * 
 	 * @param conn Connection SQL
 	 * @return ArrayList contenant tous les objets Photo
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Photo> selectAll(Connection conn) throws SQLException {
-
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Photo");
 		return getPhotos(result);
@@ -26,7 +24,6 @@ public class PhotoDAO {
 	
 	/**
 	 * Sélectionne toutes les photos avec des conditions paramétrées.
-	 * 
 	 * @param conn Connection SQL
 	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
 	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
@@ -41,7 +38,6 @@ public class PhotoDAO {
 	
 	/**
 	 * Sélectionne toutes les photos créés par un certain utilisateur.
-	 * 
 	 * @param conn Connection SQL
 	 * @param id id utilisateur
 	 * @return ArrayList contenant les objets Photo sélectionnés
@@ -61,7 +57,6 @@ public class PhotoDAO {
 	
 	/**
 	 * Sélectionne toutes les photos d'une certaine impression.
-	 * 
 	 * @param conn Connection SQL
 	 * @param id id impression
 	 * @return ArrayList contenant les objets Photo sélectionnés
@@ -76,7 +71,6 @@ public class PhotoDAO {
 	
 	/**
 	 * Sélectionne toutes les photos basés sur un certain FichierImage.
-	 * 
 	 * @param conn Connection SQL
 	 * @param id id fichier
 	 * @return ArrayList contenant les objets Photo sélectionnés
@@ -92,7 +86,6 @@ public class PhotoDAO {
 	/**
 	 * Ajoute une photo dans la base de données.
 	 * ATTENTION la requête est préparée donc tous les paramètres doivent avoir une valeur.
-	 * 
 	 * @param conn Connection SQL
 	 * @param idPh
 	 * @param idFichier
@@ -111,7 +104,6 @@ public class PhotoDAO {
 	/**
 	 * Modifie une Photo d'un certain idPh dans la base de données.
 	 * ATTENTION la requête est préparée donc tous les paramètres doivent avoir une valeur.
-	 * 
 	 * @param conn Connection SQL
 	 * @param idPh
 	 * @param idFichier
@@ -129,7 +121,6 @@ public class PhotoDAO {
 	
 	/**
 	 * Supprime une Photo d'un certain idPh de la base.
-	 * 
 	 * @param conn Connection SQL
 	 * @param id id fichier
 	 * @throws SQLException 
@@ -147,26 +138,20 @@ public class PhotoDAO {
 	
 	/**
 	 * Retourne les objets Photo construits à partir d'un résultat de requête.
-	 * 
 	 * @param result le ResultSet de la requête SQL
 	 * @return ArrayList contenant les objets Photo
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Photo> getPhotos(ResultSet result) throws SQLException {
 		ArrayList<Photo> photos = new ArrayList<Photo>();
-
 		while (result.next()) {
-			
 			photos.add(new Photo(
 					result.getInt("idPh"),
 					result.getInt("idFichier"),
 					result.getString("retouche")
 					));
-						
 		}
-
 		return photos;
 	}
-
 
 }

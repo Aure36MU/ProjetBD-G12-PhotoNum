@@ -67,7 +67,6 @@ public class Impression_PhotoDAO {
 	
 	public static ArrayList<Page> getImpression_Photo(ResultSet result) throws SQLException {
         ArrayList<Page> Impression_Photos = new ArrayList<Page>();
-
         while (result.next()) {
             Impression_Photos.add(new Page(
                     result.getInt("idPh"),
