@@ -73,9 +73,8 @@ public class UtilitaireClient {
 		case 2:  //TODO:
 
 			break;
-		case 3:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider votre commande?");
+		case 3:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
 			if(payer) {			System.out.println("Vous avez paye :)"); 	}
-			else 		{			System.out.println("vous avez paye quand meme, il faut bien que l'impresseur puisse nourrir sa famille !");}
 			break;
 		default : System.out.println("Veuillez faire un choix. ");
 		}
