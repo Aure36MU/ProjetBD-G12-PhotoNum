@@ -54,7 +54,6 @@ public class UtilitaireClient {
 	}
 	
 	public static void gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
-		
 		boolean back = false;
 		while(!back){
 			ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
@@ -80,20 +79,6 @@ public class UtilitaireClient {
 				}
 		}
 	}
-	private static void gererAjoutFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-	boolean continuer= true;
-	while(continuer==true){
-		
-		String 		chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
-		String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
-		int 		pixelImg 	= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
-		boolean 	partage 	= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
-		String 		dateUse 	= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		
-		FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage?1:0, Date.valueOf(dateUse) , 0, 0);
-		continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
-	}
-}
 	
 	private static void gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
@@ -121,36 +106,11 @@ public class UtilitaireClient {
 							break;
 			case 5:			gererFichierPartages(c, utilisateur);
 							break;
-			case 6:	gererAjoutFichier(c,utilisateur);		break;
+			case 6:	FichierImageDAO.ajouterFichier(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
 		
-	}
-
-
-	private static void gererFichierPartages(Connection c, Utilisateur utilisateur) throws SQLException {
-		System.out.println("**********************************************************");
-		System.out.println("             fichiers partages disponibles : ");
-		System.out.println("********************************************************** ");
-		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
-		utiliserFichierPourPhoto(c, utilisateur);
-		
-	}
-
-	public static void utiliserFichierPourPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
-		if(LectureClavier.lireOuiNon("Voulez vous utiliser un de ces fichiers ?")) {
-			int idFichier = -1;
-			while(!FichierImageDAO.idExists(c,idFichier) || !(FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser()) || FichierImageDAO.isShared(c,idFichier))){
-				idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
-				if(idFichier == -1) {return;}
-			}
-			String retouche = LectureClavier.lireChaine("quelle retouche apporter au fichier ?");
-			PhotoDAO.insertPhoto(c, idFichier, retouche);
-			System.out.println("Votre photo a ete cree");
-		} else {
-			return;
-		}
 	}
 	
 	private static void gererFichiers(Connection c, Utilisateur utilisateur) throws SQLException {
@@ -201,6 +161,30 @@ public class UtilitaireClient {
 				case 4:	PhotoDAO.supprimerPhoto(c,utilisateur);			break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
+		}
+	}
+	
+	private static void gererFichierPartages(Connection c, Utilisateur utilisateur) throws SQLException {
+		System.out.println("**********************************************************");
+		System.out.println("             fichiers partages disponibles : ");
+		System.out.println("********************************************************** ");
+		new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
+		utiliserFichierPourPhoto(c, utilisateur);
+		
+	}
+
+	public static void utiliserFichierPourPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
+		if(LectureClavier.lireOuiNon("Voulez vous utiliser un de ces fichiers ?")) {
+			int idFichier = -1;
+			while(!FichierImageDAO.idExists(c,idFichier) || !(FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser()) || FichierImageDAO.isShared(c,idFichier))){
+				idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
+				if(idFichier == -1) {return;}
+			}
+			String retouche = LectureClavier.lireChaine("quelle retouche apporter au fichier ?");
+			PhotoDAO.insertPhoto(c, idFichier, retouche);
+			System.out.println("Votre photo a ete cree");
+		} else {
+			return;
 		}
 	}
 	
