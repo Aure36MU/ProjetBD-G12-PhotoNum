@@ -1,5 +1,5 @@
 Create or replace trigger Inc_User_Contrainte
- Before insert on Utilisateur
+Before insert on Utilisateur
  for each row
  BEGIN
  Select idUser_seq.nextval

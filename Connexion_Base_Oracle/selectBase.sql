@@ -1,7 +1,4 @@
 SELECT * FROM Utilisateur
-insert into Utilisateur (prenom,nom,email,mdp,active,statutUtilisateur) values ('ttt','ttt','d@e.fr','truc',1,'CLIENT')
-insert into CodePromo (code,taux, idUser) values ('noyeux',10,21)
-insert into CodePromo (code,taux, idUser) values ('joel',10,21)
-insert into CodePromo (code,taux, idUser) values ('pika',10,21)
-insert into CodePromo (code,taux, idUser) values ('chu',10,21)
-select * from CodePromo
+SELECT * FROM Adresse
+insert into adresse (rue , codePostal, ville , pays, idUser)  values ('2424 greenway', 65806, 'Springfield' , 'USA' , 5)
+select * from Adresse
