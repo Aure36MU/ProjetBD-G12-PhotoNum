@@ -10,18 +10,6 @@ import java.util.ArrayList;
 public class PhotoDAO {
 	
 
-	public static int getHigherIdFichier(Connection c){
-		try {
-			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idPh) FROM Photo;");
-			return res.getInt(0);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
 	/**
 	 * Sélectionne toutes les photos sans conditions.
 	 * 
@@ -32,7 +20,7 @@ public class PhotoDAO {
 	public static ArrayList<Photo> selectAll(Connection conn) throws SQLException {
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Photo;");
+		ResultSet result = state.executeQuery("SELECT * FROM Photo");
 		return getPhotos(result);
 	}
 	
@@ -47,7 +35,7 @@ public class PhotoDAO {
 	 */
 	public static ArrayList<Photo> selectAll(Connection conn, String condition) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Photo WHERE "+condition+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Photo WHERE "+condition);
 		return getPhotos(result);
 	}
 	
@@ -61,7 +49,7 @@ public class PhotoDAO {
 	 */
 	public static ArrayList<Photo> selectAllFromUser(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN FichierImage ON (Photo.idFichier = FichierImage.idFichier) WHERE FichierImage.idUser="+id+" OR FichierImage.partage=true;");
+		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN FichierImage ON (Photo.idFichier = FichierImage.idFichier) WHERE FichierImage.idUser="+id+" OR FichierImage.partager=1");
 		return getPhotos(result);
 	}
 	
@@ -81,7 +69,7 @@ public class PhotoDAO {
 	 */
 	public static ArrayList<Photo> selectAllFromImpression(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN Impression_Photo ON (Photo.idPh = Impression_Photo.idPh) WHERE Impression_Photo.idImp="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Photo JOIN Impression_Photo ON (Photo.idPh = Impression_Photo.idPh) WHERE Impression_Photo.idImp="+id);
 		return getPhotos(result);
 	}
 	
@@ -96,7 +84,7 @@ public class PhotoDAO {
 	 */
 	public static ArrayList<Photo> selectAllFromFichierImage(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Photo WHERE idFichier="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Photo WHERE idFichier="+id);
 		return getPhotos(result);
 	}
 	
@@ -111,12 +99,11 @@ public class PhotoDAO {
 	 * @param retouche
 	 * @throws SQLException
 	 */
-
+//TODO : verifier que l'insert fonctionne
 	public static void insertPhoto(Connection conn, int idFichier, String retouche) throws SQLException {
-		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo VALUES (?, ?, ?);");
-		state.setInt(1, getHigherIdFichier(conn)+1);
-		state.setInt(2, idFichier);
-		state.setString(3, retouche);
+		PreparedStatement state = conn.prepareStatement("INSERT INTO Photo VALUES ( ?, ?)");
+		state.setInt(1, idFichier);
+		state.setString(2, retouche);
 		state.executeUpdate();
 	}
 	
@@ -132,7 +119,7 @@ public class PhotoDAO {
 	 * @throws SQLException
 	 */
 	public static void updatePhoto(Connection conn, int idPh, int idFichier, String retouche) throws SQLException {
-		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idFichier=?, retouche=?) WHERE idPh=?;");
+		PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET (idFichier=?, retouche=?) WHERE idPh=?");
 		state.setInt(1, idFichier);
 		state.setString(2, retouche);
 		state.setInt(3, idPh);
@@ -149,7 +136,13 @@ public class PhotoDAO {
 	 */
 	public static void deletePhoto(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
-		state.executeUpdate("DELETE FROM Photo WHERE idPh="+id+";");
+		state.executeUpdate("DELETE FROM Photo WHERE idPh="+id);
+	}
+	
+	
+	public static void deletePhotosFromFichierImage(Connection conn, int id) throws SQLException {
+		Statement state = conn.createStatement();
+		state.executeUpdate("DELETE FROM Photo WHERE idFichier="+id);
 	}
 	
 	/**

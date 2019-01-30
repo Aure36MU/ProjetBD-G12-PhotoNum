@@ -96,7 +96,7 @@ public class LectureClavier {
     public static boolean lireOuiNon(String invite) {
         String ch;
         ch = lireChaine(invite);
-        return (ch.equals("o") || ch.equals("O"));
+        return (ch.startsWith("o") || ch.startsWith("O"));
     }
     
     /**

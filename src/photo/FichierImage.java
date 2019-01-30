@@ -1,5 +1,6 @@
 package src.photo;
 
+import java.sql.Connection;
 import java.sql.Date;
 
 public class FichierImage {
@@ -9,13 +10,13 @@ public class FichierImage {
 	String chemin;
 	String infoPVue;
 	int pixelImg;
-	boolean partage;
+	int partage;
 	Date dateUtilisation;
-	boolean fileAttModif;
-	boolean fileAttSuppr;
+	int fileAttModif;
+	int fileAttSuppr;
 	
-	public FichierImage(int idfichier, int idutilisateur, String chemin, String info, int pixels, boolean partage,
-			Date dateutilisation, boolean attentemodification, boolean attentesuppression) {
+	public FichierImage(int idfichier, int idutilisateur, String chemin, String info, int pixels, int partage,
+			Date dateutilisation, int attentemodification, int attentesuppression) {
 		this.idFichier = idfichier;
 		this.idUser = idutilisateur;
 		this.chemin = chemin;
@@ -67,11 +68,11 @@ public class FichierImage {
 		this.pixelImg = pixelImg;
 	}
 
-	public boolean isPartage() {
+	public int isPartage() {
 		return partage;
 	}
 
-	public void setPartage(boolean partage) {
+	public void setPartage(int partage) {
 		this.partage = partage;
 	}
 
@@ -83,25 +84,24 @@ public class FichierImage {
 		this.dateUtilisation = dateUtilisation;
 	}
 
-	public boolean isFileAttModif() {
+	public int isFileAttModif() {
 		return fileAttModif;
 	}
 
-	public void setFileAttModif(boolean fileAttModif) {
+	public void setFileAttModif(int fileAttModif) {
 		this.fileAttModif = fileAttModif;
 	}
 
-	public boolean isFileAttSuppr() {
+	public int isFileAttSuppr() {
 		return fileAttSuppr;
 	}
 
-	public void setFileAttSuppr(boolean fileAttSuppr) {
+	public void setFileAttSuppr(int fileAttSuppr) {
 		this.fileAttSuppr = fileAttSuppr;
 	}
 	
 	public String toString(){
 		return "idFichier : "+idFichier+"     idUser : "+idUser+"     nombrePixels : "+pixelImg+"     chemin : "+chemin+"     infoPriseVue : "+infoPVue+"     partage : "+partage+"     dateUtilisation : "+dateUtilisation+"     fileModif : "+fileAttModif+"     fileSuppr : "+fileAttSuppr;
 	}
-
 
 }

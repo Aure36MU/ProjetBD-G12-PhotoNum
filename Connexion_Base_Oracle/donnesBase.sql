@@ -1,7 +1,8 @@
-insert into utilisateur (prenom,nom,email,mdp) values ('pauline','fauto','PF@mail.fr','12345')
-insert into utilisateur (prenom,nom,email,mdp) values ('Aurelien','FLASH','AF@mail.fr','12ZD')
-insert into utilisateur (prenom,nom,email,mdp) values ('THOMAS','Trigger','tt@mail.fr','tt$')
-insert into utilisateur (prenom,nom,email,mdp) values ('sylvain','me','Smi@mail.us','AZERTY$00')
+insert into Utilisateur (prenom,nom,email,mdp,active,statutUtilisateur) values ('pauline','fauto','p.fauto@mail.fr','12345',1,'CLIENT')
+insert into Utilisateur (prenom,nom,email,mdp,active,statutUtilisateur) values ('Aurelien','FLASH','AF@mail.fr','12ZD',1,'CLIENT')
+insert into Utilisateur (prenom,nom,email,mdp,active,statutUtilisateur) values ('THOMAS','Trigger','tt@mail.fr','tt$',1,'CLIENT')
+insert into Utilisateur (prenom,nom,email,mdp,active,statutUtilisateur) values ('sylvain','me','Smi@mail.us','AZERTY$00',1,'CLIENT')
+insert into Utilisateur (prenom,nom,email,mdp,active,statutUtilisateur) values ('chouette','bidule','a@b.com','truc',1,'GESTIONNAIRE')
 
 insert into adresse (rue , codePostal, ville , pays, idUser)  values ('16 rue Malifaud' , 38100,'Grenoble' , 'france' , (select idUser from utilisateur where email='p.fauto@mail.fr'))
 insert into adresse (rue , codePostal, ville , pays, idUser)  values ('16 rue Malifaud' , 38100, 'Grenoble' , 'france' , (select idUser from utilisateur where email='AF@mail.fr'))

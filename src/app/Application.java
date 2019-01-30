@@ -34,7 +34,7 @@ public class Application {
 
 		String mail = LectureClavier.lireChaine("Pour vous connecter, saisissez votre mail : ");
 		Utilisateur utilisateur = UtilisateurDAO.selectWithCondition(c, "email = '"+mail+"'").get(0);
-		String mdp = null;
+		String mdp = "";
 		while(!mdp.equals(utilisateur.getMdp())){
 			mdp = LectureClavier.lireChaine("Veuillez entrer le mot de passe correspondant ou entrez \"return to menu\" pour retourner au Menu Principal");
 			if(mdp.equals("return to menu")){

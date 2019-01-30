@@ -15,18 +15,6 @@ import src.impression.calendrier.CalendrierDAO;
 public class ArticleDAO {
 	
 	
-	public static int getHigherIdArt(Connection c){
-		try {
-			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idArt) FROM Article");
-			return res.getInt(0);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
-	
 	/**
 	 * S�lectionne tous les Articles (quels que soient leurs mod�les) sans conditions.
 	 *
@@ -36,10 +24,8 @@ public class ArticleDAO {
 	 */
 
 	public static ArrayList<Article> selectAll(Connection conn) throws SQLException {
-
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Article;");
-        
+        ResultSet result = state.executeQuery("SELECT * FROM Article");
         return getArticles(result);
 
     }
@@ -54,11 +40,9 @@ public class ArticleDAO {
      * @throws SQLException
      */
     public static ArrayList<Article> selectAll(Connection conn, String condition) throws SQLException {
-
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Article WHERE "+condition+";");
+        ResultSet result = state.executeQuery("SELECT * FROM Article WHERE "+condition);
         return getArticles(result);
-
     }
     
     /**
@@ -71,11 +55,9 @@ public class ArticleDAO {
      * @throws SQLException
      */
     public static ArrayList<Article> selectEnvoyer(Connection conn) throws SQLException {
-
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Article NATURAL JOIN Commande WHERE statutCommande='ENVOYE';");
+        ResultSet result = state.executeQuery("SELECT * FROM Article NATURAL JOIN Commande WHERE statutCommande='ENVOYE'");
         return getArticles(result);
-
     }
 
     /**
@@ -87,11 +69,9 @@ public class ArticleDAO {
      * @throws SQLException
      */
     public static ArrayList<Article> selectAllFromCommande(Connection conn, int id) throws SQLException {
-
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Article WHERE idComm="+id+";");
+        ResultSet result = state.executeQuery("SELECT * FROM Article WHERE idComm="+id);
         return getArticles(result);
-
     }
     
     /**
@@ -103,12 +83,10 @@ public class ArticleDAO {
      * @throws SQLException
      */
     public static ArrayList<Article> selectAllFromPanier(Connection conn, int idUser) throws SQLException {
-
         Statement state = conn.createStatement();
         ResultSet result = state.executeQuery("SELECT * FROM Article a INNER JOIN Commande c ON (a.idComm = c.idComm) "
-        									+ "WHERE c.statutCommande = 'BROUILLON' AND c.idUser = '" +idUser+ "');");
+        									+ "WHERE c.statutCommande = 'BROUILLON' AND c.idUser = " +idUser);
         return getArticles(result);
-
     }
     
     
@@ -125,23 +103,15 @@ public class ArticleDAO {
      * @throws Exception
      */
     public static void insertArticleFromImpression(Connection conn, int idImp, int idComm, int qte) throws Exception {
-    	
     	Impression newImp = ImpressionDAO.selectImpressionFromId(conn, idImp);
     	String newModele = "NULL";
     	/* TODO modifier le switch sur newImp.type par une comparaison d'instances : Calendrier, Agenda, Cadre, [autre].
     	 * Cela fera une requ�te � faire en moins dans la base !*/
     	switch (newImp.getType()) {
-		case CALENDRIER:
-			newModele = CalendrierDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModele().toString();
-			break;
-		case AGENDA:
-			newModele = AgendaDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleAgenda().toString();
-			break;
-		case CADRE:
-			newModele = CadreDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleCadre().toString();
-			break;
-		default:
-			break;
+			case CALENDRIER:		newModele = CalendrierDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleCalendrier().toString();			break;
+			case AGENDA:				newModele = AgendaDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleAgenda().toString();					break;
+			case CADRE:					newModele = CadreDAO.selectAll(conn, "idImp='"+idImp+"'").get(0).getModeleCadre().toString();						break;
+			default:	break;
 		}
     	
     	Catalogue artDuCatalogue = CatalogueDAO.selectAll(conn,
@@ -152,21 +122,12 @@ public class ArticleDAO {
     	if (artDuCatalogue.getQteStock() <= 0) {
     		throw new Exception("Not enough of this Article in stock !");
     	} else {
-
     		//Ajout nouvel Article dans la base
     		Statement state = conn.createStatement();
-    		state.executeUpdate("INSERT INTO Article VALUES("+getHigherIdArt(conn)+", "+artDuCatalogue.getPrix()+", "+qte+", "+idImp+", "+idComm+");");
-
-    	}
-
-    	
+    		state.executeUpdate("INSERT INTO Article VALUES("+artDuCatalogue.getPrix()+", "+qte+", "+idImp+", "+idComm+")");
+    	}    	
     }
-    
-    
-    
-    
-    
-    /**
+   /**
      * Retourne les objets Article construits � partir d'un r�sultat de requ�te.
      *
      * @param result le ResultSet de la requ�te SQL
@@ -175,7 +136,6 @@ public class ArticleDAO {
      */
 	public static ArrayList<Article> getArticles(ResultSet result) throws SQLException {
         ArrayList<Article> articles = new ArrayList<Article>();
-
         while (result.next()) {
             articles.add(new Article(
                     result.getInt("idArt"),
@@ -185,8 +145,5 @@ public class ArticleDAO {
             ));
         }
         return articles;
-	}
-	public void AjoutAuPanier (Connection conn,int idIM) throws SQLException {
-		
 	}
 }

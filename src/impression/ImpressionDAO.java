@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import src.app.LectureClavier;
+import src.compte.Utilisateur;
 import src.impression.agenda.Agenda;
 import src.impression.agenda.AgendaDAO;
 import src.impression.album.Album;
@@ -23,27 +24,15 @@ public class ImpressionDAO {
 	public static int getHigherIdImp(Connection c){
 		try {
 			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idImp) FROM Impression;");
-			return res.getInt(0);
+			ResultSet res = state.executeQuery("SELECT max(idImp) FROM Impression");
+			if (res.next()) {
+				return res.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return 0;
 	}
-/*
-	public static void createImpression(Connection c, int idUser, String NomImp, Type type, Format format, Qualite qualite, int nbPages){
-		try {
-			Statement state = c.createStatement();
-			state.executeUpdate("INSERT INTO Impression "
-					+ "(idImp,nomImp,type,qualite,format,idUser,nbPageTotal)"
-					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + NomImp + ", " + type + ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );		
-		} catch (SQLException e) {
-			System.out.println("creation failed");
-			e.printStackTrace();
-		}
-	}
-*/
-	
 	public static ArrayList<Impression> selectAll(Connection c) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
 		tab.addAll(CalendrierDAO.selectAll(c));
@@ -57,43 +46,44 @@ public class ImpressionDAO {
 	public static ArrayList<Impression> selectAllFromType(Connection c, String type) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
 		switch(type) {
-		case "CALENDRIER":
-			tab.addAll(CalendrierDAO.selectAll(c));
-			break;
-		case "AGENDA":
-			tab.addAll(AgendaDAO.selectAll(c));
-			break;
-		case "TIRAGE":
-			tab.addAll(TirageDAO.selectAll(c));
-			break;
-		case "CADRE":
-			tab.addAll(CadreDAO.selectAll(c));
-			break;
-		case "ALBUM":
-			tab.addAll(AlbumDAO.selectAll(c));
-			break;				
+		case "CALENDRIER":		tab.addAll(CalendrierDAO.selectAll(c));		break;
+		case "AGENDA":			tab.addAll(AgendaDAO.selectAll(c));			break;
+		case "TIRAGE":				tab.addAll(TirageDAO.selectAll(c));				break;
+		case "CADRE":				tab.addAll(CadreDAO.selectAll(c));				break;
+		case "ALBUM":				tab.addAll(AlbumDAO.selectAll(c));				break;				
 		}
 		return tab;
 	}
 	
-	public static Impression selectImpressionFromId(Connection conn, int id) throws SQLException{
+	public static Impression selectSousImpressionFromId(Connection conn, int id) throws SQLException{
 
 		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id);
         if (result.next()) {
         	switch (result.getString("type")) {
-			case "CALENDRIER":
-				return CalendrierDAO.selectAll(conn, "idImp='"+id+"'").get(0);
-			case "AGENDA":
-				return AgendaDAO.selectAll(conn, "idImp='"+id+"'").get(0);
-			case "TIRAGE":
-				return TirageDAO.selectAll(conn, "idImp='"+id+"'").get(0);
-			case "CADRE":
-				return CadreDAO.selectAll(conn, "idImp='"+id+"'").get(0);
-			case "ALBUM":
-				return AlbumDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "CALENDRIER":		return CalendrierDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "AGENDA":			return AgendaDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "TIRAGE":				return TirageDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "CADRE":				return CadreDAO.selectAll(conn, "idImp='"+id+"'").get(0);
+			case "ALBUM":				return AlbumDAO.selectAll(conn, "idImp='"+id+"'").get(0);
 			}
         }
+		return null;
+	}
+	
+	public static Impression selectImpressionFromId(Connection conn, int id) throws SQLException{
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idImp="+id);
+		if(result.next()){
+			return new Impression(
+					result.getInt("idImp"),
+					result.getString("nomImp"),
+					result.getInt("nbrPageTotal"),
+					result.getInt("idUser"),
+					Qualite.valueOf(result.getString("qualite")),
+					Type.valueOf(result.getString("type")),
+					Format.valueOf(result.getString("format")));
+		}
 		return null;
 	}
 	
@@ -107,21 +97,20 @@ public class ImpressionDAO {
 		return tab;
 	}
 	
-	public static ArrayList<Impression> selectAllFromUserImpressionWait(Connection c,int idUser) throws SQLException{
+	public static ArrayList<Impression> selectAllFromUserImpressionNotArticle(Connection c,int idUser) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
-		tab.addAll(CalendrierDAO.selectAllFromUserWait(c,idUser));
-		tab.addAll(AgendaDAO.selectAllFromUserWait(c,idUser));
-		tab.addAll(TirageDAO.selectAllFromUserWait(c,idUser));
-		tab.addAll(CadreDAO.selectAllFromUserWait(c,idUser));
-		tab.addAll(AlbumDAO.selectAllFromUserWait(c,idUser));
+		tab.addAll(CalendrierDAO.selectAllFromUserNotArticle(c,idUser));
+		tab.addAll(AgendaDAO.selectAllFromUserNotArticle(c,idUser));
+		tab.addAll(TirageDAO.selectAllFromUserNotArticle(c,idUser));
+		tab.addAll(CadreDAO.selectAllFromUserNotArticle(c,idUser));
+		tab.addAll(AlbumDAO.selectAllFromUserNotArticle(c,idUser));
 		return tab;
 	}
 	
 	public static ArrayList<FichierImage> selectAllFichierImages(Connection c,int id) throws SQLException{
 		ArrayList<FichierImage> tab = new ArrayList<FichierImage>();
-		
 		Statement state = c.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id+";");
+		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id);
 		
 		while (result.next()) {
 			tab.add(new FichierImage(
@@ -130,23 +119,20 @@ public class ImpressionDAO {
 					result.getString("chemin"),
 					result.getString("infoPVue"),
 					result.getInt("pixelImg"),
-					result.getBoolean("partage"),
+					result.getInt("partage"),
 					result.getDate("dateUtilisation"),
-					result.getBoolean("fileAttModif"),
-					result.getBoolean("fileAttSuppr")
+					result.getInt("fileAttModif"),
+					result.getInt("fileAttSuppr")
 					));
-		}
-		
+		}		
 		return tab;
 	}
 	
 	
 	public static ArrayList<Photo> selectAllPhotos(Connection c,int id) throws SQLException{
 		ArrayList<Photo> tab = new ArrayList<Photo>();
-		
 		Statement state = c.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id+";");
-		
+		ResultSet result = state.executeQuery("SELECT * FROM Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE Impression.idImp="+id);
 		while (result.next()) {
 			tab.add(new Photo(
 					result.getInt("idPhoto"),
@@ -154,7 +140,6 @@ public class ImpressionDAO {
 					result.getString("retouche")
 					));
 		}
-		
 		return tab;
 	}
 
@@ -174,42 +159,45 @@ public class ImpressionDAO {
 	 */
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, String modele) throws SQLException {
 		Statement state = conn.createStatement();
+		int newId = getHigherIdImp(conn)+1;
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
+				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
 		switch(type) {
-		case "CALENDRIER":
-			CalendrierDAO.insertCalendrier(conn, (getHigherIdImp(conn)+1), modele);
-			break;
-		case "CADRE":
-			CadreDAO.insertCadre(conn, (getHigherIdImp(conn)+1), modele);
-			break;
+			case "CALENDRIER":		CalendrierDAO.insertCalendrier(conn, newId, modele);		break;
+			case "CADRE":				CadreDAO.insertCadre(conn, newId, modele);						break;
 		}
 	}
 	
 
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, String modele, String ornement) throws SQLException {
 		Statement state = conn.createStatement();
+		int newId = getHigherIdImp(conn)+1;
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
-			AgendaDAO.insertAgenda(conn, (getHigherIdImp(conn)+1), ornement, modele);
+				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+			AgendaDAO.insertAgenda(conn, newId, ornement, modele);
+			System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
 	
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
 		Statement state = conn.createStatement();
+		int newId = getHigherIdImp(conn)+1;
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
-		TirageDAO.insertTirage(conn, (getHigherIdImp(conn)+1));
+				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+		TirageDAO.insertTirage(conn, newId);
+		System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
 	
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, int photo, String titre) throws SQLException {
 		Statement state = conn.createStatement();
+		int newId = getHigherIdImp(conn)+1;
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
-				+ "VALUES ("+(getHigherIdImp(conn)+1)+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "';");
-		AlbumDAO.insertAlbum(conn, photo, titre);
+				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+		AlbumDAO.insertAlbum(conn, newId, photo, titre);
+		System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
 	}
 	
 	/**
@@ -226,9 +214,8 @@ public class ImpressionDAO {
 	 */
 	
 	public static void updateImpression(Connection conn, int idImp, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
-
 		Statement state = conn.createStatement();
-		state.executeUpdate("UPDATE Impression SET nomImp='"+nomImp+"', nbrPageTotal="+nbPages+", idUser="+idUser+", type='"+type+"', format='"+format+"', qualite='"+qualite+"' WHERE idImp="+idImp+";");
+		state.executeUpdate("UPDATE Impression SET nomImp='"+nomImp+"', nbrPageTotal="+nbPages+", idUser="+idUser+", type='"+type+"', format='"+format+"', qualite='"+qualite+"' WHERE idImp="+idImp);
 		
 	}
 
@@ -240,10 +227,8 @@ public class ImpressionDAO {
      * @throws SQLException
      */
     public static void deleteImpression(Connection conn, int id) throws SQLException {
-
         Statement state = conn.createStatement();
-        state.executeUpdate("DELETE FROM Impression WHERE idImp="+id+";");
-
+        state.executeUpdate("DELETE FROM Impression WHERE idImp="+id);
     }
 	
 	
@@ -252,21 +237,21 @@ public class ImpressionDAO {
 		//sinon on renvoie une Exception.
 		try {
 			if (to.equals("Agenda")) { 
-				throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+				throw new Exception("Impossible de convertir du type +"+from.getClass().getName()+" vers "+to);
 			} else if (to.equals("Album")) { 
 				if (from instanceof Cadre)
-					throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+					throw new Exception("Impossible de convertir du type +"+from.getClass().getName()+" vers "+to);
 				String titre = LectureClavier.lireChaine("Quel titre d'album voulez-vous ?");
-				AlbumDAO.insertAlbum(c, selectAllPhotos(c, from.getIdImp()).get(0).getIdPh(), titre);
+				AlbumDAO.insertAlbum(c, from.getIdImp(), selectAllPhotos(c, from.getIdImp()).get(0).getIdPh(), titre);
 			} else if (to.equals("Cadre")) {
 				String modeleCadre = LectureClavier.lireChaine("Quel modèle de cadre voulez-vous ?");
 				CadreDAO.insertCadre(c, from.getIdImp(), modeleCadre);
 			} else if (to.equals("Calendrier")) { 
-				throw new Exception("Cannot convert from +"+from.getClass().getName()+" to "+to);
+				throw new Exception("Impossible de convertir du type +"+from.getClass().getName()+" vers "+to);
 			} else if (to.equals("Tirage")) {  
 				TirageDAO.insertTirage(c, from.getIdImp());
 			} else { 
-				throw new Exception("Impression "+to+" is not recognized");
+				throw new Exception("Type d'impression "+to+" non reconnu.");
 			}
 		} catch (SQLException e) {
 			System.out.println("insert failed");
@@ -300,7 +285,7 @@ public class ImpressionDAO {
 			i.setQualite(qualite);
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET qualite = '"+qualite+"' "
-								+ "WHERE idImp = '" + i.getIdImp()+"';");
+								+ "WHERE idImp = '" + i.getIdImp()+"'");
 		} catch (SQLException e) {
 			System.out.println("update failed");
 			e.printStackTrace();
@@ -311,7 +296,7 @@ public class ImpressionDAO {
 			i.setFormat(format);
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET format = '"+format+"' "
-								+ "WHERE idImp = '" + i.getIdImp()+"';");
+								+ "WHERE idImp = '" + i.getIdImp()+"'");
 			
 		} catch (SQLException e) {
 			System.out.println("update failed");
@@ -323,11 +308,38 @@ public class ImpressionDAO {
 			i.setNbPages(nb);
 			Statement state = c.createStatement();
 			state.executeUpdate("UPDATE Impression SET nbPages = '"+nb+"' "
-								+ "WHERE idImp = '" + i.getIdImp()+"';");
+								+ "WHERE idImp = '" + i.getIdImp()+"'");
 		} catch (SQLException e) {
 			System.out.println("update failed");
 			e.printStackTrace();
 		}
+	}
+	
+	public static ArrayList<Impression> getImpressions(ResultSet result) throws SQLException {
+        ArrayList<Impression> impressions = new ArrayList<Impression>();
+
+        while (result.next()) {
+        	impressions.add(new Impression(
+                    result.getInt("idImp"),
+                    result.getString("nomImp"),
+                    result.getInt("nbPages"),
+                    result.getInt("idUser"),
+                    Qualite.valueOf(result.getString("qualite")),
+                    Type.valueOf(result.getString("type")),
+                    Format.valueOf(result.getString("format"))
+            ));
+        }
+        return impressions;
+	}
+	public static void gererDeleteImp(Connection c, Utilisateur utilisateur) throws SQLException {
+		int impSupp=LectureClavier.lireEntier("Quel impression voulez vous supprimer?");
+		ArrayList <Impression> tabImp = selectAllFromUser(c, utilisateur.getIdUser());
+		int i=0;	while(i<tabImp.size() && tabImp.get(i).getIdImp()!=impSupp) {i++;}
+		
+		if(i<tabImp.size()) {
+			boolean sur=LectureClavier.lireOuiNon("Vous êtes sur de vouloir supprimer:" + impSupp + "?");
+			if(sur) {deleteImpression(c, impSupp);}
+		} else {	System.out.println("Vous n'avez pas selectionner une impression que vous controler");	}
 	}
 	
 	
