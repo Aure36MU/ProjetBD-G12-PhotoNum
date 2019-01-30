@@ -112,7 +112,7 @@ public class UtilitaireClient {
 				gererUnePhoto(c,utilisateur);
 				break;
 			case 5:
-				FichierImageDAO.selectAll(c, "partager=1");
+				new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
 				gererFichierPartager(c, utilisateur);
 				//PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
 				break;
@@ -132,7 +132,7 @@ public class UtilitaireClient {
 			String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
 			int 			pixelImg 		= LectureClavier.lireEntier("Quel est la taille en pixel : ");	
 			boolean partage 		= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
-			String 		dateUse 		= LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/mm/yyyy"));
+			String 		dateUse 		= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			
 			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage?1:0, Date.valueOf(dateUse) , 0, 0);
 			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
@@ -229,10 +229,10 @@ public class UtilitaireClient {
 	}
 	
 	private static void gereRetoucheFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous supprimer? (Entre le numero du fichier)");
+		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous retoucher? (Entre le numero du fichier)");
 		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
 		if((utilisateur.getIdUser()==tab.get(0).getIdUser()) || (tab.get(0).isPartage()==1)) {
-			System.out.println("Le fichier que vous souhaitez supprimer est: "+ tab.get(0).getIdFichier() + " avec comme chemin :"+ tab.get(0).getChemin());
+			System.out.println("Le fichier que vous souhaitez retoucher est: "+ tab.get(0).getIdFichier() + " avec comme chemin :"+ tab.get(0).getChemin());
 			boolean choix = LectureClavier.lireOuiNon("Voulez vous retoucher ce fichier?");
 			if(choix) {
 				String retouche = LectureClavier.lireChaine("Quelles retouche voulez vous faire?");
