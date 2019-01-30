@@ -1,23 +1,25 @@
 Create or replace trigger Personne_existant_contrainte
-after insert or update On UTILISATEUR FOR EACH ROW
+after insert or update On UTILISATEUR
 DECLARE
  valeur INTEGER;
  BEGIN
- Select count(*) into valeur From UTILISATEUR u1, UTILISATEUR u2 where u1.email = u2.email;
- If valeur>0 then raise_application_error(20001, 'impossible de l’ajouter car cet adresse mail est déjà utilisé');
+ select count(ndr) into valeur
+from (select email , count(email) as ndr from utilisateur group by email)
+where ndr >1;
+ If valeur >0 then raise_application_error(-20001, 'impossible d ajouter car cet adresse mail est deja utilise');
  END IF;
 END;
 /
 -----------------------------------------------------------------------------------------------------------------
-
-Create or replace trigger Adresse_existant_contrainte
+//NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
+Create or replace drop trigger Adresse_existant_contrainte;
 After insert or update on Adresse
 DECLARE
-Nombre int;
+Nombre INTEGER;
 BEGIN
 Select count(A1.idAdre) into Nombre
-From Adresse A1, Adresse A2 Where(A1.idUser!=A2.idUser) and A1.ville=A2.ville and A1.codePostal=A2.codePostal and A1.rue=A2.rue and A1.pays=A2.pays;
-if(Nombre>=1) then raise_application_error(20002,'Adresse mail à déjà été ajouter dans votre liste de choix');
+From Adresse A1, Adresse A2 Where A1.idUser=A2.idUser and A1.ville=A2.ville and A1.codePostal=A2.codePostal and A1.rue=A2.rue and A1.pays=A2.pays;
+if(Nombre>1) then raise_application_error(-20002,'Adresse de livraison deja renseigne');
 end if;
 END;
 /
@@ -32,13 +34,14 @@ BEGIN
 	From Agenda a INNER JOIN Impression_Photo ip ON (a.idImp = ip.idImp)
 	where a.modeleAgenda = 'SEMAINIER';
 
-	if(NbrPage>365)then raise_application_error(20002,'Vous ne pouvez pas ajouter une nouvelle page');
+	if(NbrPage>365)then raise_application_error(-20003,'Vous ne pouvez pas ajouter une nouvelle page');
 	end if;
 END;
 /
 -----------------------------------------------------------------------------------------------------------------
+//NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
 Si un agenda journalier possède plus de 52 pages on a un message d’erreur.
-Create trigger or replace NbrPageJournalier_Depassement_contrainte
+Create trigger or replace NbrPJour_Depas_cons
 After insert or update on impression_Photo
 DECLARE
 	NbrPage int;
@@ -47,9 +50,10 @@ BEGIN
 	From Agenda a INNER JOIN Impression_Photo ip ON (a.idImp = ip.idImp)
 	where a.modeleAgenda = 'JOURNALIER';
 
-	if(NbrPage>52)then raise_application_error(20002,'Vous ne pouvez pas ajouter une nouvelle page');
+	if(NbrPage>52)then raise_application_error(-20004,'Vous ne pouvez pas ajouter une nouvelle page');
 	end if;
 END;
+/
 -----------------------------------------------------------------------------------------------------------------
 Create sequence of all table;
 create sequence idAdre_seq
