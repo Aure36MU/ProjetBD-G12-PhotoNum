@@ -43,9 +43,7 @@ public class UtilitaireClient {
 				case 1:  	utilisateur = null;		System.out.println("Vous avez ete deconnecte");			break;
 				case 2:	gererImpression(c,utilisateur);				break;
 				case 3:	gererFichierImages(c,utilisateur);		break;
-				case 4:	gererPanier(c, utilisateur);
-					//TODO : Valider la commande + payer
-					break;
+				case 4:	gererPanier(c, utilisateur);					break;
 				case 5:
 					ArrayList<Commande> commandes = CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());
 					new Affichage<Commande>().afficher(commandes);		break;
@@ -73,10 +71,9 @@ public class UtilitaireClient {
 		case 2:  //TODO:
 
 			break;
-		case 3:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider votre commande?");
-			if(payer) {			System.out.println("Vous avez paye :)"); 	}
-			else 		{			System.out.println("vous avez paye quand meme, il faut bien que l'impresseur puisse nourrir sa famille !");}
-			break;
+		case 3:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
+						if(payer) {System.out.println("Vous avez paye :)"); }
+						break;
 		default : System.out.println("Veuillez faire un choix. ");
 		}
 	}
@@ -94,31 +91,23 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("6 : Ajouter un nouveau fichier.");
 
 			switch(choixAction){
-			case 1:  
-				utilisateur = null;
-				back = true;
-				System.out.println("Vous avez ete deconnecte");
-				break;
-			case 2:  
-				back = true;
-				System.out.println("retour au menu precedent");
-				break;
-			case 3:
-				new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser()));
-				gererUnFichier(c,utilisateur);
-				break;
-			case 4:
-				new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
-				gererUnePhoto(c,utilisateur);
-				break;
-			case 5:
-				new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
-				gererFichierPartager(c, utilisateur);
-				//PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
-				break;
-			case 6:
-				gererAjoutFichier(c,utilisateur);
-				break;
+			case 1:  	utilisateur = null;	back = true;
+							System.out.println("Vous avez ete deconnecte");
+							break;
+			case 2:   	back = true;
+							System.out.println("retour au menu precedent");
+							break;
+			case 3:	new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser()));
+							gererUnFichier(c,utilisateur);
+							break;
+			case 4:	new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
+							gererUnePhoto(c,utilisateur);
+							break;
+			case 5:	new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
+							gererFichierPartager(c, utilisateur);
+							//PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser());
+							break;
+			case 6:	gererAjoutFichier(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
