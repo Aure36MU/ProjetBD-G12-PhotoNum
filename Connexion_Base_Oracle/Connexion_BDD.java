@@ -27,8 +27,8 @@ public class Connexion_BDD {
   // final static String DB_URL="jdbc:oracle:thin:@wallet_dbname?TNS_ADMIN=/Users/test/wallet_dbname";
   // In case of windows, use the following URL 
   // final static String DB_URL="jdbc:oracle:thin:@wallet_dbname?TNS_ADMIN=C:\\Users\\test\\wallet_dbname";
-  final static String DB_USER = "roussys";
-  final static String DB_PASSWORD = "fn7DPQxAEB";
+  final static String DB_USER = "bourreta";
+  final static String DB_PASSWORD = "cv570ewUGA";
 
  /*
   * The method gets a database connection using 
@@ -68,6 +68,7 @@ public class Connexion_BDD {
     	//Scripts("Connexion_Base_Oracle\\creationBase.sql",connection);
     	//Scripts("Connexion_Base_Oracle\\donnesBase.sql",connection);
     	Scripts("Connexion_Base_Oracle\\selectBase.sql",connection);
+    	//Scripts("Connexion_Base_Oracle\\RestoreTrigger.sql", connection); A FAIRE SUR SQLPLUS
     	//Scripts("Connexion_Base_Oracle\\triggerBase.sql",connection);
     	//Scripts("Connexion_Base_Oracle\\RestoreBase.sql",connection);
     	//Scripts("Connexion_Base_Oracle\\RestoreDonnees.sql",connection);
@@ -89,7 +90,7 @@ public class Connexion_BDD {
     	if ((selectReq[0].equals("SELECT"))|| (selectReq[0].equals("select" ))) {
     		try (ResultSet resultSet = statement.executeQuery(req)) {
     			System.out.println("==========");
-    			while (resultSet.next())
+    			while (resultSet.next()) {
     				System.out.println(resultSet.getString(1) + " " 
     						+resultSet.getString(2) + " "
     				+resultSet.getString(3) + " "
@@ -97,7 +98,8 @@ public class Connexion_BDD {
     				+resultSet.getString(5) + " "
     				+resultSet.getString(6) + " "
     				+resultSet.getString(7) + " "
-    				*/); 
+    				*/);
+    			}
     		} 
     	}else {
     		boolean resultB = statement.execute(req);

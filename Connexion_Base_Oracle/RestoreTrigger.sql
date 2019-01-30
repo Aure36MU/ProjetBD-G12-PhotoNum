@@ -1,4 +1,4 @@
-Create trigger Inc_User_Contrainte
+Create or replace trigger Inc_User_Contrainte
  Before insert on Utilisateur
  for each row
  BEGIN
@@ -6,7 +6,7 @@ Create trigger Inc_User_Contrainte
  into :new.idUser From dual;
  END;
  /
-Create trigger Inc_Adresse_contrainte
+Create or replace trigger Inc_Adresse_contrainte
 Before insert on Adresse
 for each row
 BEGIN
@@ -15,7 +15,7 @@ BEGIN
 From dual;
 END;
  /
- Create trigger Inc_fichierImage_contrainte
+ Create or replace trigger Inc_fichierImage_contrainte
 Before insert on FichierImage
 for each row
 BEGIN
@@ -24,7 +24,7 @@ BEGIN
 From dual;
 END;
  /
-Create trigger Inc_Article_contrainte
+Create or replace trigger Inc_Article_contrainte
 Before insert on Article
 for each row
 BEGIN
@@ -33,7 +33,7 @@ BEGIN
 From dual;
 END;
 /
-Create trigger Inc_Impr_contrainte
+Create or replace trigger Inc_Impr_contrainte
 Before insert on Impression
 for each row
 BEGIN
@@ -42,7 +42,7 @@ BEGIN
 From dual;
 END;
 /
-Create trigger Inc_Photo_contrainte
+Create or replace trigger Inc_Photo_contrainte
 Before insert on Photo
 for each row
 BEGIN
@@ -51,7 +51,7 @@ BEGIN
 From dual;
 END;
 /
-Create trigger Inc_CodePromo_contrainte
+Create or replace trigger Inc_CodePromo_contrainte
 Before insert on CodePromo
 for each row
 BEGIN
@@ -60,7 +60,7 @@ BEGIN
 From dual;
 END;
 /
-Create trigger Inc_commande_contrainte
+Create or replace trigger Inc_commande_contrainte
 Before insert on Commande
 for each row
 BEGIN
