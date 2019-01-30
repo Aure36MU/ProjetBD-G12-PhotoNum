@@ -1,5 +1,4 @@
 package src.impression.album;
-
 import src.impression.Impression;
 
 public class Album extends Impression {

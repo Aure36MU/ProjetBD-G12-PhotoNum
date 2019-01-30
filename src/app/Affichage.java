@@ -6,8 +6,12 @@ public class Affichage<T>{
 		public void afficher(ArrayList<T> tab){
 			int i = 0;
 			while(i<= tab.size()){
+				System.out.println("****************");
+				System.out.println(tab.get(i).getClass().getSimpleName());
+				System.out.println("****************");
 				System.out.println(tab.get(i).toString());
 				i++;
+				
 			}
 		}
 		

@@ -70,10 +70,8 @@ public class CalendrierDAO {
 	 * @throws SQLException 
 	 */
 	public static void insertCalendrier(Connection conn, int id, String modeleCalendrier) throws SQLException {
-
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO Calendrier VALUES("+id+", '"+modeleCalendrier+"');");
-		
+		state.executeUpdate("INSERT INTO Calendrier VALUES('"+id+"', '"+modeleCalendrier+"');");
 	}
 	
 	
