@@ -1,8 +1,6 @@
-select * from Utilisateur where email = 'a@b.com'
-select * from Impression
-select * from tirage
-SELECT max(idImp) FROM Impression
-SELECT max(idUser) FROM Utilisateur
-select * from Impression where type='CALENDRIER'
-(SELECT idImp FROM Impression i WHERE i.idUser=2 and i.type='CALENDRIER') MINUS (SELECT idImp FROM Article NATURAL JOIN Impression WHERE type='CALENDRIER')
-SELECT table_name FROM user_tables
+select * from CodePromo
+insert into CodePromo (code,taux, idUser) values ('noyeux',10,21)
+insert into CodePromo (code,taux, idUser) values ('joel',10,21)
+insert into CodePromo (code,taux, idUser) values ('pika',10,21)
+insert into CodePromo (code,taux, idUser) values ('chu',10,21)
+select * from CodePromo

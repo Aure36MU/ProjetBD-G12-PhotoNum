@@ -33,20 +33,6 @@ public class ImpressionDAO {
 		}
 		return 0;
 	}
-/*
-	public static void createImpression(Connection c, int idUser, String NomImp, Type type, Format format, Qualite qualite, int nbPages){
-		try {
-			Statement state = c.createStatement();
-			state.executeUpdate("INSERT INTO Impression "
-					+ "(idImp,nomImp,type,qualite,format,idUser,nbPageTotal)"
-					+ "VALUES ("+(getHigherIdImp(c)+1)+ ", " + NomImp + ", " + type + ", " + qualite + ", " + format + ", " + idUser + ", " + nbPages + "); " );		
-		} catch (SQLException e) {
-			System.out.println("creation failed");
-			e.printStackTrace();
-		}
-	}
-*/
-	
 	public static ArrayList<Impression> selectAll(Connection c) throws SQLException{
 		ArrayList<Impression> tab = new ArrayList<Impression>();
 		tab.addAll(CalendrierDAO.selectAll(c));

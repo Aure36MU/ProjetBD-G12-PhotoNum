@@ -21,7 +21,6 @@ public class CommandeDAO {
 
 		/**
 		 * Selectionne tous les Commandes (quels que soient leurs modeles) sans conditions.
-		 *
 		 * @param conn Connection SQL
 		 * @return ArrayList contenant tous les objets Commande
 		 * @throws SQLException
@@ -31,34 +30,10 @@ public class CommandeDAO {
 	        ResultSet result = state.executeQuery("SELECT * FROM Commande");
 	        return getCommandes(result);
 	    }
-		
-	    /**
-	     * Selectionne toutes les commandes  avec des conditions parametres.
-	     *
-	     * @param conn Connection SQL
-	     * @param condition chaene de caracteres formate comme suit : "condition1 {AND condition2}"
-	     * Exemple : "foo=1 AND bar='bar' AND truc<>42"
-	     * @return ArrayList contenant les objets commande selectionnes
-	     * @throws SQLException
-	     */
-	    public static ArrayList<Commande> selectPretEnvoi(Connection conn) throws SQLException{
-	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='PRET_A_L_ENVOI'");
-	        return getCommandes(result);
-	    }
 	    
-	    /**
-	     * Selectionne toutes les commandes  envoyee  : represente archivage des commandes deje faites
-	     * Partie de la base exportable dans une zone de stockage
-	     * @param conn Connection SQL
-	     * @param condition chaene de caracteres formate comme suit : "condition1 {AND condition2}"
-	     * Exemple : "foo=1 AND bar='bar' AND truc<>42"
-	     * @return ArrayList contenant les objets commande selectionnes
-	     * @throws SQLException
-	     */
-	    public static ArrayList<Commande> selectEnCours(Connection conn) throws SQLException {
+	    public static ArrayList<Commande> selectWithStatut(Connection conn,String STATUT) throws SQLException {
 	        Statement state = conn.createStatement();
-	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='EN_COURS'");
+	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='"+STATUT+"'");
 	        return getCommandes(result);
 	    }
 
@@ -97,17 +72,17 @@ public class CommandeDAO {
 	    		imp = ImpressionDAO.selectImpressionFromId(c, id);
 	    		switch(imp.getType().toString()){
 	    			case "AGENDA" : 
-	    				Agenda agenda = AgendaDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
-	    				modele = agenda.getModeleAgenda().toString();
-	    				break;
+				    				Agenda agenda = AgendaDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+				    				modele = agenda.getModeleAgenda().toString();
+				    				break;
 	    			case "CADRE" : 
-	    				Cadre cadre = CadreDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
-	    				modele = cadre.getModeleCadre().toString();
-	    				break;
+				    				Cadre cadre = CadreDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+				    				modele = cadre.getModeleCadre().toString();
+				    				break;
 	    			case "CALENDRIER" : 
-	    				Calendrier calendrier = CalendrierDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
-	    				modele = calendrier.getModeleCalendrier().toString();
-	    				break;
+				    				Calendrier calendrier = CalendrierDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+				    				modele = calendrier.getModeleCalendrier().toString();
+				    				break;
 	    			default : modele = "AUCUN";
 	    		}
 	    		CatalogueDAO.updateCatalogueQte(c, a.qte, imp.getType().toString(), imp.getFormat().toString(), modele);
@@ -132,7 +107,6 @@ public class CommandeDAO {
 	     * -S'il n'existe pas de Commande 'brouillon' sur cet utilisateur, on va la crï¿½er (INSERT).
 	     * -La quantitï¿½ de l'article est connue ï¿½ l'avance, mettre une valeur de 1 par dï¿½faut.
 	     * -Pour une commande existante, si l'idImp de l'article est dï¿½jï¿½ prï¿½sent, alors il suffit d'ajouter la quantitï¿½ voulue ï¿½ celle-ci (UPDATE).
-	     * 
 	     * @param conn
 	     * @param idUser
 	     * @param idImp
@@ -162,9 +136,10 @@ public class CommandeDAO {
 	    		}
 
 	    	} else { // Il n'existe pas encore de commande
-	    		state.executeUpdate("INSERT INTO Commande VALUES("+(getHigherId(conn)+1)+", "+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
+	    		state.executeUpdate("INSERT INTO Commande VALUES("+", "+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
 	    		try {
-					ArticleDAO.insertArticleFromImpression(conn, idImp, (getHigherId(conn)+1), qte);
+	    			
+					ArticleDAO.insertArticleFromImpression(conn, idImp, selectWithStatut(conn,"BROUILLON").get(0).idComm, qte);
 				} catch (Exception e) {
 					// EXCEPTION stock insuffisant !
 					e.printStackTrace();
@@ -173,20 +148,8 @@ public class CommandeDAO {
 	    	conn.commit();
 	    }
 
-		public static int getHigherId(Connection c){
-			try {
-				Statement state = c.createStatement();
-				ResultSet res = state.executeQuery("SELECT max(idComm) FROM Commande");
-				if (res.next()) {
-					return res.getInt(1);
-				}
-			} catch (SQLException e) { e.printStackTrace();	}
-			return 0;
-		}
-	    
-	    /**
+		/**
 	     * Retourne les objets Commande construits e partir d'un resultat de requete.
-	     *
 	     * @param result le ResultSet de la requete SQL
 	     * @return ArrayList contenant les objets Agenda
 	     * @throws SQLException
@@ -207,7 +170,7 @@ public class CommandeDAO {
 		}
 
 		public static void gererEnvoiCommande(Connection c) throws SQLException {
-			new Affichage<Commande>().afficher(selectPretEnvoi(c));
+			new Affichage<Commande>().afficher(selectWithStatut(c,"PRET_A_L_ENVOI"));
 			int idComm = -1;
 			while(!idExists(c,idComm)){
 				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
@@ -216,7 +179,7 @@ public class CommandeDAO {
 		}
 		
 		public static void gererImpressionCommande(Connection c) throws SQLException {
-			new Affichage<Commande>().afficher(selectEnCours(c));
+			new Affichage<Commande>().afficher(selectWithStatut(c,"EN_COURS"));
 			int idComm = -1;
 			while(!idExists(c,idComm)){
 				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");

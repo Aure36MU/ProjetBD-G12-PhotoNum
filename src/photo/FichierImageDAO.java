@@ -15,26 +15,6 @@ import java.sql.Date;
 
 public class FichierImageDAO {
 	
-	/**
-	 * Renvoie l'idFichier le plus grand de FichierImage. Utilisé pour les opérations INSERT.
-	 * @param c Connection
-	 * @return
-	 */
-	
-	public static int getHigherIdFichier(Connection c){
-		try {
-			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idFichier) FROM FichierImage");
-			if (res.next()) {
-				return res.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
-	
 	/** Renvoie la date du jour pour utilisation avec la base de données.
 	 * 
 	 * @return La date du jour formatté comme suit : "yyyy-MM-dd"
@@ -45,7 +25,6 @@ public class FichierImageDAO {
 	
 	/**
 	 * Sélectionne tous les fichiers images sans conditions.
-	 * 
 	 * @param conn Connection SQL
 	 * @return ArrayList contenant tous les objets FichierImage
 	 * @throws SQLException 
@@ -59,7 +38,6 @@ public class FichierImageDAO {
 	public static ArrayList<Owners> selectAllWithOwner(Connection conn) throws SQLException {
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,prenom, nom  FROM FichierImage NATURAL JOIN Utilisateur ");
-
 
 		ArrayList<Owners> owners = new ArrayList<Owners>();
 		while (result.next()) {
@@ -77,7 +55,6 @@ public class FichierImageDAO {
 	
 	/**
 	 * Sélectionne tous les fichiers images avec des conditions paramétrées.
-	 * 
 	 * @param conn Connection SQL
 	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
 	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
@@ -92,7 +69,6 @@ public class FichierImageDAO {
 	
 	/**
 	 * Sélectionne tous les fichiers images créés par un certain utilisateur.
-	 * 
 	 * @param conn Connection SQL
 	 * @param id id utilisateur
 	 * @return ArrayList contenant les objets FichierImage sélectionnés
@@ -104,13 +80,9 @@ public class FichierImageDAO {
 		return getFichiersImage(result);
 	}
 
-	
-	
-	
 	/**
 	 * Ajoute un fichier image dans la base de données.
 	 * ATTENTION la requête est préparée donc tous les paramètres doivent avoir une valeur.
-	 * 
 	 * @param conn Connection SQL
 	 * @param idUser
 	 * @param chemin
@@ -124,16 +96,15 @@ public class FichierImageDAO {
 	 */
 	public static void insertFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
 			int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
-			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			state.setInt(1, getHigherIdFichier(conn)+1);
-			state.setInt(2, idUser);
-			state.setString(3, chemin);
-			state.setString(4, infoPVue);
-			state.setInt(5, pixelImg);
-			state.setInt(6, partage);
-			state.setDate(7, dateUtilisation);
-			state.setInt(8, fileAttModif);
-			state.setInt(9, fileAttSuppr);
+			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			state.setInt(1, idUser);
+			state.setString(2, chemin);
+			state.setString(3, infoPVue);
+			state.setInt(4, pixelImg);
+			state.setInt(5, partage);
+			state.setDate(6, dateUtilisation);
+			state.setInt(7, fileAttModif);
+			state.setInt(8, fileAttSuppr);
 			state.executeUpdate();
 	}
 	
@@ -141,7 +112,6 @@ public class FichierImageDAO {
 	/**
 	 * Modifie un fichier image d'un certain idFichier dans la base de données.
 	 * ATTENTION la requête est préparée donc tous les paramètres doivent avoir une valeur.
-	 * 
 	 * @param conn Connection SQL
 	 * @param idFichier
 	 * @param idUser
@@ -174,7 +144,6 @@ public class FichierImageDAO {
 	 * Modifie un fichier image d'un certain idFichier dans la base de données.
 	 * Cette méthode vérifie si le FichierImage est éligible pour la modification dans le cas où il est partagé.
 	 * Paramètres modifiables : chemin, infoPVue, pixelImg, partage.
-	 * 
 	 * @param conn Connection SQL
 	 * @param id
 	 * @param newChemin
@@ -229,7 +198,6 @@ public class FichierImageDAO {
 	/**
 	 * Supprime un FichierImage d'un certain idFichier de la base.
 	 * Cette méthode vérifie si le FichierImage est éligible pour la suppression dans le cas où il est partagé.
-	 * 
 	 * @param conn Connection SQL
 	 * @param id id fichier
 	 * @throws SQLException 
@@ -257,7 +225,6 @@ public class FichierImageDAO {
 	 * Supprime un FichierImage d'un certain idFichier de la base.
 	 * Cette méthode vérifie si le FichierImage est éligible pour la suppression dans le cas où il est partagé.
 	 * En mode Gestionnaire, on doit également annuler toutes les commandes de statut 'BROUILLON' ou 'EN_COURS' qui utilisent ce fichier image.
-	 * 
 	 * @param conn Connection SQL
 	 * @param id id fichier
 	 * @throws SQLException 
@@ -280,15 +247,11 @@ public class FichierImageDAO {
 			while (lesCommandes.next()) {
 				state.executeQuery("UPDATE Commande SET statutCommande='ANNULEE' WHERE statutCommande<>'ENVOYEE' AND idComm="+lesCommandes.getInt("idComm"));
 			}
-		} else {
-			delete(conn, id);
-		}
+		} else { delete(conn, id);}
 	}
-
 
 	/**
 	 * Vérifie si un FichierImage est partagé et utilisé par quelqu'un d'autre à partir de l'id fichier.
-	 * 
 	 * @param conn
 	 * @param id
 	 * @return
@@ -306,7 +269,6 @@ public class FichierImageDAO {
 
 	/**
 	 * Retourne les objets FichierImage construits à partir d'un résultat de requête.
-	 * 
 	 * @param result le ResultSet de la requête SQL
 	 * @return ArrayList contenant les objets FichierImage
 	 * @throws SQLException 
@@ -340,7 +302,6 @@ public class FichierImageDAO {
 	 */
 	public static void uploadFichierImage(Connection conn, int idUser, String chemin, String infoPVue, int pixelImg) throws SQLException {
 		insertFichierImage(conn, idUser, chemin, infoPVue, pixelImg, 0, Date.valueOf(today()), 0, 0);
-
 	}
 
 	/**

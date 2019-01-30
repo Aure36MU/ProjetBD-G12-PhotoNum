@@ -11,24 +11,14 @@ import src.app.LectureClavier;
 
 public class UtilisateurDAO {
 	
-	public static int getHigherId(Connection c){
-		try {
-			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idUser) FROM Utilisateur");
-			if (res.next()) {
-				return res.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
 	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, String statut) throws SQLException {
 		Statement stat= c.createStatement();
-		int id = (getHigherId(c)+1);
-		String query= "insert into Utilisateur (idUser, nom , prenom, mdp , email, active, statutUtilisateur) values ("+id+",'"+nom+"','"+prenom+"','"+mdp+"','"+mail+"', 1,'"+statut+"')";
+		c.setAutoCommit(false);
+		String query= "insert into Utilisateur ( nom , prenom, mdp , email, active, statutUtilisateur) values (,'"+nom+"','"+prenom+"','"+mdp+"','"+mail+"', 1,'"+statut+"')";
 		stat.executeUpdate(query);
+		ResultSet result = stat.executeQuery("select idUser from Utilisateur where email = '"+mail+"' and nom = '"+nom+"'");
+		result.next();
+		int id = result.getInt("idUser");
 		return new Utilisateur(id, nom, prenom, mdp, mail, 1, StatutUtilisateur.valueOf(statut));
 	}
 	
