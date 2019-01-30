@@ -19,12 +19,8 @@ import src.impression.calendrier.CalendrierDAO;
 
 public class CommandeDAO {
 
-		/**
-		 * Selectionne tous les Commandes (quels que soient leurs modeles) sans conditions.
-		 * @param conn Connection SQL
-		 * @return ArrayList contenant tous les objets Commande
-		 * @throws SQLException
-		 */
+	//SELECTIONS : 
+	
 		public static ArrayList<Commande> selectAll(Connection conn) throws SQLException {
 	        Statement state = conn.createStatement();
 	        ResultSet result = state.executeQuery("SELECT * FROM Commande");
@@ -36,14 +32,7 @@ public class CommandeDAO {
 	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE statutCommande='"+STATUT+"'");
 	        return getCommandes(result);
 	    }
-
-	    /**
-	     * Selectionne tous les Commandes crees par un certain utilisateur.
-	     * @param conn Connection SQL
-	     * @param id id utilisateur
-	     * @return ArrayList contenant les objets Commande selectionnes
-	     * @throws SQLException
-	     */
+	    
 	    public static ArrayList<Commande> selectAllFromUser(Connection conn, int id) throws SQLException {
 	        Statement state = conn.createStatement();
 	        ResultSet result = state.executeQuery("SELECT * FROM Commande WHERE idUser="+id);
@@ -63,8 +52,8 @@ public class CommandeDAO {
 	    }
 	    
 	    public static void updateCommandeCommeImprimee(Connection c, int id) throws SQLException {
-	    	Statement stat= c.createStatement();
-	    	c.setAutoCommit(false);	    	
+	    	c.setAutoCommit(false);	  
+	    	Statement stat= c.createStatement();	    	  	
 	    	ArrayList<Article> articles = ArticleDAO.selectAllFromCommande(c,id);
 	    	int i=0; Article a; Impression imp; String modele;
 	    	while (i<articles.size()){
@@ -90,6 +79,7 @@ public class CommandeDAO {
 	    	}
 			stat.executeUpdate("update Commande set statutCommande = 'PRET_A_L_ENVOI' where idComm='"+id+"'");
 			c.commit();
+			c.setAutoCommit(true);
 	    }
 	    
 	    
@@ -116,7 +106,6 @@ public class CommandeDAO {
 	     */
 	    public static void ajouterAuPanier(Connection conn, int idUser, int idImp, int qte) throws SQLException {
 	    	conn.setAutoCommit(false);
-	    	//TODO: isolation level a changer => serialisable pour tout faire d'un coup sans modification.
 	    	Statement state = conn.createStatement();
 	    	ResultSet result = state.executeQuery("SELECT idComm FROM Commande WHERE idUser="+idUser+" AND statutCommande='BROUILLON'");
 	    	
@@ -134,11 +123,9 @@ public class CommandeDAO {
 						e.printStackTrace();
 					}
 	    		}
-
 	    	} else { // Il n'existe pas encore de commande
 	    		state.executeUpdate("INSERT INTO Commande VALUES("+", "+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
 	    		try {
-	    			
 					ArticleDAO.insertArticleFromImpression(conn, idImp, selectWithStatut(conn,"BROUILLON").get(0).idComm, qte);
 				} catch (Exception e) {
 					// EXCEPTION stock insuffisant !
@@ -146,6 +133,7 @@ public class CommandeDAO {
 				}
 	    	}
 	    	conn.commit();
+	    	conn.setAutoCommit(true);
 	    }
 
 		/**
@@ -170,20 +158,26 @@ public class CommandeDAO {
 		}
 
 		public static void gererEnvoiCommande(Connection c) throws SQLException {
+			c.setAutoCommit(false);
 			new Affichage<Commande>().afficher(selectWithStatut(c,"PRET_A_L_ENVOI"));
 			int idComm = -1;
 			while(!idExists(c,idComm)){
 				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
 			}
 			updateCommandeCommeEnvoyee(c, idComm);
+			c.commit();
+			c.setAutoCommit(true);
 		}
 		
 		public static void gererImpressionCommande(Connection c) throws SQLException {
+			c.setAutoCommit(false);
 			new Affichage<Commande>().afficher(selectWithStatut(c,"EN_COURS"));
 			int idComm = -1;
 			while(!idExists(c,idComm)){
 				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
 			}
 			updateCommandeCommeImprimee(c, idComm);
+			c.commit();
+			c.setAutoCommit(true);
 		}
 }

@@ -9,12 +9,12 @@ import java.util.Date;
 
 public class CodeUniverselDAO {
 
-	public static void createCodeUniversel(Connection c, Date dateAcqui, Date dateUtil, String code, int taux, int idUser){
+	public static void createCodeUniversel(Connection c, Date dateAcqui, Date dateUtil, String code, int taux){
 		try {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO CodeUniversel "
-					+ "(idCodeP,dateAcqui,dateUtil,code,taux,idUser)"
-					+ "VALUES ("+dateAcqui+ ", " +dateUtil+ ", " +code+ ", " +taux+ ", " +idUser+ ") " );
+					+ "(idCodeP,dateAcqui,dateUtil,code,taux)"
+					+ "VALUES ("+dateAcqui+ ", " +dateUtil+ ", " +code+ ", " +taux+ ") " );
 		} catch (SQLException e) {
 			System.out.println("creation failed");
 			e.printStackTrace();
@@ -24,13 +24,6 @@ public class CodeUniverselDAO {
 	public static ArrayList<CodeUniversel> selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from CodePromo natural join CodeUniversel";
-		ResultSet result =stat.executeQuery(query);
-		return CodeUniverselDAO.getCodeUniversel(result);
-	}
-	
-	public static ArrayList<CodeUniversel> selectAll(Connection c, int id) throws SQLException {
-		Statement stat= c.createStatement();
-		String query= "select * from CodePromo natural join CodeUniversel where idUser="+id;
 		ResultSet result =stat.executeQuery(query);
 		return CodeUniverselDAO.getCodeUniversel(result);
 	}
