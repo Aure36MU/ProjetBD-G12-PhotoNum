@@ -97,7 +97,7 @@ public class FichierImageDAO {
 	 */
 	public static void insertFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
 			int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
-			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage (idUser,chemin,infoPVue,pixelImg,partage,dateUtilisation,fileAttModif,fileAttSuppr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage (idUser,chemin,infoPVue,pixelImg,partager,dateUtilisation,fileAttModif,fileAttSuppr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			state.setInt(1, idUser);
 			state.setString(2, chemin);
 			state.setString(3, infoPVue);

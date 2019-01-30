@@ -61,7 +61,7 @@ public class AgendaDAO {
      */
     public static ArrayList<Agenda> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Agenda') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp)");
+        ResultSet result = state.executeQuery("SELECT * FROM Agenda ag INNER JOIN Impression i ON ag.idImp=i.idImp WHERE i.idUser="+id+" AND ag.idImp NOT IN (select idImp FROM Article)");
         return getAgendas(result);
     }
 	/**
@@ -74,7 +74,7 @@ public class AgendaDAO {
 	 */
 	public static void insertAgenda(Connection conn, int id, String ornement, String modeleAgenda) throws SQLException {
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+ornement+"', '"+modeleAgenda+"')");
+		state.executeUpdate("INSERT INTO agenda (idImp, ornement, modeleAgenda) VALUES("+id+", '"+ornement+"', '"+modeleAgenda+"')");
 	}
 	
 	

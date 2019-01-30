@@ -177,7 +177,7 @@ public class ImpressionDAO {
 	}
 	
 
-	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, String modele, String ornement) throws SQLException {
+	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, String ornement, String modele) throws SQLException {
 			Statement state = conn.createStatement();
 			int newId = getHigherIdImp(conn)+1;
 			state.executeUpdate("INSERT INTO Impression "

@@ -48,7 +48,7 @@ public class CalendrierDAO {
 	
 	public static ArrayList<Calendrier> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
         Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Calendrier') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Calendrier')");
+        ResultSet result = state.executeQuery("SELECT * FROM Calendrier c INNER JOIN Impression i ON c.idImp=i.idImp WHERE i.idUser="+id+" AND c.idImp NOT IN (select idImp FROM Article)");
         return getCalendriers(result);
     }
 	
@@ -95,7 +95,7 @@ public class CalendrierDAO {
 		while (result.next()) {
 			calendriers.add(new Calendrier(
 				result.getInt("idImp"),
-				ModeleCalendrier.valueOf(result.getString("modele"))
+				ModeleCalendrier.valueOf(result.getString("modeleCalendrier"))
 				));	
 		}
 		return calendriers;

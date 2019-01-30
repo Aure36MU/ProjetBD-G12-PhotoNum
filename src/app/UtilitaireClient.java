@@ -54,10 +54,11 @@ public class UtilitaireClient {
 	}
 	
 	public static void gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
-		ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+		
 		boolean back = false;
 		while(!back){
-				if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); }
+			ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+				if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); return; }
 				else{	new Affichage<Article>().afficher(panier);
 							
 							System.out.println("*****************************************************************************");

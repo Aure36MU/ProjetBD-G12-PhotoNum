@@ -1,9 +1,12 @@
 package src.commande;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import src.app.Affichage;
@@ -103,6 +106,7 @@ public class CommandeDAO {
 	     * @param idComm
 	     * @param qte
 	     * @throws SQLException 
+	     * @throws Exception 
 	     */
 	    public static void ajouterAuPanier(Connection conn, int idUser, int idImp, int qte) throws SQLException {
 	    	conn.setAutoCommit(false);
@@ -116,15 +120,12 @@ public class CommandeDAO {
 	    		if (result.next()) { //Cet article existe deja dans le panier
 	    			state.executeUpdate("UPDATE Article SET qte= qte+"+qte);
 	    		} else { //L'Article est a ajouter dans le panier
-	    			try {
-						ArticleDAO.insertArticleFromImpression(conn, idImp, idComm, qte);
-					} catch (Exception e) {
-						// EXCEPTION stock insuffisant !
-						e.printStackTrace();
-					}
+	    			ArticleDAO.insertArticleFromImpression(conn, idImp, idComm, qte);
+
 	    		}
 	    	} else { // Il n'existe pas encore de commande
-	    		state.executeUpdate("INSERT INTO Commande (idUser,idCodeP, dateC,modeLivraison,statutCommande) VALUES("+idUser+", 0, 'NULL', 'NULL', 'BROUILLON')");
+	    		Date today = Date.valueOf(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+	    		state.executeUpdate("INSERT INTO Commande (idUser,idCodeP, dateC,modeLivraison,statutCommande) VALUES("+idUser+", 0, TO_DATE('"+today+"', 'YYYY-MM-DD'), 'NULL', 'BROUILLON')");
 	    		try {
 					ArticleDAO.insertArticleFromImpression(conn, idImp, selectWithStatut(conn,"BROUILLON").get(0).idComm, qte);
 				} catch (Exception e) {

@@ -107,7 +107,7 @@ public class ArticleDAO {
 			idArticle = LectureClavier.lireEntier("Pour selectionner un Article, entrez son idArticle (dans la liste présentée ci-dessus).");
 		}
 		int Qte = LectureClavier.lireEntier("Combien d'exemplaire voulez vous ?");
-		PreparedStatement state = conn.prepareStatement("UPDATE Article SET (qte=?,) WHERE idArt=?");
+		PreparedStatement state = conn.prepareStatement("UPDATE Article SET qte=? WHERE idArt=?");
 		state.setInt(1, Qte);
 		state.setInt(2, idArticle);
 		state.executeUpdate();
@@ -147,9 +147,9 @@ public class ArticleDAO {
      * @param idImp
      * @param idComm
      * @param qte
-     * @throws Exception
+	 * @throws SQLException 
      */
-    public static void insertArticleFromImpression(Connection conn, int idImp, int idComm, int qte) throws Exception {
+    public static void insertArticleFromImpression(Connection conn, int idImp, int idComm, int qte) throws SQLException {
     	Impression newImp = ImpressionDAO.selectImpressionFromId(conn, idImp);
     	String newModele = "NULL";
     	/* TODO modifier le switch sur newImp.type par une comparaison d'instances : Calendrier, Agenda, Cadre, [autre].
@@ -161,18 +161,24 @@ public class ArticleDAO {
 			default:	break;
 		}
     	
-    	Catalogue artDuCatalogue = CatalogueDAO.selectAll(conn,
+    	ArrayList<Catalogue> artDuCatalogue = CatalogueDAO.selectAll(conn,
     			"type='"+newImp.getType().toString()
     			+"' AND format='"+newImp.getFormat().toString()
-    			+"' AND modele='"+newModele+"'").get(0);
+    			+"' AND modele='"+newModele+"'");
     	
-    	if (artDuCatalogue.getQteStock() <= 0) {
-    		throw new Exception("Not enough of this Article in stock !");
+    	int lePrix;
+    	if (artDuCatalogue.size() > 0) {
+    		lePrix = artDuCatalogue.get(0).getPrix();
+    		
     	} else {
+    		lePrix = 0;
+    	}
+    	
+    	
     		//Ajout nouvel Article dans la base
     		Statement state = conn.createStatement();
-    		state.executeUpdate("INSERT INTO Article VALUES("+artDuCatalogue.getPrix()+", "+qte+", "+idImp+", "+idComm+")");
-    	}    	
+    		state.executeUpdate("INSERT INTO Article (prix,qte,idImp,idComm) VALUES("+lePrix+", "+qte+", "+idImp+", "+idComm+")"); 
+    		
     }
    /**
      * Retourne les objets Article construits ï¿½ partir d'un rï¿½sultat de requï¿½te.
