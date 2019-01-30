@@ -33,19 +33,7 @@ public class AlbumDAO {
 		return getAlbums(result);
 
 	}
-	
-	public static ArrayList<Album> selectAllFromUser(Connection c, int idUser) throws SQLException {
-		Statement stat= c.createStatement();
-		String query= "select * from Album NATURAL JOIN Impression where idUser='"+idUser+"' ";
-		ResultSet result =stat.executeQuery(query);
-		return AlbumDAO.getAlbums(result);
-	}
 
-    public static ArrayList<Album> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Album al INNER JOIN Impression i ON al.idImp=i.idImp WHERE i.idUser="+id+" AND al.idImp NOT IN (select idImp FROM Article)");
-        return getAlbums(result);
-    }
 	
 	public static void insertAlbum(Connection c, int idi, int photo, String titre) throws SQLException {
 		Statement stat= c.createStatement();

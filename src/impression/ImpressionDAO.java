@@ -96,21 +96,40 @@ public class ImpressionDAO {
 	
 	public static ArrayList<Impression> selectAllFromUser(Connection c,int idUser) throws SQLException{
 			ArrayList<Impression> tab = new ArrayList<Impression>();
-			tab.addAll(CalendrierDAO.selectAllFromUser(c,idUser));
-			tab.addAll(AgendaDAO.selectAllFromUser(c,idUser));
-			tab.addAll(TirageDAO.selectAllFromUser(c,idUser));
-			tab.addAll(CadreDAO.selectAllFromUser(c,idUser));
-			tab.addAll(AlbumDAO.selectAllFromUser(c,idUser));
+			
+			Statement state = c.createStatement();
+			ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idUser="+idUser);
+			while (result.next()) {
+				tab.add(new Impression(						
+						result.getInt("idImp"),
+						result.getString("nomImp"),
+						result.getInt("nbrPageTotal"),
+						result.getInt("idUser"),
+						Qualite.valueOf(result.getString("qualite")),
+						Type.valueOf(result.getString("type")),
+						Format.valueOf(result.getString("format"))
+				));
+			}
 			return tab;
 	}
 	
 	public static ArrayList<Impression> selectAllFromUserImpressionNotArticle(Connection c,int idUser) throws SQLException{
 			ArrayList<Impression> tab = new ArrayList<Impression>();
-			tab.addAll(CalendrierDAO.selectAllFromUserNotArticle(c,idUser));
-			tab.addAll(AgendaDAO.selectAllFromUserNotArticle(c,idUser));
-			tab.addAll(TirageDAO.selectAllFromUserNotArticle(c,idUser));
-			tab.addAll(CadreDAO.selectAllFromUserNotArticle(c,idUser));
-			tab.addAll(AlbumDAO.selectAllFromUserNotArticle(c,idUser));
+			
+			Statement state = c.createStatement();
+			ResultSet result = state.executeQuery("SELECT * FROM Impression WHERE idUser="+idUser+" AND idImp NOT IN (select idImp FROM Article)");
+			while (result.next()) {
+				tab.add(new Impression(						
+						result.getInt("idImp"),
+						result.getString("nomImp"),
+						result.getInt("nbrPageTotal"),
+						result.getInt("idUser"),
+						Qualite.valueOf(result.getString("qualite")),
+						Type.valueOf(result.getString("type")),
+						Format.valueOf(result.getString("format"))
+				));
+			}
+
 		return tab;
 	}
 	

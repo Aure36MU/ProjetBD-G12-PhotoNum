@@ -29,18 +29,6 @@ public class CadreDAO {
 		return getCadres(result);
 	}
 	
-	public static ArrayList<Cadre> selectAllFromUser(Connection c, int idUser) throws SQLException {
-		Statement stat= c.createStatement();
-		String query= "select * from Cadre NATURAL JOIN Impression where idUser='"+idUser+"' ";
-		ResultSet result =stat.executeQuery(query);
-		return CadreDAO.getCadres(result);
-	}
-	
-	public static ArrayList<Cadre> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Cadre c INNER JOIN Impression i ON c.idImp=i.idImp WHERE i.idUser="+id+" AND c.idImp NOT IN (select idImp FROM Article)");
-        return getCadres(result);
-    }
 	
 	/**
 	 * Ajoute un cadre dans la base.

@@ -37,33 +37,6 @@ public class AgendaDAO {
         return getAgendas(result);
     }
 
-    /**
-     * Selectionne tous les Agendas crees par un certain utilisateur.
-     *
-     * @param conn Connection SQL
-     * @param id id utilisateur
-     * @return ArrayList contenant les objets Agenda selectionnes
-     * @throws SQLException
-     */
-    public static ArrayList<Agenda> selectAllFromUser(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Agenda JOIN Impression ON (Agenda.idImp = Impression.idImp) WHERE Impression.idUser="+id);
-        return getAgendas(result);
-    }
-    
-    /**
-     * Selectionne tous les Agendas crees par un certain utilisateur.
-     *
-     * @param conn Connection SQL
-     * @param id id utilisateur
-     * @return ArrayList contenant les objets Agenda selectionnes
-     * @throws SQLException
-     */
-    public static ArrayList<Agenda> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Agenda ag INNER JOIN Impression i ON ag.idImp=i.idImp WHERE i.idUser="+id+" AND ag.idImp NOT IN (select idImp FROM Article)");
-        return getAgendas(result);
-    }
 	/**
 	 * Ajoute un agenda dans la base.
 	 * 

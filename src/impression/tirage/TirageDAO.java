@@ -27,19 +27,7 @@ public class TirageDAO {
 		ResultSet result = state.executeQuery("SELECT * FROM Tirage WHERE "+condition);
 		return getTirages(result);
 	}
-	
-	public static ArrayList<Tirage> selectAllFromUser(Connection c, int idUser) throws SQLException {
-		Statement stat= c.createStatement();
-		String query = "select * from Tirage NATURAL JOIN Impression where idUser='"+idUser+"' ";
-		ResultSet result = stat.executeQuery(query);
-		return TirageDAO.getTirages(result);
-	}
-	
-	public static ArrayList<Tirage> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Tirage t INNER JOIN Impression i ON t.idImp=i.idImp WHERE i.idUser="+id+" AND t.idImp NOT IN (select idImp FROM Article)");
-        return getTirages(result);
-    }
+
 	
 	/**
 	 * Ajoute un tirage dans la base.
