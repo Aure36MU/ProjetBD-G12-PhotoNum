@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import src.app.Affichage;
 import src.app.LectureClavier;
+import src.compte.Utilisateur;
+
 import java.sql.Date;
 
 
@@ -323,7 +325,7 @@ public class FichierImageDAO {
 		return false;
 	}
 	
-	public static Boolean BelongToUser(Connection c, int idFichier, int idUser) throws SQLException {
+	public static Boolean belongToUser(Connection c, int idFichier, int idUser) throws SQLException {
 		Statement stat= c.createStatement();
 		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier='"+idFichier+"' and idUser = '"+idUser+"'");
 		if (result.next()) {
@@ -336,6 +338,14 @@ public class FichierImageDAO {
 		new Affichage<Owners>().afficher(selectAllWithOwner(c));
 		int idFichier = -1;
 		while(!idExists(c,idFichier)){
+			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+		}
+		deleteFichierImage(c, idFichier);
+	}
+	public static void supprimerUnFichierClient(Connection c, Utilisateur u) throws SQLException {
+		new Affichage<FichierImage>().afficher(selectAllFromUser(c, u.getIdUser()));
+		int idFichier = -1;
+		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, u.getIdUser())){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
 		}
 		deleteFichierImage(c, idFichier);

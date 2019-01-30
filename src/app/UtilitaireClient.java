@@ -3,6 +3,7 @@ package src.app;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -100,13 +101,13 @@ public class UtilitaireClient {
 							System.out.println("retour au menu precedent");
 							break;
 			case 3:	new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser()));
-							gererUnFichier(c,utilisateur);
+							gererFichiers(c,utilisateur);
 							break;
 			case 4:	new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
 							gererUnePhoto(c,utilisateur);
 							break;
 			case 5:	new Affichage<FichierImage>().afficher(FichierImageDAO.selectAll(c, "partager=1"));
-							gererFichierPartager(c, utilisateur);
+							gererFichierPartages(c, utilisateur);
 							break;
 			case 6:	gererAjoutFichier(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
@@ -129,30 +130,25 @@ public class UtilitaireClient {
 		}
 	}
 
-	private static void gererFichierPartager(Connection c, Utilisateur utilisateur) throws SQLException {
-		boolean back = false;
-		while(!back){
-			System.out.println("*****************************************************************************");
-			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Se deconnecter.");
-			System.out.println("2 : Retourner au menu precedent.");
-			int choixAction = LectureClavier.lireEntier("3 : Retoucher un fichier.");
-			switch(choixAction){ 
-			case 1:  	utilisateur = null;
-							back = true;
-							System.out.println("Vous avez ete deconnecte");
-							break;
-			case 2:  	back = true;
-							System.out.println("retour au menu precedent");
-							break;
-			case 3:	gereRetoucheFichier(c,utilisateur);
-							break;
-			default : System.out.println("Veuillez faire un choix. ");
+	private static void gererFichierPartages(Connection c, Utilisateur utilisateur) throws SQLException {
+		System.out.println("*****************************");
+		System.out.println("  voici vos fichiers partages : ");
+		System.out.println("****************************** ");
+		while(LectureClavier.lireOuiNon("Voulez vous modifier le partage d'un fichier ?")){
+			c.setAutoCommit(false);
+			int idFichier = -1;
+			while(!FichierImageDAO.idExists(c,idFichier)){
+				idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
 			}
+			Statement state = c.createStatement();
+			state.executeUpdate("UPDATE FichierImage SET (partager = (1-partager)) WHERE idFichier = '" +idFichier+"'");
+			
+			c.commit();
+			c.setAutoCommit(true);
 		}
 	}
 	
-	private static void gererUnFichier(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static void gererFichiers(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -161,11 +157,10 @@ public class UtilitaireClient {
 			System.out.println("2 : Retourner au menu precedent.");
 			System.out.println("3 : Modifier un fichier");
 			System.out.println("4 : Supprimer un fichier");
-			int choixAction = LectureClavier.lireEntier("5 : Retoucher un fichier.");
+			int choixAction = LectureClavier.lireEntier("5 : Creer une photo avec ce fichier (retouche).");
 			
 			switch(choixAction){ 
-				case 1:  	utilisateur = null;
-								back = true;
+				case 1:  	utilisateur = null;	back = true;
 								System.out.println("Vous avez ete deconnecte");
 								break;
 				case 2:  	back = true;
@@ -180,26 +175,29 @@ public class UtilitaireClient {
 	}
 	
 	private static void gereModifFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int fichier = LectureClavier.lireEntier("Quel fichier voulez vous modifier? (Entrez le numero du fichier)");
-		ArrayList<FichierImage> tab = FichierImageDAO.selectAll(c, "idFichier=" + fichier);
-		if(utilisateur.getIdUser()==tab.get(0).getIdUser()) {
-			int part=tab.get(0).isPartage();
-			System.out.println("Votre photo est partagee : "+ part);
-			boolean choix1 = LectureClavier.lireOuiNon("Voulez vous modifier le partage?");
-			boolean choix2 = LectureClavier.lireOuiNon("Voulez vous modifier le commentaire?");
-			if(choix1) {	part= 1- (tab.get(0).isPartage());	}
-			else{
-				if(choix2) {
-					String comm= LectureClavier.lireChaine("Quel est le nouveau commentaire ?");
-					FichierImageDAO.updateFichierImage(c, fichier, tab.get(0).getChemin(), comm, tab.get(0).getPixelImg(), part);
-					System.out.println("Fichier modifie avec succes!");
-				} else {
-					FichierImageDAO.updateFichierImage(c, fichier, tab.get(0).getChemin(), tab.get(0).getInfoPVue(), tab.get(0).getPixelImg(), part);
-					System.out.println("Fichier modifie avec succes!");
-					//TODO : what the fuck ? faut que tu m'explique cette méthode thomas elle fait nimp avec les if.
-				}
+		int idFichier = -1;
+		while(!FichierImageDAO.idExists(c,idFichier) || !FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser())){
+			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+		}
+		FichierImage f = FichierImageDAO.selectAll(c, "idFichier=" + idFichier).get(0);
+		boolean back = false;
+		while (!back){
+			System.out.println(" \n"+f.toString());
+			if(LectureClavier.lireOuiNon("modifier les infos de prise de vue ?")){
+				f.setInfoPVue(LectureClavier.lireChaine("Nouvelles infos ?"));
 			}
-		} else {	System.out.println("Vous n'avez pas le droit de modifier ce fichier, il n'est pas a vous");}
+			if(LectureClavier.lireOuiNon("modifier le chemin ?")){
+				f.setChemin(LectureClavier.lireChaine("Nouveau chemin ?"));			
+			}
+			if(LectureClavier.lireOuiNon("modifier le partage ?")){
+				f.setPartage(1-f.isPartage());
+			}
+			if(LectureClavier.lireOuiNon("Sauvegarder les changements ?")){
+				FichierImageDAO.updateFichierImage(c, idFichier, f.getChemin(), f.getInfoPVue(), f.getPixelImg(), f.isPartage());
+			} else {
+				back = true;
+			}
+		}
 		
 	}
 	
@@ -233,7 +231,7 @@ public class UtilitaireClient {
 			System.out.println("Vous n'avez pas le droit de retoucher ce fichier, il n'est pas a vous et il n'est pas en libre service");
 		}
 	}
-	
+	 
 	private static void gererUnePhoto(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
@@ -245,8 +243,7 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("4 : Supprimer une photo");
 			
 			switch(choixAction){ 
-				case 1:  	utilisateur = null;
-								back = true;
+				case 1:  	utilisateur = null; back = true;
 								System.out.println("Vous avez ete deconnecte");
 								break;
 				case 2:  	back = true;
