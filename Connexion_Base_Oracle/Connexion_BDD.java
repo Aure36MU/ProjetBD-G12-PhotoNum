@@ -96,14 +96,20 @@ public class Connexion_BDD {
     				+resultSet.getString(3) + " "
     				+resultSet.getString(4) + " "
     				+resultSet.getString(5) + " "
-    				/*+resultSet.getString(6) + " "
-    				+resultSet.getString(7) + " "
+    				+resultSet.getString(6) + " "
+    				/*+resultSet.getString(7) + " "
     				*/); 
     		} 
     	}else {
-    		boolean resultB = statement.execute(req);
-    		System.out.println("++++++++++");
-    	}
+    		try {
+    			boolean resultB = statement.execute(req);
+    			System.out.println("++++++++++");
+    		}catch(Exception e)
+    		{
+    			e.printStackTrace();
+    			System.out.println("EXCEPTION LANCE PAR LE TRIGGER ET CAPTURE PAR L APPLICATION");
+    		}
+    		}
     }   
   }
   public static boolean Scripts(String aSQLScriptFilePath,Connection connection) throws IOException,SQLException {
