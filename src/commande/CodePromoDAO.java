@@ -14,7 +14,7 @@ public class CodePromoDAO {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO CodePromo "
 					+ "(dateAcqui,dateUtil,code,taux,idUser)"
-					+ "VALUES ("+ ", " + dateAcqui + ", " + dateUtil + ", " + code + ", " + taux + ", " + idUser + "); " );
+					+ "VALUES ("+dateAcqui + ", " + dateUtil + ", " + code + ", " + taux + ", " + idUser + "); " );
 			
 			
 		} catch (SQLException e) {

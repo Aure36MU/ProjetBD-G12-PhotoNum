@@ -14,7 +14,7 @@ public class Impression_PhotoDAO {
 
 	public static void insert(Connection conn, int idPh, int idImp, int num, String text, int nbEx) throws SQLException {
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO Impression_Photo VALUES("+idPh+","+idImp+","+num+", '"+text+"', "+nbEx+")");
+		state.executeUpdate("INSERT INTO Impression_Photo (idPh,idImp,num_page,text,nbExemplairePHOTO) VALUES("+idPh+","+idImp+","+num+", '"+text+"', "+nbEx+")");
 	}
 	
 	public static ArrayList<Page> selectAll(Connection conn) throws SQLException {
