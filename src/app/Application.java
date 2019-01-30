@@ -23,7 +23,7 @@ public class Application {
 		String nom= LectureClavier.lireChaine("Votre nom : ");
 		String prenom= LectureClavier.lireChaine("Votre prenom : ");
 		System.out.println("   ");
-		System.out.println("Bienvenue e vous " + nom + " "+ prenom + " ! ");
+		System.out.println("Bienvenue a vous " + nom + " "+ prenom + " ! ");
 		return UtilisateurDAO.createUtilisateur(c,  nom,  prenom,  mdp,  mail,  statut);
 	}	
 

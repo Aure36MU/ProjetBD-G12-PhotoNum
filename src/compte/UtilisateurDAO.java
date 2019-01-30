@@ -14,7 +14,7 @@ public class UtilisateurDAO {
 	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, String statut) throws SQLException {
 		Statement stat= c.createStatement();
 		c.setAutoCommit(false);
-		String query= "insert into Utilisateur ( nom , prenom, mdp , email, active, statutUtilisateur) values ("+nom+"','"+prenom+"','"+mdp+"','"+mail+"', 1,'"+statut+"')";
+		String query= "insert into Utilisateur ( nom , prenom, mdp , email, active, statutUtilisateur) values ('"+nom+"','"+prenom+"','"+mdp+"','"+mail+"', 1,'"+statut+"')";
 		stat.executeUpdate(query);
 		ResultSet result = stat.executeQuery("select idUser from Utilisateur where email = '"+mail+"' and nom = '"+nom+"'");
 		result.next();
