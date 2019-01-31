@@ -24,6 +24,7 @@ public class Application {
 		String prenom= LectureClavier.lireChaine("Votre prenom : ");
 		System.out.println("   ");
 		System.out.println("Bienvenue a vous " + nom + " "+ prenom + " ! ");
+		System.out.println("Vous avez ete inscrit.");
 		return UtilisateurDAO.createUtilisateur(c,  nom,  prenom,  mdp,  mail,  statut);
 	}	
 
@@ -50,6 +51,7 @@ public class Application {
 					return null;
 				}
 			}
+			System.out.println("Vous etes maintenant connecte.");
 			return utilisateur;
 		}
 		else {
@@ -78,11 +80,9 @@ public class Application {
 				switch(choix){ 
 				case 1:  
 					utilisateur = connexion(c);
-					System.out.println("Vous etes maintenant connecte.");
 					break;
 				case 2:
 					utilisateur = inscription(c);
-					System.out.println("Vous avez ete inscrit.");
 					break;
 				default : 
 				}
@@ -100,13 +100,5 @@ public class Application {
 			e.printStackTrace();
 		}
 	}
-
-	/*
-	 * Consulter tous utilisateurs
-Supprimer ⇔ désactiver un client
-Consulter tous fichiers images et leur createur
-Suppression fichiers images 
-Consulter commandes (filtrer par article → filtrage dans ArticleDAO)
-1*/
 
 }
