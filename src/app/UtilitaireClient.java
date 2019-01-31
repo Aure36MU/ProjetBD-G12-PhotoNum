@@ -320,6 +320,7 @@ public class UtilitaireClient {
 				case "AGENDA":
 								String modeleAgenda= ModeleAgenda.definir();
 								String ornement = Ornement.definir();
+								System.out.println(utilisateur.getIdUser());
 								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,ornement,modeleAgenda );
 								System.out.println("Vous venez de creer votre nouvelle impression");
 								break;

@@ -198,6 +198,8 @@ public class PhotoDAO {
 				back = true;
 			}
 			idPh = -2;
+			System.out.println("Votre photo a ete modifiee :");
+			new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
 		}
 		
 	}
