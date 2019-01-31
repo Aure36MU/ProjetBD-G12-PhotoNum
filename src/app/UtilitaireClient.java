@@ -73,7 +73,9 @@ public class UtilitaireClient {
 								case 3: ArticleDAO.ModifierQuantite(c);			break;
 								case 4: ArticleDAO.SupprimerUnArticle(c);		break;
 								case 5:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
-										if(payer) {System.out.println("Vous avez paye :)"); }
+										if(payer) {
+											CommandeDAO.updateCommandeCommePayee(c, utilisateur.getIdUser());
+											System.out.println("Vous avez paye :)"); }
 										break;
 								default : System.out.println("Veuillez faire un choix. ");
 							}
