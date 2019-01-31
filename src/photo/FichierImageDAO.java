@@ -320,33 +320,44 @@ public class FichierImageDAO {
 	}
 	
 	public static void supprimerUnFichierClient(Connection c) throws SQLException {
+		c.setAutoCommit(false);
 		new Affichage<Owners>().afficher(selectAllWithOwner(c));
 		int idFichier = -2;
 		while(!idExists(c,idFichier)){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
-			if(idFichier==-1) {return;}
+			if(idFichier==-1) {
+				c.setAutoCommit(true);
+				return;}
 		}
 		deleteFichierImage(c, idFichier);
 		System.out.println("fichier supprime !");
+		c.setAutoCommit(true);
 	}
 	
 	public static void supprimerUnFichierClient(Connection c, Utilisateur u) throws SQLException {
+		c.setAutoCommit(false);
 		int idFichier = -2;
 		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, u.getIdUser())){
 			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
-			if(idFichier==-1) {return;}
+			if(idFichier==-1) {
+				c.setAutoCommit(true);
+				return;}
 		}
 		deleteFichierImage(c, idFichier);
 		System.out.println("fichier supprime !");
+		c.setAutoCommit(true);
 	}
 	
 	public static void modifierFichier(Connection c, Utilisateur utilisateur) throws SQLException {
+		c.setAutoCommit(false);
 		int idFichier = -2;
 		boolean back = false;
 		while (!back){
 			while(!idExists(c,idFichier) || !belongToUser(c, idFichier, utilisateur.getIdUser())){
 				idFichier = LectureClavier.lireEntier("Pour modifier un fichier, entrez son idFichier (dans la liste présentée ci-dessus). -1 pour quitter.");
-				if (idFichier == -1) {return;}
+				if (idFichier == -1) {
+					c.setAutoCommit(true);
+					return;}
 			}
 			FichierImage f = selectAll(c, "idFichier=" + idFichier).get(0);
 
@@ -367,7 +378,7 @@ public class FichierImageDAO {
 			}
 			idFichier = -2;
 		}
-		
+		c.setAutoCommit(true);
 	}
 	
 	public static void ajouterFichier(Connection c, Utilisateur utilisateur) throws SQLException {

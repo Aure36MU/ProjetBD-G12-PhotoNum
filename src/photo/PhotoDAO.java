@@ -160,13 +160,17 @@ public class PhotoDAO {
 
 	
 	public static void supprimerPhoto(Connection c, Utilisateur u) throws SQLException {
+		c.setAutoCommit(false);
 		int idPh = -2;
 		while(!idExists(c,idPh)){
 			idPh = LectureClavier.lireEntier("Pour selectionner une photo, entrez son idPh (dans la liste ci-dessus ou -1 pour annuler).");
-			if(idPh==-1) {return;}
+			if(idPh==-1) {
+				c.setAutoCommit(true);
+				return;}
 		}
 		deletePhoto(c, idPh);
 		System.out.println("Photo supprime !");
+		c.setAutoCommit(true);
 	}
 	
 	public static Boolean idExists(Connection c, int idPh) throws SQLException {
@@ -179,12 +183,15 @@ public class PhotoDAO {
 	}
 
 	public static void modifierPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
+		c.setAutoCommit(false);
 		int idPh = -2;
 		boolean back = false;
 		while (!back){
 			while(!idExists(c,idPh)){
 				idPh = LectureClavier.lireEntier("Pour selectionner une photo, entrez son idPh (dans la liste ci-dessus ou -1 pour annuler).");
-				if(idPh==-1) {return;}
+				if(idPh==-1) {
+					c.setAutoCommit(true);
+					return;}
 			}
 			Photo p = selectAll(c, "idPh='" + idPh+"'").get(0);
 
@@ -201,7 +208,7 @@ public class PhotoDAO {
 			System.out.println("Votre photo a ete modifiee :");
 			new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
 		}
-		
+		c.setAutoCommit(true);
 	}
 	
 	

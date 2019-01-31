@@ -98,14 +98,17 @@ public class UtilisateurDAO {
 
 
 	public static void gererClients(Connection c) throws SQLException {
+		c.setAutoCommit(false);
 		new Affichage<Utilisateur>().afficher(selectWithCondition(c, "statutUtilisateur = 'CLIENT'"));
 		int idUser =  -2;
 		while(!idExists(c,idUser)){
 			idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste  ci-dessus ou -1 pour annuler).");
 			if(idUser==-1) {
+				c.setAutoCommit(true);
 				return;
 			}
 		} 
 		activerDesactiverUtilisateur(c, idUser);
+		c.setAutoCommit(true);
 	}
 }
