@@ -19,6 +19,7 @@ public class UtilisateurDAO {
 		ResultSet result = stat.executeQuery("select idUser from Utilisateur where email = '"+mail+"' and nom = '"+nom+"'");
 		result.next();
 		int id = result.getInt("idUser");
+		c.commit();
 		return new Utilisateur(id, nom, prenom, mdp, mail, 1, StatutUtilisateur.valueOf(statut));
 	}
 	

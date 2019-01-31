@@ -74,34 +74,40 @@ public class Application {
 			System.out.println("    ");
 
 			Utilisateur utilisateur = null;
-			boolean quit = false;
 			while(utilisateur == null){
 				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire sur PhotoNum ? ");
 				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire, 3 pour quitter l'appli");
-				while(choix !=1 && choix !=2 && choix !=3){
-					switch(choix){ 
-							case 1:  
-								utilisateur = connexion(c);
-								break;
-							case 2:
-								utilisateur = inscription(c);
-								break;
-							case 3:
-								c.close();
-								quit = true;
-							default : System.out.println("Veuillez faire un choix. ");
-					}
+				while (!(choix == 1 || choix == 2 || choix == 3)) {
+					System.out.println("Veuillez faire un choix. ");
+					choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire, 3 pour quitter l'appli");
+				}
+				switch(choix){ 
+						case 1:  
+							utilisateur = connexion(c);
+							break;
+						case 2:
+							utilisateur = inscription(c);
+							break;
+						case 3:
+							System.out.println("Au revoir");
+							c.close();
+							System.exit(0);
+							break;
+						default : 
+
 				}
 				
-				if(!quit && utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
+				if(utilisateur != null && utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
 					UtilitaireClient.menuClient(c, utilisateur);
-					System.out.println("Vous avez ete deconnecte :) ");
-				}else if (!quit){
+					System.out.println("a bientot :) ");
+					utilisateur = null;
+				}else if (utilisateur != null){
 					UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
-					System.out.println("Vous avez ete deconnecte :) ");
+					System.out.println("a bientot :) ");
+					utilisateur = null;
 				}
 			}
-			c.close();
+			//c.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
