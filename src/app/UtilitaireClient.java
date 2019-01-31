@@ -50,6 +50,7 @@ public class UtilitaireClient {
 		}
 	}
 	
+
 	public static Utilisateur gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
@@ -185,7 +186,7 @@ public class UtilitaireClient {
 	public static void utiliserFichierPourPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
 		if(LectureClavier.lireOuiNon("Voulez vous utiliser un de ces fichiers ?")) {
 			int idFichier = -1;
-			while(!FichierImageDAO.idExists(c,idFichier) || !(FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser()) || FichierImageDAO.isShared(c,idFichier))){
+			while(!FichierImageDAO.idExists(c,idFichier) || !(FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser()) || FichierImageDAO.isShared(c,idFichier)) || FichierImageDAO.userShared(c, utilisateur.getIdUser())){
 				idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
 				if(idFichier == -1) {return;}
 			}
