@@ -6,26 +6,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.app.Affichage;
+import src.app.LectureClavier;
+
 public class UtilisateurDAO {
-	
-	public static int getHigherId(Connection c){
-		try {
-			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idUser) FROM Utilisateur");
-			if (res.next()) {
-				return res.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
 	
 	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, String statut) throws SQLException {
 		Statement stat= c.createStatement();
-		int id = (getHigherId(c)+1);
-		String query= "insert into Utilisateur (idUser, nom , prenom, mdp , email, active, statutUtilisateur) values ("+id+",'"+nom+"','"+prenom+"','"+mdp+"','"+mail+"', 1,'"+statut+"')";
+		c.setAutoCommit(false);
+		String query= "insert into Utilisateur ( nom , prenom, mdp , email, active, statutUtilisateur) values ('"+nom+"','"+prenom+"','"+mdp+"','"+mail+"', 1,'"+statut+"')";
 		stat.executeUpdate(query);
+		ResultSet result = stat.executeQuery("select idUser from Utilisateur where email = '"+mail+"' and nom = '"+nom+"'");
+		result.next();
+		int id = result.getInt("idUser");
 		return new Utilisateur(id, nom, prenom, mdp, mail, 1, StatutUtilisateur.valueOf(statut));
 	}
 	
@@ -33,27 +26,30 @@ public class UtilisateurDAO {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur";
 		ResultSet result =stat.executeQuery(query);
-		return UtilisateurDAO.getUtilisateurs(result);
+		return getUtilisateurs(result);
 	}
 	
 	public static ArrayList<Utilisateur> selectAllUserFromStatut(Connection c, StatutUtilisateur statut) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where statutUtilisateur='"+statut+"'";
 		ResultSet result =stat.executeQuery(query);
-		return UtilisateurDAO.getUtilisateurs(result);
+		return getUtilisateurs(result);
 	}
 
 	public static Boolean idExists(Connection c, int idUser) throws SQLException {
 		Statement stat= c.createStatement();
 		ResultSet result =stat.executeQuery( "select count(*) from Utilisateur where idUser='"+idUser+"'");
-		return result.getInt(0)==1;
+		if(result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
 	}
 	
 	public static ArrayList<Utilisateur> selectWithCondition(Connection c, String condition) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "select * from Utilisateur where "+condition;
 		ResultSet result =stat.executeQuery(query);
-		return UtilisateurDAO.getUtilisateurs(result);
+		return getUtilisateurs(result);
 	}
 	
 	public static void deleteUtilisateur(Connection c, String mail) throws SQLException {
@@ -93,5 +89,19 @@ public class UtilisateurDAO {
 			return null;
 		}
 		return utilisateurs;
+	}
+
+
+	public static void gererClients(Connection c) throws SQLException {
+		new Affichage<Utilisateur>().afficher(selectWithCondition(c, "statutUtilisateur = 'CLIENT' and active = 1"));
+		int idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
+		while(idUser!=0 && !idExists(c,idUser)){
+			idUser = LectureClavier.lireEntier("L'id n'existe pas. Réessayez.");
+		}
+		if(idUser==0) {
+			return;
+		} else {
+			deleteUtilisateur(c, idUser);
+		}
 	}
 }

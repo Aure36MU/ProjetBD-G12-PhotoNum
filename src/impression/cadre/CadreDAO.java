@@ -6,9 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-
 public class CadreDAO {
-
 	
 	public static ArrayList<Cadre> selectAll(Connection c) throws SQLException {
 		Statement stat= c.createStatement();
@@ -26,26 +24,11 @@ public class CadreDAO {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Cadre> selectAll(Connection conn, String condition) throws SQLException {
-
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT * FROM Cadre WHERE "+condition);
 		return getCadres(result);
-
-		
 	}
 	
-	public static ArrayList<Cadre> selectAllFromUser(Connection c, int idUser) throws SQLException {
-		Statement stat= c.createStatement();
-		String query= "select * from Cadre NATURAL JOIN Impression where idUser='"+idUser+"' ";
-		ResultSet result =stat.executeQuery(query);
-		return CadreDAO.getCadres(result);
-	}
-	
-	public static ArrayList<Cadre> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Cadre') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp and i.type='Cadre')");
-        return getCadres(result);
-    }
 	
 	/**
 	 * Ajoute un cadre dans la base.
@@ -55,10 +38,8 @@ public class CadreDAO {
 	 * @throws SQLException 
 	 */
 	public static void insertCadre(Connection conn, int id, String modeleCadre) throws SQLException {
-
 		Statement state = conn.createStatement();
 		state.executeUpdate("INSERT INTO Cadre VALUES("+id+", '"+modeleCadre+"')");
-		
 	}
 	
 	
@@ -70,10 +51,8 @@ public class CadreDAO {
 	 * @throws SQLException 
 	 */
 	public static void updateCadre(Connection conn, int id, String modeleCadre) throws SQLException {
-
 		Statement state = conn.createStatement();
 		state.executeUpdate("UPDATE Cadre SET modeleCadre='"+modeleCadre+"' WHERE idImp="+id);
-		
 	}
 	
 	
@@ -84,10 +63,8 @@ public class CadreDAO {
 	 * @throws SQLException 
 	 */
 	public static void deleteCadre(Connection conn, int id) throws SQLException {
-
 		Statement state = conn.createStatement();
 		state.executeUpdate("DELETE FROM Cadre WHERE idImp="+id);
-		
 	}
 	
 	public static ArrayList<Cadre> getCadres(ResultSet result) {
@@ -95,7 +72,7 @@ public class CadreDAO {
 		try {
 			while (result.next()) {
 				cadres.add(new Cadre(
-					ModeleCadre.valueOf(result.getString("modele")),
+					ModeleCadre.valueOf(result.getString("modeleCadre")),
 					result.getInt("idImp")
 				));
 			}

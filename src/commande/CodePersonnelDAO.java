@@ -10,25 +10,12 @@ import java.util.Date;
 
 public class CodePersonnelDAO {
 
-	public static int getHigherIdCodeP(Connection c){
-		try {
-			Statement state = c.createStatement();
-			ResultSet res = state.executeQuery("SELECT max(idCodeP) FROM CodePromo");
-			if (res.next()) {
-				return res.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
 	public static void createCodePersonnel(Connection c, Date dateAcqui, Date dateUtil, String code, int taux, int idUser){
 		try {
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO CodePersonnel "
-					+ "(idCodeP,dateAcqui,dateUtil,code,taux,idUser)"
-					+ "VALUES ("+(getHigherIdCodeP(c)+1)+ ", " + dateAcqui + ", " + dateUtil + ", " + code + ", " + taux + ", " + idUser + "); " );
+					+ "(dateAcqui,dateUtil,code,taux,idUser)"
+					+ "VALUES ("+ dateAcqui + ", " + dateUtil + ", " + code + ", " + taux + ", " + idUser + "); " );
 		} catch (SQLException e) {
 			System.out.println("creation failed");
 			e.printStackTrace();
@@ -69,7 +56,6 @@ public class CodePersonnelDAO {
 				));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
