@@ -17,45 +17,8 @@ import java.sql.Date;
 
 public class FichierImageDAO {
 	
-	/** Renvoie la date du jour pour utilisation avec la base de données.
-	 * @return La date du jour formatté comme suit : "yyyy-MM-dd"
-	 */
-	public static String today() {
-		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-	}
-	
 	/**
-	 * Sélectionne tous les fichiers images sans conditions.
-	 * @param conn Connection SQL
-	 * @return ArrayList contenant tous les objets FichierImage
-	 * @throws SQLException 
-	 */
-	public static ArrayList<FichierImage> selectAll(Connection conn) throws SQLException {
-		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM FichierImage");
-		return getFichiersImage(result);
-	}
-	
-	public static ArrayList<Owners> selectAllWithOwner(Connection conn) throws SQLException {
-		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,prenom, nom  FROM FichierImage NATURAL JOIN Utilisateur ");
-
-		ArrayList<Owners> owners = new ArrayList<Owners>();
-		while (result.next()) {
-			owners.add(new Owners(result.getInt("idFichier"),
-					result.getString("chemin"),
-					result.getString("infoPVue"),
-					result.getInt("partager"),
-					result.getDate("dateUtilisation"),
-					result.getString("prenom"),
-					result.getString("nom"))
-					);			
-		}
-		return owners;
-	}
-	
-	/**
-	 * Sélectionne tous les fichiers images avec des conditions paramétrées.
+	 * Sélectionne tous les fichiers images avec une id donnée
 	 * @param conn Connection SQL
 	 * @param condition chaîne de caractères formaté comme suit : "condition1 {AND condition2}"
 	 * Exemple : "foo=1 AND bar='bar' AND truc<>42"
@@ -80,6 +43,24 @@ public class FichierImageDAO {
 		ResultSet result = state.executeQuery("SELECT * FROM FichierImage WHERE idUser="+id);
 		return getFichiersImage(result);
 	}
+	
+	public static ArrayList<Owners> selectAllWithOwner(Connection conn) throws SQLException {
+		Statement state = conn.createStatement();
+		ResultSet result = state.executeQuery("SELECT idFichier,chemin,infoPVue,partager,dateUtilisation,prenom, nom  FROM FichierImage NATURAL JOIN Utilisateur ");
+
+		ArrayList<Owners> owners = new ArrayList<Owners>();
+		while (result.next()) {
+			owners.add(new Owners(result.getInt("idFichier"),
+					result.getString("chemin"),
+					result.getString("infoPVue"),
+					result.getInt("partager"),
+					result.getDate("dateUtilisation"),
+					result.getString("prenom"),
+					result.getString("nom"))
+					);			
+		}
+		return owners;
+	}
 
 	/**
 	 * Ajoute un fichier image dans la base de données.
@@ -97,7 +78,7 @@ public class FichierImageDAO {
 	 */
 	public static void insertFichierImage(Connection conn, int idUser, String chemin, String infoPVue,
 			int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
-			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage (idUser,chemin,infoPVue,pixelImg,partage,dateUtilisation,fileAttModif,fileAttSuppr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement state = conn.prepareStatement("INSERT INTO FichierImage (idUser,chemin,infoPVue,pixelImg,partager,dateUtilisation,fileAttModif,fileAttSuppr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			state.setInt(1, idUser);
 			state.setString(2, chemin);
 			state.setString(3, infoPVue);
@@ -125,8 +106,7 @@ public class FichierImageDAO {
 	 * @param fileAttSuppr
 	 * @throws SQLException
 	 */
-	private static void update(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,
-			int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
+	private static void update(Connection conn, int idFichier, int idUser, String chemin, String infoPVue,int pixelImg, int partage, Date dateUtilisation, int fileAttModif, int fileAttSuppr) throws SQLException {
 			PreparedStatement state = conn.prepareStatement("UPDATE FichierImage SET idUser=?, chemin=?, infoPVue=?, pixelImg=?, partager=?, dateUtilisation=?, fileAttModif=?, fileAttSuppr=? WHERE idFichier=?");
 			state.setInt(1, idUser);
 			state.setString(2, chemin);
@@ -154,7 +134,7 @@ public class FichierImageDAO {
 	 * @throws SQLException
 	 */
 	public static void updateFichierImage(Connection conn, int id, String newChemin, String newInfoPVue, int newPixelImg, int newPartage) throws SQLException {
-		FichierImage leFichierImage = selectAll(conn, "idFichier="+id).get(0);
+		FichierImage leFichierImage = selectAll(conn, "idFichier='"+id+"'").get(0);
 		if (isSharedAndUsedBySomeone(conn, id)) {
 			update(conn,
 					leFichierImage.getIdFichier(),
@@ -188,7 +168,7 @@ public class FichierImageDAO {
 	 * @param id
 	 * @throws SQLException
 	 */
-	private static void delete(Connection conn, int id) throws SQLException {
+	private static void deleteFromTable(Connection conn, int id) throws SQLException {
 		Impression_PhotoDAO.deleteAllFromFichierImage(conn, id);
 		PhotoDAO.deletePhotosFromFichierImage(conn, id);
 		Statement state = conn.createStatement();
@@ -197,14 +177,13 @@ public class FichierImageDAO {
 	
 
 	/**
-	 * Supprime un FichierImage d'un certain idFichier de la base.
-	 * Cette méthode vérifie si le FichierImage est éligible pour la suppression dans le cas où il est partagé.
+	 * Supprime un fichier image du point de vue Client : supression reelle ou mise en file d'attente pour suppression
 	 * @param conn Connection SQL
 	 * @param id id fichier
 	 * @throws SQLException 
 	 */
 	public static void deleteFichierImage(Connection conn, int id) throws SQLException {
-		FichierImage leFichierImage = selectAll(conn, "idFichier="+id).get(0);
+		FichierImage leFichierImage = selectAll(conn, "idFichier='"+id+"'").get(0);
 		if (isSharedAndUsedBySomeone(conn, id)) {
 			update(conn,
 					leFichierImage.getIdFichier(),
@@ -217,23 +196,22 @@ public class FichierImageDAO {
 					leFichierImage.isFileAttModif(),
 					1);
 		} else {
-			delete(conn, id);
+			deleteFromTable(conn, id);
 		}
 	}
 	
 	
 	/**
-	 * Supprime un FichierImage d'un certain idFichier de la base.
-	 * Cette méthode vérifie si le FichierImage est éligible pour la suppression dans le cas où il est partagé.
-	 * En mode Gestionnaire, on doit également annuler toutes les commandes de statut 'BROUILLON' ou 'EN_COURS' qui utilisent ce fichier image.
+	 * Supprime un fichier image du point de vue Gestionnaire : supression reelle ou mise en file d'attente pour suppression
+	 * et annulation de toutes les commandes 'BROUILLON' ou 'EN_COURS' qui utilisent ce fichier.
 	 * @param conn Connection SQL
-	 * @param id id fichier
+	 * @param id id du fichier
 	 * @throws SQLException 
 	 */
 	public static void deleteFichierImageModeGestion(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
 		ResultSet lesCommandes = state.executeQuery("SELECT idComm FROM Commande NATURAL JOIN Article NATURAL JOIN Impression NATURAL JOIN Impression_Photo NATURAL JOIN Photo NATURAL JOIN FichierImage WHERE idFichier="+id);
-		FichierImage leFichierImage = selectAll(conn, "idFichier="+id).get(0);
+		FichierImage leFichierImage = selectAll(conn, "idFichier='"+id+"'").get(0);
 		if (isSharedAndUsedBySomeone(conn, id)) {
 			update(conn,
 					leFichierImage.getIdFichier(),
@@ -248,7 +226,7 @@ public class FichierImageDAO {
 			while (lesCommandes.next()) {
 				state.executeQuery("UPDATE Commande SET statutCommande='ANNULEE' WHERE statutCommande<>'ENVOYEE' AND idComm="+lesCommandes.getInt("idComm"));
 			}
-		} else { delete(conn, id);}
+		} else { deleteFromTable(conn, id);}
 	}
 
 	/**
@@ -258,6 +236,8 @@ public class FichierImageDAO {
 	 * @return
 	 * @throws SQLException 
 	 */
+	//TODO : a refaire : condition pas respectée !!! requete pas bonne, il faut verifier que ce soit d'autres utilisateurs qui utilisent.
+	//TODO: verifier que c'est valable pour tout type de commande dans le sujet
 	public static boolean isSharedAndUsedBySomeone(Connection conn, int id) throws SQLException {
 		Statement state = conn.createStatement();
 		ResultSet result = state.executeQuery("SELECT count(idUser) FROM FichierImage NATURAL JOIN Photo NATURAL JOIN Impression_Photo NATURAL JOIN Impression WHERE idFichier="+id);
@@ -292,19 +272,6 @@ public class FichierImageDAO {
 		return fichiersimage;
 	}
 
-	/** Permet d'insérer un nouveau FichierImage à partir de certains paramètres.*
-	 * Les autres (partage, fileAttModif, fileAttSuppr) prennent des valeurs par défaut.
-	 * @param conn Connection
-	 * @param idUser id utilisateur
-	 * @param chemin chemin de l'image
-	 * @param infoPVue infos prise de vue
-	 * @param pixelImg dimensions de l'image
-	 * @throws SQLException
-	 */
-	public static void uploadFichierImage(Connection conn, int idUser, String chemin, String infoPVue, int pixelImg) throws SQLException {
-		insertFichierImage(conn, idUser, chemin, infoPVue, pixelImg, 0, Date.valueOf(today()), 0, 0);
-	}
-
 	/**
 	 * Version interactive de uploadFichierImage. Demande à l'utilisateur un chemin, les infos de prise de vue et la dimension de l'image.
 	 * @throws SQLException 
@@ -313,7 +280,7 @@ public class FichierImageDAO {
 		String chemin = LectureClavier.lireChaine("Entrez un chemin :");
 		String infoPVue = LectureClavier.lireChaine("Entrez les infos de prise de vue :");
 		int pixelImg = LectureClavier.lireEntier("Entrez la dimension de l'image :");
-		uploadFichierImage(conn, idUser, chemin, infoPVue, pixelImg);
+		insertFichierImage(conn, idUser, chemin, infoPVue, pixelImg, 0, Date.valueOf(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))), 0, 0);
 	}
 	
 	public static Boolean idExists(Connection c, int idFichier) throws SQLException {
@@ -325,7 +292,7 @@ public class FichierImageDAO {
 		return false;
 	}
 	
-	public static Boolean BelongToUser(Connection c, int idFichier, int idUser) throws SQLException {
+	public static Boolean belongToUser(Connection c, int idFichier, int idUser) throws SQLException {
 		Statement stat= c.createStatement();
 		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier='"+idFichier+"' and idUser = '"+idUser+"'");
 		if (result.next()) {
@@ -334,16 +301,76 @@ public class FichierImageDAO {
 		return false;
 	}
 
+	public static Boolean isShared(Connection c, int idFichier) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idFichier = '"+idFichier+"' and partager = 1");
+		if (result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
+	}
+	
 	public static void supprimerUnFichierClient(Connection c) throws SQLException {
 		new Affichage<Owners>().afficher(selectAllWithOwner(c));
-		boolean back = false;
-		int idFichier = -1;
-		while((!idExists(c,idFichier))&&(!back)){
-			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
-			if (idFichier == -1) back=true;
+		int idFichier = -2;
+		while(!idExists(c,idFichier)){
+			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
+			if(idFichier==-1) {return;}
 		}
 		deleteFichierImage(c, idFichier);
-		System.out.println("fichier supprime");
+		System.out.println("fichier supprime !");
+	}
+	
+	public static void supprimerUnFichierClient(Connection c, Utilisateur u) throws SQLException {
+		int idFichier = -2;
+		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, u.getIdUser())){
+			idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
+			if(idFichier==-1) {return;}
+		}
+		deleteFichierImage(c, idFichier);
+		System.out.println("fichier supprime !");
+	}
+	
+	public static void modifierFichier(Connection c, Utilisateur utilisateur) throws SQLException {
+		int idFichier = -1;
+		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, utilisateur.getIdUser())){
+			idFichier = LectureClavier.lireEntier("Pour modifier un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
+		}
+		FichierImage f = selectAll(c, "idFichier=" + idFichier).get(0);
+		boolean back = false;
+		while (!back){
+			System.out.println(" \n"+f.toString());
+			if(LectureClavier.lireOuiNon("modifier les infos de prise de vue ?")){
+				f.setInfoPVue(LectureClavier.lireChaine("Nouvelles infos ?"));
+			}
+			if(LectureClavier.lireOuiNon("modifier le chemin ?")){
+				f.setChemin(LectureClavier.lireChaine("Nouveau chemin ?"));			
+			}
+			if(LectureClavier.lireOuiNon("modifier le partage ?")){
+				f.setPartage(1-f.isPartage());
+			}
+			if(LectureClavier.lireOuiNon("Sauvegarder les changements ?")){
+				updateFichierImage(c, idFichier, f.getChemin(), f.getInfoPVue(), f.getPixelImg(), f.isPartage());
+			} else {
+				back = true;
+			}
+		}
+		
+	}
+	
+	public static void ajouterFichier(Connection c, Utilisateur utilisateur) throws SQLException {
+		boolean continuer= true;
+		while(continuer==true){
+			
+			String 		chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
+			String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
+			int 		pixelImg 	= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
+			boolean 	partage 	= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
+			String 		dateUse 	= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			
+			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage?1:0, Date.valueOf(dateUse) , 0, 0);
+			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
+		}
 	}
 	
 }

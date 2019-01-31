@@ -3,6 +3,7 @@ package src.commande;
 import src.app.LectureClavier;
 
 public enum ModeLivraison {
+	NULL,
 	DOMICILE,
 	RELAIS_COLIS;
 	

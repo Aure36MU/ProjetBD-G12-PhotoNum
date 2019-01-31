@@ -37,33 +37,6 @@ public class AgendaDAO {
         return getAgendas(result);
     }
 
-    /**
-     * Selectionne tous les Agendas crees par un certain utilisateur.
-     *
-     * @param conn Connection SQL
-     * @param id id utilisateur
-     * @return ArrayList contenant les objets Agenda selectionnes
-     * @throws SQLException
-     */
-    public static ArrayList<Agenda> selectAllFromUser(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("SELECT * FROM Agenda JOIN Impression ON (Agenda.idImp = Impression.idImp) WHERE Impression.idUser="+id);
-        return getAgendas(result);
-    }
-    
-    /**
-     * Selectionne tous les Agendas crees par un certain utilisateur.
-     *
-     * @param conn Connection SQL
-     * @param id id utilisateur
-     * @return ArrayList contenant les objets Agenda selectionnes
-     * @throws SQLException
-     */
-    public static ArrayList<Agenda> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Agenda') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp)");
-        return getAgendas(result);
-    }
 	/**
 	 * Ajoute un agenda dans la base.
 	 * 
@@ -74,7 +47,7 @@ public class AgendaDAO {
 	 */
 	public static void insertAgenda(Connection conn, int id, String ornement, String modeleAgenda) throws SQLException {
 		Statement state = conn.createStatement();
-		state.executeUpdate("INSERT INTO agenda VALUES("+id+", '"+ornement+"', '"+modeleAgenda+"')");
+		state.executeUpdate("INSERT INTO agenda (idImp, ornement, modeleAgenda) VALUES("+id+", '"+ornement+"', '"+modeleAgenda+"')");
 	}
 	
 	

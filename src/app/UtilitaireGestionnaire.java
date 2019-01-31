@@ -44,7 +44,7 @@ public class UtilitaireGestionnaire {
 					CatalogueDAO.updateCataloguePrix( c,  newPrix,  type,  format,  modele);
 					break;
 				case 4:	UtilisateurDAO.gererClients(c);																									break;
-				case 5: 	FichierImageDAO.supprimerUnFichierClient(c);																					break;				
+				case 5: 	FichierImageDAO.supprimerUnFichierClient(c);																		break;				
 				case 6:	menuCommandeClients(c,utilisateur);																						break;
 				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));		break;
 				default : System.out.println("Veuillez faire un choix. ");

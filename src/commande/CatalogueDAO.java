@@ -40,26 +40,27 @@ public class CatalogueDAO {
     
     public static void updateCataloguePrix(Connection c, int prix, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
-		ArrayList<Catalogue> Catalogues= selectAll(c,"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
-		System.out.println(" l ancien prix de : "+format+" "+type+" "+modele+" est de "+Catalogues.get(1));
+		ArrayList<Catalogue> Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		System.out.println(" l ancien prix de : "+format+" "+type+" "+modele+" etait de "+Catalogues.get(0).prix);
 		String query= "update Catalogue set prix='"+prix+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
-		Catalogues= selectAll(c,"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
-		System.out.println(" le nouveau prix de : "+format+" "+type+" "+modele+" est de "+Catalogues.get(1));
+		Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		System.out.println(" le nouveau prix de : "+format+" "+type+" "+modele+" est de "+Catalogues.get(0).prix);
 	}
     
     public static void updateCatalogueQte(Connection c, int qte, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Catalogue set qteStock='"+qte+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		String query= "update Catalogue set qteStock='"+qte+"type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
-		ArrayList<Catalogue> Catalogues= selectAll(c,"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
-		System.out.println(" le stock de : "+format+" "+type+"  "+modele+" est de "+Catalogues.get(5));
+		ArrayList<Catalogue> Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		System.out.println(" le stock de : "+format+" "+type+"  "+modele+" est de "+Catalogues.get(0).qteStock);
 	}
     public static void simulerLivraison(Connection c, int qteLivraison, String type, String format, String modele) throws SQLException {
-    	
 		Statement stat= c.createStatement();
 		String query= "update Catalogue set qteStock= qteStock + "+qteLivraison+" where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
+		ArrayList<Catalogue> Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		System.out.println(" le stock de : "+format+" "+type+"  "+modele+" est de "+Catalogues.get(0).qteStock);
 	}
     
     /**

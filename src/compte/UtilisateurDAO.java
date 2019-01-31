@@ -93,7 +93,7 @@ public class UtilisateurDAO {
 
 
 	public static void gererClients(Connection c) throws SQLException {
-		new Affichage<Utilisateur>().afficher(selectWithCondition(c, "statutUtilisateur = 'CLIENT' and active = 1"));
+		new Affichage<Utilisateur>().afficher(selectWithCondition(c, "statutUtilisateur = 'CLIENT'"));
 		int idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
 		while(idUser!=0 && !idExists(c,idUser)){
 			idUser = LectureClavier.lireEntier("L'id n'existe pas. Réessayez.");

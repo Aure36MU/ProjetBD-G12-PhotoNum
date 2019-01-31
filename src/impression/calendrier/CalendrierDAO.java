@@ -33,25 +33,7 @@ public class CalendrierDAO {
 		return getCalendriers(result);
 	}
 	
-	/**
-	 * Sélectionne tous les Calendriers créés par un certain utilisateur.
-	 * @param conn Connection SQL
-	 * @param id id utilisateur
-	 * @return ArrayList contenant les objets Calendrier sélectionnés
-	 * @throws SQLException 
-	 */
-	public static ArrayList<Calendrier> selectAllFromUser(Connection conn, int id) throws SQLException {
-		Statement state = conn.createStatement();
-		ResultSet result = state.executeQuery("SELECT * FROM Calendrier JOIN Impression ON (Calendrier.idImp = Impression.idImp) WHERE Impression.idUser="+id);
-		return getCalendriers(result);
-	}
-	
-	public static ArrayList<Calendrier> selectAllFromUserNotArticle(Connection conn, int id) throws SQLException {
-        Statement state = conn.createStatement();
-        ResultSet result = state.executeQuery("(SELECT * FROM Impression i WHERE i.idUser="+id+" and i.type='Calendrier') MINUS (SELECT * FROM Article NATURAL JOIN Impression I a WHERE a.idImp=i.idImp; and i.type='Calendrier')");
-        return getCalendriers(result);
-    }
-	
+
 	/**
 	 * Ajoute un calendrier dans la base.
 	 * @param id id impression
@@ -95,7 +77,7 @@ public class CalendrierDAO {
 		while (result.next()) {
 			calendriers.add(new Calendrier(
 				result.getInt("idImp"),
-				ModeleCalendrier.valueOf(result.getString("modele"))
+				ModeleCalendrier.valueOf(result.getString("modeleCalendrier"))
 				));	
 		}
 		return calendriers;
