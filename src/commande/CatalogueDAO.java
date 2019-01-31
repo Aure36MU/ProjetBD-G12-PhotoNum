@@ -53,7 +53,7 @@ public class CatalogueDAO {
     
     public static void updateCatalogueQte(Connection c, int qte, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Catalogue set qteStock='"+qte+"type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		String query= "update Catalogue set qteStock="+qte+" WHERE type='"+type+"' and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
 		ArrayList<Catalogue> Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
 		System.out.println(" le stock de : "+format+" "+type+"  "+modele+" est de "+Catalogues.get(0).qteStock);

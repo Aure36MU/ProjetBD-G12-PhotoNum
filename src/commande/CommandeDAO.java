@@ -55,7 +55,6 @@ public class CommandeDAO {
 	    }
 	    
 	    public static void updateCommandeCommeImprimee(Connection c, int id) throws SQLException {
-	    	c.setAutoCommit(false);	  
 	    	Statement stat= c.createStatement();	    	  	
 	    	ArrayList<Article> articles = ArticleDAO.selectAllFromCommande(c,id);
 	    	int i=0; Article a; Impression imp; String modele;
@@ -64,15 +63,15 @@ public class CommandeDAO {
 	    		imp = ImpressionDAO.selectImpressionFromId(c, id);
 	    		switch(imp.getType().toString()){
 	    			case "AGENDA" : 
-				    				Agenda agenda = AgendaDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+				    				Agenda agenda = AgendaDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"' ").get(0);
 				    				modele = agenda.getModeleAgenda().toString();
 				    				break;
 	    			case "CADRE" : 
-				    				Cadre cadre = CadreDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+				    				Cadre cadre = CadreDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"' ").get(0);
 				    				modele = cadre.getModeleCadre().toString();
 				    				break;
 	    			case "CALENDRIER" : 
-				    				Calendrier calendrier = CalendrierDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"'").get(0);
+				    				Calendrier calendrier = CalendrierDAO.selectAll(c, " idImp = '"+imp.getIdImp()+"' ").get(0);
 				    				modele = calendrier.getModeleCalendrier().toString();
 				    				break;
 	    			default : modele = "AUCUN";
@@ -80,9 +79,8 @@ public class CommandeDAO {
 	    		CatalogueDAO.updateCatalogueQte(c, a.qte, imp.getType().toString(), imp.getFormat().toString(), modele);
 	    		i++;
 	    	}
-			stat.executeUpdate("update Commande set statutCommande = 'PRET_A_L_ENVOI' where idComm='"+id+"'");
+			stat.executeUpdate("update Commande set statutCommande = 'PRET_A_L_ENVOI' where idComm='"+id+"' ");
 			c.commit();
-			c.setAutoCommit(true);
 	    }
 	    
 	    public static void updateCommandeCommePayee(Connection c, int idUser) throws SQLException {
@@ -185,7 +183,7 @@ public class CommandeDAO {
 			int idComm = -1;
 			while(!idExists(c,idComm)){
 				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus). -1 pour annuler.");
-				if (idComm==-1) {return;}
+				if (idComm==-1) {c.setAutoCommit(true); return;}
 			}
 			updateCommandeCommeImprimee(c, idComm);
 			c.commit();
