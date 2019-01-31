@@ -74,10 +74,13 @@ public class UtilitaireClient {
 								case 3: ArticleDAO.ModifierQuantite(c);			break;
 								case 4: ArticleDAO.SupprimerUnArticle(c);		break;
 								case 5:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
-										if(payer) {
-											CatalogueDAO.verifierStockPanier(c, utilisateur);
+								Article articleStockInsuffisant = CatalogueDAO.verifierStockPanier(c, utilisateur);
+										if(payer && articleStockInsuffisant==null) {
 											CommandeDAO.updateCommandeCommePayee(c, utilisateur.getIdUser());
-											System.out.println("Vous avez paye :)"); }
+											System.out.println("Vous avez paye :)"); 
+										} else if(payer){
+											System.out.println("Commande Impossible : stock insuffisant pour l'article d'idArt = "+articleStockInsuffisant.getIdArt()); 
+										}
 										break;
 								default : System.out.println("Veuillez faire un choix. ");
 							}

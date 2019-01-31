@@ -64,8 +64,8 @@ public class CatalogueDAO {
 		ArrayList<Catalogue> Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
 		System.out.println(" le stock de : "+format+" "+type+"  "+modele+" est de "+Catalogues.get(0).qteStock);
 	}
-   //TODO
-    public static boolean verifierStockPanier(Connection c, Utilisateur utilisateur) throws SQLException{
+    
+    public static Article verifierStockPanier(Connection c, Utilisateur utilisateur) throws SQLException{
     	ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
     	int i = 0; Article a;
     	boolean stockInsuffisant = false;
@@ -105,7 +105,11 @@ public class CatalogueDAO {
 			}
 			i++;
     	}
-    	return !(i<panier.size());
+    	if(i<panier.size()){
+    		return null;
+    	}else {
+    		return panier.get(i);
+    	}
     }
     
     /**
