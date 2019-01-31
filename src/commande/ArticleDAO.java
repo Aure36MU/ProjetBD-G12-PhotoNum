@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.app.Affichage;
 import src.app.LectureClavier;
+import src.compte.Utilisateur;
 import src.impression.Impression;
 import src.impression.ImpressionDAO;
 import src.impression.agenda.AgendaDAO;
@@ -91,6 +93,28 @@ public class ArticleDAO {
         return getArticles(result);
     }
     
+    public static void gererValidationCommande(Connection c, Utilisateur utilisateur) throws SQLException {
+    	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
+		Article articleStockInsuffisant = CatalogueDAO.verifierStockPanier(c, utilisateur);
+		int somme=0;
+			if(payer && articleStockInsuffisant==null) {
+				CommandeDAO.updateCommandeCommePayee(c, utilisateur.getIdUser());
+				System.out.println("Vous avez paye :)"); 
+				ArrayList <Article> tab= ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+				int i=0;
+				while(i<tab.size()) {
+					somme=somme + tab.get(i).getprix()*tab.get(i).getqte();
+				}
+				if(somme>100) {
+					System.out.println("Vous avez reçu sur votre adresse mail un code pour une remise de 10% sur votre futur commande");
+					CodePersonnelDAO.createCodePersonnel(c, utilisateur.getIdUser());
+				}
+				} else if(payer){
+					System.out.println("Commande Impossible : stock insuffisant pour l'article d'idArt = "+articleStockInsuffisant.getIdArt()); 
+				}
+    }
+    
+    
 	public static Boolean idExists(Connection c, int idArticle) throws SQLException {
 		Statement stat= c.createStatement();
 		ResultSet result =stat.executeQuery( "select count(*) from Article where idArt='"+idArticle+"'");
@@ -100,7 +124,7 @@ public class ArticleDAO {
 		return false;
 	}
 	
-	public static void ModifierQuantite(Connection conn) throws SQLException {
+	public static void ModifierQuantite(Connection conn,Utilisateur utilisateur) throws SQLException {
 		conn.setAutoCommit(false);
 		int idArticle = -1;
 		while(!idExists(conn,idArticle)){
@@ -114,6 +138,7 @@ public class ArticleDAO {
 		
 		conn.commit();
 		conn.setAutoCommit(true);
+		new Affichage<Article>().afficher(selectAllFromPanier(conn,utilisateur.getIdUser() ));
 	}
 	
 	public static void modifierLesPrixDansPaniers(Connection conn, Catalogue cat) throws SQLException {
@@ -145,7 +170,8 @@ public class ArticleDAO {
 		
 	}
 	
-	public static void SupprimerUnArticle(Connection conn) throws SQLException {
+
+	public static void SupprimerUnArticle(Connection conn,Utilisateur utilisateur) throws SQLException {
 		conn.setAutoCommit(false);
 		int idArticle = -1;
 		while(!idExists(conn,idArticle)){
@@ -154,6 +180,9 @@ public class ArticleDAO {
 		deleteArticle(conn, idArticle);
 		conn.commit();
 		conn.setAutoCommit(true);
+		System.out.println("l'article a ete supprime : ");
+		new Affichage<Article>().afficher(selectAllFromPanier(conn,utilisateur.getIdUser() ));
+		
 	}
 	
     

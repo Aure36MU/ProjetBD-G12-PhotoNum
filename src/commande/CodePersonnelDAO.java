@@ -4,22 +4,39 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.time.LocalDateTime;
 
 public class CodePersonnelDAO {
 
-	public static void createCodePersonnel(Connection c, Date dateAcqui, Date dateUtil, String code, int taux, int idUser){
+	public static void createCodePersonnel(Connection c, int idUser){
 		try {
+			String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			String code= generateCode(10);
 			Statement state = c.createStatement();
 			state.executeUpdate("INSERT INTO CodePersonnel "
 					+ "(dateAcqui,dateUtil,code,taux,idUser)"
-					+ "VALUES ("+ dateAcqui + ", " + dateUtil + ", " + code + ", " + taux + ", " + idUser + "); " );
+					+ "VALUES ("+ today + ", " + today + ", " + code + ", 0.1 , " + idUser + "); " );
 		} catch (SQLException e) {
 			System.out.println("creation failed");
 			e.printStackTrace();
 		}
+	}
+	
+	public static String generateCode(int length)
+	{
+		    String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // Tu supprimes les lettres dont tu ne veux pas
+		    String pass = "";
+		    for(int x=0;x<length;x++)
+		    {
+		       int i = (int)Math.floor(Math.random() * 62); // Si tu supprimes des lettres tu diminues ce nb
+		       pass += chars.charAt(i);
+		    }
+		    System.out.println(pass);
+		    return pass;
 	}
 	
 	public static ArrayList<CodePersonnel> selectAll(Connection c) throws SQLException {

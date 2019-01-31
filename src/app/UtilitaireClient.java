@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import src.commande.Article;
 import src.commande.ArticleDAO;
 import src.commande.CatalogueDAO;
+import src.commande.CodePersonnelDAO;
 import src.commande.Commande;
 import src.commande.CommandeDAO;
 import src.compte.Utilisateur;
@@ -38,9 +39,9 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("5 : Voir mon historique de commandes.");
 
 			switch(choixAction){ 
-				case 1:  	utilisateur = null;		System.out.println("Vous avez ete deconnecte");			break;
-				case 2:	gererImpression(c,utilisateur);				break;
-				case 3:	gererFichierImages(c,utilisateur);		break;
+				case 1: utilisateur = null; System.out.println("Vous avez ete deconnecte");			break;
+				case 2:	utilisateur = gererImpression(c,utilisateur);				break;
+				case 3:	utilisateur = gererFichierImages(c,utilisateur);		break;
 				case 4:	utilisateur = gererPanier(c, utilisateur);					break;
 				case 5:
 					ArrayList<Commande> commandes = CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());
@@ -72,16 +73,10 @@ public class UtilitaireClient {
 						switch(choixAction){ 
 								case 1: return null;
 								case 2: back = true; 												break;
-								case 3: ArticleDAO.ModifierQuantite(c);			break;
-								case 4: ArticleDAO.SupprimerUnArticle(c);		break;
-								case 5:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
-								Article articleStockInsuffisant = CatalogueDAO.verifierStockPanier(c, utilisateur);
-										if(payer && articleStockInsuffisant==null) {
-											CommandeDAO.updateCommandeCommePayee(c, utilisateur.getIdUser());
-											System.out.println("Vous avez paye :)"); 
-										} else if(payer){
-											System.out.println("Commande Impossible : stock insuffisant pour l'article d'idArt = "+articleStockInsuffisant.getIdArt()); 
-										}
+								case 3: ArticleDAO.ModifierQuantite(c,utilisateur);			break;
+								case 4: ArticleDAO.SupprimerUnArticle(c,utilisateur);		break;
+								case 5:	ArticleDAO.gererValidationCommande(c,utilisateur);
+
 										break;
 								default : System.out.println("Veuillez faire un choix. ");
 							}
@@ -90,7 +85,7 @@ public class UtilitaireClient {
 		return utilisateur;
 	}
 	
-	private static void gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static Utilisateur gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -103,10 +98,10 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("6 : Ajouter un nouveau fichier.");
 
 			switch(choixAction){
-			case 1:  	utilisateur = null;	back = true;
+			case 1:  back = true; 
 							System.out.println("Vous avez ete deconnecte");
-							break;
-			case 2:   	back = true;
+							return null;
+			case 2:   back = true;
 							System.out.println("retour au menu precedent");
 							break;
 			case 3:	gererFichiers(c,utilisateur);
@@ -120,6 +115,7 @@ public class UtilitaireClient {
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
+		return utilisateur;
 	}
 	
 	
@@ -129,22 +125,18 @@ public class UtilitaireClient {
 			new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser()));
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Se deconnecter.");
-			System.out.println("2 : Retourner au menu precedent.");
-			System.out.println("3 : Modifier un fichier");
-			System.out.println("4 : Supprimer un fichier");
-			int choixAction = LectureClavier.lireEntier("5 : Utiliser un fichier (retouche).");
+			System.out.println("1 : Retourner au menu precedent.");
+			System.out.println("2 : Modifier un fichier");
+			System.out.println("3 : Supprimer un fichier");
+			int choixAction = LectureClavier.lireEntier("4 : Utiliser un fichier (retouche).");
 			
 			switch(choixAction){ 
-				case 1:  	utilisateur = null;	back = true;
-							System.out.println("Vous avez ete deconnecte");
-							break;
-				case 2:  	back = true;
+				case 1:  	back = true;
 							System.out.println("retour au menu precedent");
 							break;
-				case 3:	FichierImageDAO.modifierFichier(c,utilisateur);				break;
-				case 4:	FichierImageDAO.supprimerUnFichierClient(c, utilisateur);	break;
-				case 5:	utiliserFichierPourPhoto(c,utilisateur);					break;
+				case 2:	FichierImageDAO.modifierFichier(c,utilisateur);				break;
+				case 3:	FichierImageDAO.supprimerUnFichierClient(c, utilisateur);	break;
+				case 4:	utiliserFichierPourPhoto(c,utilisateur);					break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
@@ -155,20 +147,16 @@ public class UtilitaireClient {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Se deconnecter.");
-			System.out.println("2 : Retourner au menu precedent.");
-			System.out.println("3 : Modifier une photo");
-			int choixAction = LectureClavier.lireEntier("4 : Supprimer une photo");
+			System.out.println("1 : Retourner au menu precedent.");
+			System.out.println("2 : Modifier une photo");
+			int choixAction = LectureClavier.lireEntier("3 : Supprimer une photo");
 			
 			switch(choixAction){ 
-				case 1:  	utilisateur = null; back = true;
-								System.out.println("Vous avez ete deconnecte");
-								break;
-				case 2:  	back = true;
-								System.out.println("retour au menu precedent");
-								break;
-				case 3:	PhotoDAO.modifierPhoto(c,utilisateur);			break;
-				case 4:	PhotoDAO.supprimerPhoto(c,utilisateur);			break;
+				case 1:  	back = true;
+							System.out.println("retour au menu precedent");
+							break;
+				case 2:	PhotoDAO.modifierPhoto(c,utilisateur);			break;
+				case 3:	PhotoDAO.supprimerPhoto(c,utilisateur);			break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
@@ -238,7 +226,7 @@ public class UtilitaireClient {
 	}
 
 
-	private static void gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static Utilisateur gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
 
 		boolean back = false;
 		while(!back){
@@ -250,10 +238,9 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("4 : Creer une nouvelle impression.");
 
 			switch(choixAction){ 
-			case 1:  	utilisateur = null;
-							back = true;
+			case 1:  	back = true;
 							System.out.println("Vous avez ete deconnecte");
-							break;
+							return null;
 			case 2:  	back = true;
 							System.out.println("retour au menu precedent");
 							break;
@@ -264,7 +251,8 @@ public class UtilitaireClient {
 			case 4:	gereInsertImp(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
-		}		
+		}
+		return utilisateur;
 	}
 
 	private static void gererModifImpression(Connection c, Utilisateur utilisateur) throws SQLException {
@@ -273,26 +261,21 @@ public class UtilitaireClient {
 		while(!back){
 			System.out.println("*****************************************************************************");
 			System.out.println("Que voulez vous faire ?");
-			System.out.println("1 : Se deconnecter.");
-			System.out.println("2 : Retourner au menu precedent.");
-			System.out.println("3 : Continuer une impression.");
-			int choixAction = LectureClavier.lireEntier("4 : Supprimer une impression.");
+			System.out.println("1 : Retourner au menu precedent.");
+			System.out.println("2 : Continuer une impression.");
+			int choixAction = LectureClavier.lireEntier("3 : Supprimer une impression.");
 
 			switch(choixAction){ 
-			case 1:  	utilisateur = null;
-							back = true;
-							System.out.println("Vous avez ete deconnecte");
-							break;
-			case 2:  	back = true;
+			case 1:  	back = true;
 							System.out.println("retour au menu precedent");
 							break;
-			case 3:	int imp=LectureClavier.lireEntier("Quel impression voulez vous continuer?");
+			case 2:	int imp=LectureClavier.lireEntier("Quel impression voulez vous continuer?");
 			creationPhoto(c,utilisateur,imp);
 							break;
-			case 4:	ImpressionDAO.gererDeleteImp(c,utilisateur);		break;
+			case 3:	ImpressionDAO.gererDeleteImp(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
-		}		
+		}
 	}
 	
 	

@@ -45,14 +45,14 @@ public class UtilitaireGestionnaire {
 					break;
 				case 4:	UtilisateurDAO.gererClients(c);																									break;
 				case 5: 	FichierImageDAO.supprimerUnFichierClient(c);																		break;				
-				case 6:	menuCommandeClients(c,utilisateur);																						break;
+				case 6:	utilisateur = menuCommandeClients(c,utilisateur);																						break;
 				case 7:	new Affichage<Stat>().afficher(CatalogueDAO.getStat(c,(CatalogueDAO.selectAll(c))));		break;
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
 	}
 	
-	private static void menuCommandeClients(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static Utilisateur menuCommandeClients(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -62,9 +62,9 @@ public class UtilitaireGestionnaire {
 			System.out.println("3 : Notifier l'envoi d'une commande.");
 			int choixAction = LectureClavier.lireEntier("4 : Lancer l'impression d'une commande.");
 			switch(choixAction){ 
-				case 1:  	utilisateur = null;	back = true;
+				case 1:  		back = true;
 					System.out.println("Vous avez ete deconnecte");
-					break;
+					return null;
 				case 2:	back = true;
 					System.out.println("retour au menu precedent");
 					break;
@@ -73,6 +73,7 @@ public class UtilitaireGestionnaire {
 				default : System.out.println("Veuillez faire un choix. ");
 			}	
 		}
+		return utilisateur;
 	}
 	
 }

@@ -14,6 +14,7 @@ public class UtilisateurDAO {
 	public static Utilisateur createUtilisateur(Connection c, String nom, String prenom, String mdp, String mail, String statut) throws SQLException {
 		Statement stat= c.createStatement();
 		c.setAutoCommit(false);
+		try {
 		String query= "insert into Utilisateur ( nom , prenom, mdp , email, active, statutUtilisateur) values ('"+nom+"','"+prenom+"','"+mdp+"','"+mail+"', 1,'"+statut+"')";
 		stat.executeUpdate(query);
 		ResultSet result = stat.executeQuery("select idUser from Utilisateur where email = '"+mail+"' and nom = '"+nom+"'");
@@ -21,6 +22,11 @@ public class UtilisateurDAO {
 		int id = result.getInt("idUser");
 		c.commit();
 		return new Utilisateur(id, nom, prenom, mdp, mail, 1, StatutUtilisateur.valueOf(statut));
+		}catch (Exception e) {
+			System.out.println("EXCEPTION LANCE PAR LE TRIGGER ET CAPTURE PAR L APPLICATION :impossible d ajouter car cet adresse mail est deja utilise");
+			System.out.println("Veuillez recommencer");
+		}
+		return null;
 	}
 	
 	public static ArrayList<Utilisateur> selectAll(Connection c) throws SQLException {
@@ -61,8 +67,12 @@ public class UtilisateurDAO {
 	
 	public static void updateUtilisateur(Connection c, int idUtilisateur, String nom, String prenom, String mdp, String email, String statut) throws SQLException {
 		Statement stat= c.createStatement();
+		try {
 		String query= "update Utilisateur set nom='"+nom+"',prenom='"+prenom+"',mdp='"+mdp+"',email='"+email+"', statutUtilisateur='"+statut+"' where idUser='"+idUtilisateur+"'";
 		stat.executeUpdate(query);
+		}catch (Exception e) {
+			System.out.println("EXCEPTION LANCE PAR LE TRIGGER ET CAPTURE PAR L APPLICATION :impossible d ajouter car cet adresse mail est deja utilise");
+		}
 	}
 	
 	public static ArrayList<Utilisateur> getUtilisateurs(ResultSet result) {
