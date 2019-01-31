@@ -217,12 +217,14 @@ public class UtilitaireClient {
 										choix = LectureClavier.lireEntier("Voulez vous faire autre chose? (0: Ajouter/ 1:Retirer / 2: Finir)");
 										break;
 										
-						case 2:	boucle=false;	 break;
+						case 2:	boucle=false;
+								boolean comm=LectureClavier.lireOuiNon("Voulez vous ajouter cette impression dans votre panier?");
+								if(comm) {		int qte= LectureClavier.lireEntier("combien d'exemplaires souhaitez vous?");
+														CommandeDAO.ajouterAuPanier(c, utilisateur.getIdUser(), idImp, qte);
+								}
+								break;
 					}
-					boolean comm=LectureClavier.lireOuiNon("Voulez vous ajouter cette impression dans votre panier?");
-					if(comm) {		int qte= LectureClavier.lireEntier("combien d'exemplaires souhaitez vous?");
-											CommandeDAO.ajouterAuPanier(c, utilisateur.getIdUser(), idImp, qte);
-					}
+
 			}
 		} else {	System.out.println("Vous n'avez pas selectionne une impression que vous possedez");}
 	}
