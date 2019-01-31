@@ -38,9 +38,9 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("5 : Voir mon historique de commandes.");
 
 			switch(choixAction){ 
-				case 1:  	utilisateur = null;		System.out.println("Vous avez ete deconnecte");			break;
-				case 2:	gererImpression(c,utilisateur);				break;
-				case 3:	gererFichierImages(c,utilisateur);		break;
+				case 1: utilisateur = null; System.out.println("Vous avez ete deconnecte");			break;
+				case 2:	utilisateur = gererImpression(c,utilisateur);				break;
+				case 3:	utilisateur = gererFichierImages(c,utilisateur);		break;
 				case 4:	utilisateur = gererPanier(c, utilisateur);					break;
 				case 5:
 					ArrayList<Commande> commandes = CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());
@@ -90,7 +90,7 @@ public class UtilitaireClient {
 		return utilisateur;
 	}
 	
-	private static void gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static Utilisateur gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -103,9 +103,9 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("6 : Ajouter un nouveau fichier.");
 
 			switch(choixAction){
-			case 1:  utilisateur = null;	back = true;
+			case 1:  back = true; 
 							System.out.println("Vous avez ete deconnecte");
-							break;
+							return null;
 			case 2:   back = true;
 							System.out.println("retour au menu precedent");
 							break;
@@ -120,10 +120,11 @@ public class UtilitaireClient {
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
+		return utilisateur;
 	}
 	
 	
-	private static void gererFichiers(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static Utilisateur gererFichiers(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			new Affichage<FichierImage>().afficher(FichierImageDAO.selectAllFromUser(c,utilisateur.getIdUser()));
@@ -136,9 +137,9 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("5 : Utiliser un fichier (retouche).");
 			
 			switch(choixAction){ 
-				case 1:  	utilisateur = null;	back = true;
+				case 1:  	back = true;
 							System.out.println("Vous avez ete deconnecte");
-							break;
+							return null;
 				case 2:  	back = true;
 							System.out.println("retour au menu precedent");
 							break;
@@ -148,9 +149,10 @@ public class UtilitaireClient {
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
+		return utilisateur;
 	}
 	
-	private static void gererPhotos(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static Utilisateur gererPhotos(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			System.out.println("*****************************************************************************");
@@ -161,9 +163,9 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("4 : Supprimer une photo");
 			
 			switch(choixAction){ 
-				case 1:  	utilisateur = null; back = true;
+				case 1:  	 back = true;
 								System.out.println("Vous avez ete deconnecte");
-								break;
+								return null;
 				case 2:  	back = true;
 								System.out.println("retour au menu precedent");
 								break;
@@ -172,6 +174,7 @@ public class UtilitaireClient {
 				default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
+		return utilisateur;
 	}
 	
 	private static void gererFichierPartages(Connection c, Utilisateur utilisateur) throws SQLException {
@@ -238,7 +241,7 @@ public class UtilitaireClient {
 	}
 
 
-	private static void gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static Utilisateur gererImpression(Connection c, Utilisateur utilisateur) throws SQLException {
 
 		boolean back = false;
 		while(!back){
@@ -250,10 +253,9 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("4 : Creer une nouvelle impression.");
 
 			switch(choixAction){ 
-			case 1:  	utilisateur = null;
-							back = true;
+			case 1:  	back = true;
 							System.out.println("Vous avez ete deconnecte");
-							break;
+							return null;
 			case 2:  	back = true;
 							System.out.println("retour au menu precedent");
 							break;
@@ -264,10 +266,11 @@ public class UtilitaireClient {
 			case 4:	gereInsertImp(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
-		}		
+		}
+		return utilisateur;
 	}
 
-	private static void gererModifImpression(Connection c, Utilisateur utilisateur) throws SQLException {
+	private static Utilisateur gererModifImpression(Connection c, Utilisateur utilisateur) throws SQLException {
 
 		boolean back = false;
 		while(!back){
@@ -279,10 +282,9 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("4 : Supprimer une impression.");
 
 			switch(choixAction){ 
-			case 1:  	utilisateur = null;
-							back = true;
+			case 1:  	back = true;
 							System.out.println("Vous avez ete deconnecte");
-							break;
+							return null;
 			case 2:  	back = true;
 							System.out.println("retour au menu precedent");
 							break;
@@ -292,7 +294,8 @@ public class UtilitaireClient {
 			case 4:	ImpressionDAO.gererDeleteImp(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
 			}
-		}		
+		}
+		return utilisateur;
 	}
 	
 	
