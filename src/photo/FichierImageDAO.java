@@ -365,11 +365,11 @@ public class FichierImageDAO {
 		boolean continuer= true;
 		while(continuer==true){
 			
-			String 		chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
-			String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
-			int 		pixelImg 	= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
-			boolean 	partage 	= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
-			String 		dateUse 	= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			String 			chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
+			String 			infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
+			int 				pixelImg	 	= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
+			boolean 	partage 		= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
+			String 			dateUse 		= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			
 			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage?1:0, Date.valueOf(dateUse) , 0, 0);
 			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
