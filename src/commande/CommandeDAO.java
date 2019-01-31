@@ -85,6 +85,12 @@ public class CommandeDAO {
 			c.setAutoCommit(true);
 	    }
 	    
+	    public static void updateCommandeCommePayee(Connection c, int idUser) throws SQLException {
+	    	Statement stat= c.createStatement();
+			String query= "update Commande set statutCommande = 'EN_COURS' where idUser="+idUser+" AND statutCommande='BROUILLON'";
+			stat.executeUpdate(query);
+	    }
+	    
 	    
 		public static Boolean idExists(Connection c, int idComm) throws SQLException {
 			Statement stat= c.createStatement();
@@ -127,7 +133,9 @@ public class CommandeDAO {
 	    		Date today = Date.valueOf(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 	    		state.executeUpdate("INSERT INTO Commande (idUser,idCodeP, dateC,modeLivraison,statutCommande) VALUES("+idUser+", 0, TO_DATE('"+today+"', 'YYYY-MM-DD'), 'NULL', 'BROUILLON')");
 	    		try {
-					ArticleDAO.insertArticleFromImpression(conn, idImp, selectWithStatut(conn,"BROUILLON").get(0).idComm, qte);
+	    			ResultSet result2 = state.executeQuery("SELECT max(idImp) FROM Commande");
+	    			result2.next();
+					ArticleDAO.insertArticleFromImpression(conn, idImp, result2.getInt(1), qte);
 				} catch (Exception e) {
 					// EXCEPTION stock insuffisant !
 					e.printStackTrace();
@@ -163,7 +171,8 @@ public class CommandeDAO {
 			new Affichage<Commande>().afficher(selectWithStatut(c,"PRET_A_L_ENVOI"));
 			int idComm = -1;
 			while(!idExists(c,idComm)){
-				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
+				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus). -1 pour annuler.");
+				if (idComm==-1) {return;}
 			}
 			updateCommandeCommeEnvoyee(c, idComm);
 			c.commit();
@@ -175,7 +184,8 @@ public class CommandeDAO {
 			new Affichage<Commande>().afficher(selectWithStatut(c,"EN_COURS"));
 			int idComm = -1;
 			while(!idExists(c,idComm)){
-				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
+				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus). -1 pour annuler.");
+				if (idComm==-1) {return;}
 			}
 			updateCommandeCommeImprimee(c, idComm);
 			c.commit();

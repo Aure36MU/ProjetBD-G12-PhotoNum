@@ -20,8 +20,8 @@ insert into Photo (idPh, idFichier, retouche) values (1, 1,' ')
 insert into Photo (idPh, idFichier, retouche) values (2, 2,'filtre sequoia ')
 insert into Photo (idPh, idFichier, retouche) values (3, 3,' ')
 
-insert into Impression (nomImp, nbrPageTotal, idUser, type, format, qualite)  values ('mon_tirage', 1, 2, 'tirage', 'petit', 'basse')
-insert into Impression (nomImp, nbrPageTotal, idUser, type, format, qualite)  values ('mon_album', 1, 2, 'album', 'moyen', 'basse')
+insert into Impression (nomImp, nbrPageTotal, idUser, type, format, qualite)  values ('mon_tirage', 1, 2, 'TIRAGE', 'PETIT', 'BASSE')
+insert into Impression (nomImp, nbrPageTotal, idUser, type, format, qualite)  values ('mon_album', 1, 2, 'ALBUM', 'MOYEN', 'BASSE')
 
 insert into  Impression_Photo (idImp , idPh,num_page,text,nbExemplairePHOTO) values (2,1,1,'chat',1)
 insert into  Impression_Photo (idImp ,idPh,num_page,text,nbExemplairePHOTO) values (2,2,2,'chien',2)
@@ -30,3 +30,24 @@ insert into  Impression_Photo (idImp ,idPh,num_page,text,nbExemplairePHOTO) valu
 insert into Commande (idUser, idCodeP, dateC, modeLivraison, statutCommande) values (2, 1, TO_DATE('27/01/2019', 'DD/MM/YYYY'), 'DOMICILE', 'BROUILLON')
 
 insert into Article (prix, qte, idImp, idComm)  values (20, 1,1,1)
+
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',22,'PETIT','SEMAINIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',32,'MOYEN','SEMAINIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',42,'GRAND','SEMAINIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',27,'PETIT','JOURNALIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',37,'MOYEN','JOURNALIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',47,'GRAND','JOURNALIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',11,'PETIT','BOIS',105)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',21,'MOYEN','BOIS',45)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',31,'GRAND','BOIS',35)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',15,'PETIT','ALUMINIUM',1)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',25,'MOYEN','ALUMINIUM',1)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',55,'GRAND','ALUMINIUM',0)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',9,'PETIT','MURAL',10)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',11,'MOYEN','MURAL',40)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',15,'GRAND','MURAL',30)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',1,'PETIT','BUREAU',1)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',9,'MOYEN','BUREAU',1)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',19,'GRAND','BUREAU',0)
+
+

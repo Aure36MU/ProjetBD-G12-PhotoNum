@@ -7,8 +7,8 @@ import src.compte.UtilisateurDAO;
 
 public class Application {
 	static final String CONN_URL = "jdbc:oracle:thin:@im2ag-oracle.e.ujf-grenoble.fr:1521:im2ag";
-	 static String USER;
-	 static String PASSWD;
+	 static String USER = "roussys";
+	 static String PASSWD = "fn7DPQxAEB";
 	static Connection c; 
 
 	private static Utilisateur inscription(Connection c) throws SQLException{
@@ -24,6 +24,7 @@ public class Application {
 		String prenom= LectureClavier.lireChaine("Votre prenom : ");
 		System.out.println("   ");
 		System.out.println("Bienvenue a vous " + nom + " "+ prenom + " ! ");
+		System.out.println("Vous avez ete inscrit.");
 		return UtilisateurDAO.createUtilisateur(c,  nom,  prenom,  mdp,  mail,  statut);
 	}	
 
@@ -39,24 +40,31 @@ public class Application {
 			try {
 				utilisateur = UtilisateurDAO.selectWithCondition(c, "email = '"+mail+"'").get(0);
 			} catch (IndexOutOfBoundsException ie) {
-				
+				System.out.println("Votre email ne correspond a aucun utilisateur dans la base");
 			}
 		}
-		
-		String mdp = "";
-		while(!mdp.equals(utilisateur.getMdp())){
-			mdp = LectureClavier.lireChaine("Veuillez entrer le mot de passe correspondant ou entrez \"return to menu\" pour retourner au Menu Principal");
-			if(mdp.equals("return to menu")){
-				return null;
+		if(utilisateur.isActive()==1){
+			String mdp = "";
+			while(!mdp.equals(utilisateur.getMdp())){
+				mdp = LectureClavier.lireChaine("Veuillez entrer le mot de passe correspondant ou entrez \"return to menu\" pour retourner au Menu Principal");
+				if(mdp.equals("return to menu")){
+					return null;
+				}
 			}
+			System.out.println("Vous etes maintenant connecte.");
+			return utilisateur;
 		}
-		return utilisateur;
+		else {
+			System.out.println("Ce compte a ete desactive pour des raisons juridiques.");
+			return null;
+		}
 	}
 	
 	public static void main(String[] args) throws SQLException {
 		try{
-			USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
-			PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
+			//USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
+			//PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
+			//System.setIn(new FileInputStream("Connexion_Base_Oracle\\\\jeudetest"));
 
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());  	    
 			System.out.print("Connecting to the database... "); 
@@ -68,40 +76,42 @@ public class Application {
 			Utilisateur utilisateur = null;
 			while(utilisateur == null){
 				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire sur PhotoNum ? ");
-				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire");
-
+				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire, 3 pour quitter l'appli");
+				while (!(choix == 1 || choix == 2 || choix == 3)) {
+					System.out.println("Veuillez faire un choix. ");
+					choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire, 3 pour quitter l'appli");
+				}
 				switch(choix){ 
-				case 1:  
-					utilisateur = connexion(c);
-					System.out.println("Vous etes maintenant connecte.");
-					break;
-				case 2:
-					utilisateur = inscription(c);
-					System.out.println("Vous avez ete inscrit.");
-					break;
-				default : 
+						case 1:  
+							utilisateur = connexion(c);
+							break;
+						case 2:
+							utilisateur = inscription(c);
+							break;
+						case 3:
+							System.out.println("Au revoir");
+							c.close();
+							System.exit(0);
+							break;
+						default : 
+
+				}
+				
+				if(utilisateur != null && utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
+					UtilitaireClient.menuClient(c, utilisateur);
+					System.out.println("a bientot :) ");
+					utilisateur = null;
+				}else if (utilisateur != null){
+					UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
+					System.out.println("a bientot :) ");
+					utilisateur = null;
 				}
 			}
-		
-			System.out.println("Veuillez faire un choix. ");
-			if(utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
-				UtilitaireClient.menuClient(c, utilisateur);
-			}else {
-				UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
-			}
-			c.close();
+			//c.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	/*
-	 * Consulter tous utilisateurs
-Supprimer ⇔ désactiver un client
-Consulter tous fichiers images et leur createur
-Suppression fichiers images 
-Consulter commandes (filtrer par article → filtrage dans ArticleDAO)
-1*/
 
 }

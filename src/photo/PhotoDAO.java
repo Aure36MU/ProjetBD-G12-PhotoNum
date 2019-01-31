@@ -180,13 +180,14 @@ public class PhotoDAO {
 
 	public static void modifierPhoto(Connection c, Utilisateur utilisateur) throws SQLException {
 		int idPh = -2;
-		while(!idExists(c,idPh)){
-			idPh = LectureClavier.lireEntier("Pour selectionner une photo, entrez son idPh (dans la liste ci-dessus ou -1 pour annuler).");
-			if(idPh==-1) {return;}
-		}
-		Photo p = selectAll(c, "idPh='" + idPh+"'").get(0);
 		boolean back = false;
 		while (!back){
+			while(!idExists(c,idPh)){
+				idPh = LectureClavier.lireEntier("Pour selectionner une photo, entrez son idPh (dans la liste ci-dessus ou -1 pour annuler).");
+				if(idPh==-1) {return;}
+			}
+			Photo p = selectAll(c, "idPh='" + idPh+"'").get(0);
+
 			System.out.println(" \n"+p.toString());
 			if(LectureClavier.lireOuiNon("modifier la retouche ?")){
 				p.setRetouche(LectureClavier.lireChaine("Nouvelles retouches ?"));
@@ -196,6 +197,9 @@ public class PhotoDAO {
 			} else {
 				back = true;
 			}
+			idPh = -2;
+			System.out.println("Votre photo a ete modifiee :");
+			new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
 		}
 		
 	}

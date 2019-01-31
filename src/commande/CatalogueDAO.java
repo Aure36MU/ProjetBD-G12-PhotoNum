@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.compte.Utilisateur;
+
 public class CatalogueDAO {
 
     /**
@@ -40,20 +42,75 @@ public class CatalogueDAO {
     
     public static void updateCataloguePrix(Connection c, int prix, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
+		ArrayList<Catalogue> Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		System.out.println(" l ancien prix de : "+format+" "+type+" "+modele+" etait de "+Catalogues.get(0).prix);
 		String query= "update Catalogue set prix='"+prix+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
+		Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		System.out.println(" le nouveau prix de : "+format+" "+type+" "+modele+" est de "+Catalogues.get(0).prix);
 	}
     
     public static void updateCatalogueQte(Connection c, int qte, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Catalogue set qteStock='"+qte+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
+		String query= "update Catalogue set qteStock='"+qte+"type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
+		ArrayList<Catalogue> Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		System.out.println(" le stock de : "+format+" "+type+"  "+modele+" est de "+Catalogues.get(0).qteStock);
 	}
     public static void simulerLivraison(Connection c, int qteLivraison, String type, String format, String modele) throws SQLException {
 		Statement stat= c.createStatement();
 		String query= "update Catalogue set qteStock= qteStock + "+qteLivraison+" where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
+		ArrayList<Catalogue> Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		System.out.println(" le stock de : "+format+" "+type+"  "+modele+" est de "+Catalogues.get(0).qteStock);
 	}
+    
+    public static Article verifierStockPanier(Connection c, Utilisateur utilisateur) throws SQLException{
+    	ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+    	int i = 0; Article a;
+    	boolean stockInsuffisant = false;
+    	
+    	while (i<panier.size() && !stockInsuffisant){
+    		 a = panier.get(i);			
+			Statement state = c.createStatement();
+			String query= "SELECT i.type FROM Article a, Impression i where a.idImp = i.idImp and i.idUser = '"+utilisateur.getIdUser()+"'"; 
+			ResultSet result = state.executeQuery(query);
+			String type = result.getString(1);
+			
+			query = "SELECT count(*) FROM Article a, Catalogue cat, Impression i, ";
+			String where = "WHERE a.idArt = '"+a.getIdArt()+"'"
+					+ "a.qte > cat.qteStock"
+					+ "cat.format+=i.format "
+					+ "and cat.type=i.type "
+					+ "and cat.modele";
+			
+			switch(type){
+					case "AGENDA" : 			where += " = ag.modeleAgenda";
+															query += " , Agenda ag "+where;
+															break;
+					case "CALENDRIER" : 
+															where += " = cal.modeleCalendrier";
+															query += ", Calendrier cal "+where;
+															break;
+					case "CADRE" : 
+															where += " = cad.modeleCadre";
+															query += ", Cadre cad" +where;
+															break;
+					default :							where += " = 'AUCUN'" ;
+															query += where;
+			}
+			ResultSet result2 = state.executeQuery(query); 
+			if(result2.next() && result2.getInt(1)!=0){
+				stockInsuffisant = true;
+			}
+			i++;
+    	}
+    	if(i<panier.size()){
+    		return null;
+    	}else {
+    		return panier.get(i);
+    	}
+    }
     
     /**
      * Retourne les objets Catalogue construits e partir d'un resultat de requete.
@@ -104,7 +161,7 @@ public class CatalogueDAO {
 		}
 		query +=  " AND c.statut<>'Brouillon'";
 		ResultSet result = state.executeQuery(query);        		
-        return result.getInt(0); //nbVentes
+        return result.getInt(1); //nbVentes
 	}
 	
 	public static ArrayList<Stat> getStat(Connection conn, ArrayList<Catalogue> catalogues) throws SQLException {

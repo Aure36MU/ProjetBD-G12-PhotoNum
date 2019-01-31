@@ -19,6 +19,7 @@ public class UtilisateurDAO {
 		ResultSet result = stat.executeQuery("select idUser from Utilisateur where email = '"+mail+"' and nom = '"+nom+"'");
 		result.next();
 		int id = result.getInt("idUser");
+		c.commit();
 		return new Utilisateur(id, nom, prenom, mdp, mail, 1, StatutUtilisateur.valueOf(statut));
 	}
 	
@@ -52,15 +53,9 @@ public class UtilisateurDAO {
 		return getUtilisateurs(result);
 	}
 	
-	public static void deleteUtilisateur(Connection c, String mail) throws SQLException {
+	public static void activerDesactiverUtilisateur(Connection c, int id) throws SQLException {
 		Statement stat= c.createStatement();
-		String query= "update Utilisateur set active=0 where email='"+mail+"'";
-		stat.executeUpdate(query);
-	}
-	
-	public static void deleteUtilisateur(Connection c, int id) throws SQLException {
-		Statement stat= c.createStatement();
-		String query= "update Utilisateur set active=0 where idUser = '"+id+"'";
+		String query= "update Utilisateur set active=1-active where idUser = '"+id+"'";
 		stat.executeUpdate(query);
 	}
 	
@@ -93,15 +88,14 @@ public class UtilisateurDAO {
 
 
 	public static void gererClients(Connection c) throws SQLException {
-		new Affichage<Utilisateur>().afficher(selectWithCondition(c, "statutUtilisateur = 'CLIENT' and active = 1"));
-		int idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste présentée ci-dessus).");
-		while(idUser!=0 && !idExists(c,idUser)){
-			idUser = LectureClavier.lireEntier("L'id n'existe pas. Réessayez.");
-		}
-		if(idUser==0) {
-			return;
-		} else {
-			deleteUtilisateur(c, idUser);
-		}
+		new Affichage<Utilisateur>().afficher(selectWithCondition(c, "statutUtilisateur = 'CLIENT'"));
+		int idUser =  -2;
+		while(!idExists(c,idUser)){
+			idUser = LectureClavier.lireEntier("Pour selectionner un client, entrez son idUser (dans la liste  ci-dessus ou -1 pour annuler).");
+			if(idUser==-1) {
+				return;
+			}
+		} 
+		activerDesactiverUtilisateur(c, idUser);
 	}
 }

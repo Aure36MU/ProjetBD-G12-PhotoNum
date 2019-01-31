@@ -188,11 +188,12 @@ public class ImpressionDAO {
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
 				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
-		
+		newId = getHigherIdImp(conn);
 		switch(type) {
 				case "CALENDRIER":		CalendrierDAO.insertCalendrier(conn, newId, modele);		break;
 				case "CADRE":				CadreDAO.insertCadre(conn, newId, modele);						break;
 		}
+		System.out.println("L'impression a l'identifiant :" + newId);
 	}
 	
 
@@ -202,8 +203,9 @@ public class ImpressionDAO {
 			state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
 				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+			newId = getHigherIdImp(conn);
 			AgendaDAO.insertAgenda(conn, newId, ornement, modele);
-			System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
+			System.out.println("L'impression a l'identifiant :" + newId);
 	}
 	
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite) throws SQLException {
@@ -212,8 +214,9 @@ public class ImpressionDAO {
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
 				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+		newId = getHigherIdImp(conn);
 		TirageDAO.insertTirage(conn, newId);
-		System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
+		System.out.println("L'impression a l'identifiant :" + newId);
 	}
 	
 	public static void insertImpression(Connection conn, String nomImp, int nbPages, int idUser, String type, String format, String qualite, int photo, String titre) throws SQLException {
@@ -222,8 +225,9 @@ public class ImpressionDAO {
 		state.executeUpdate("INSERT INTO Impression "
 				+ "(idImp, nomImp, nbrPageTotal, idUser, type, format, qualite)"
 				+ "VALUES ("+newId+ ", '" + nomImp + "', " + nbPages + ", " + idUser + ", '" + type + "', '" + format + "', '" + qualite + "')");
+		newId = getHigherIdImp(conn);
 		AlbumDAO.insertAlbum(conn, newId, photo, titre);
-		System.out.println("L'impression a l'identifiant :" + (getHigherIdImp(conn)+1));
+		System.out.println("L'impression a l'identifiant :" + newId);
 	}
 	
 	public static void changeTypeIfCompatible(Connection c, Impression from, String to) throws Exception {
@@ -328,7 +332,30 @@ public class ImpressionDAO {
      * @throws SQLException
      */
     public static void deleteImpression(Connection conn, int id) throws SQLException {
+    	
         Statement state = conn.createStatement();
-        state.executeUpdate("DELETE FROM Impression WHERE idImp="+id);
+        ResultSet result = state.executeQuery("SELECT type FROM Impression WHERE idImp="+id);
+        if (result.next()) {
+        	 String leType = result.getString("type");
+        	 switch(leType) {
+        	 case "AGENDA":
+        		 AgendaDAO.deleteAgenda(conn, id);
+        		 break;
+        	 case "ALBUM":
+        		 AlbumDAO.deleteAlbum(conn, id);
+        		 break;
+        	 case "CADRE":
+        		 CadreDAO.deleteCadre(conn, id);
+        		 break;
+        	 case "CALENDRIER":
+        		 CalendrierDAO.deleteCalendrier(conn, id);
+        		 break;
+        	 case "TIRAGE":
+        		 TirageDAO.deleteTirage(conn, id);
+        		 break;
+        	 }
+        	state.executeUpdate("DELETE FROM Impression WHERE idImp="+id);
+        }
+       
     }
 }

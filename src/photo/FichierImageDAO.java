@@ -332,13 +332,15 @@ public class FichierImageDAO {
 	}
 	
 	public static void modifierFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int idFichier = -1;
-		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, utilisateur.getIdUser())){
-			idFichier = LectureClavier.lireEntier("Pour modifier un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
-		}
-		FichierImage f = selectAll(c, "idFichier=" + idFichier).get(0);
+		int idFichier = -2;
 		boolean back = false;
 		while (!back){
+			while(!idExists(c,idFichier) || !belongToUser(c, idFichier, utilisateur.getIdUser())){
+				idFichier = LectureClavier.lireEntier("Pour modifier un fichier, entrez son idFichier (dans la liste présentée ci-dessus). -1 pour quitter.");
+				if (idFichier == -1) {return;}
+			}
+			FichierImage f = selectAll(c, "idFichier=" + idFichier).get(0);
+
 			System.out.println(" \n"+f.toString());
 			if(LectureClavier.lireOuiNon("modifier les infos de prise de vue ?")){
 				f.setInfoPVue(LectureClavier.lireChaine("Nouvelles infos ?"));
@@ -354,6 +356,7 @@ public class FichierImageDAO {
 			} else {
 				back = true;
 			}
+			idFichier = -2;
 		}
 		
 	}
@@ -362,11 +365,11 @@ public class FichierImageDAO {
 		boolean continuer= true;
 		while(continuer==true){
 			
-			String 		chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
-			String 		infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
-			int 		pixelImg 	= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
-			boolean 	partage 	= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
-			String 		dateUse 	= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			String 			chemin 		= LectureClavier.lireChaine("Ou se trouve votre fichier? ");
+			String 			infoPVue 	= LectureClavier.lireChaine("Commentaire sur le fichier: ");
+			int 				pixelImg	 	= LectureClavier.lireEntier("Quel est la taille en pixels : ");	
+			boolean 	partage 		= LectureClavier.lireOuiNon("Souhaitez vous que n'importe qui puisse utiliser cette image?");
+			String 			dateUse 		= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			
 			FichierImageDAO.insertFichierImage(c, utilisateur.getIdUser(), chemin, infoPVue, pixelImg, partage?1:0, Date.valueOf(dateUse) , 0, 0);
 			continuer= LectureClavier.lireOuiNon("Voulez vous ajouter un nouveau fichier? ");
