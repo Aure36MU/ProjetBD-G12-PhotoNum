@@ -8,8 +8,8 @@ import src.compte.UtilisateurDAO;
 
 public class Application {
 	static final String CONN_URL = "jdbc:oracle:thin:@im2ag-oracle.e.ujf-grenoble.fr:1521:im2ag";
-	 static String USER = "bourreta";
-	 static String PASSWD = "cv570ewUGA";
+	 static String USER = "roussys";
+	 static String PASSWD = "fn7DPQxAEB";
 	static Connection c; 
 
 	private static Utilisateur inscription(Connection c) throws SQLException{
@@ -41,7 +41,6 @@ public class Application {
 			try {
 				utilisateur = UtilisateurDAO.selectWithCondition(c, "email = '"+mail+"'").get(0);
 			} catch (IndexOutOfBoundsException ie) {
-				//TODO
 			}
 		}
 		if(utilisateur.isActive()==1){
