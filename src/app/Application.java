@@ -16,16 +16,22 @@ public class Application {
 		System.out.println("      INSCRIPTION ");
 		System.out.println("***********************");
 		System.out.println("Bienvenue sur le site PhotoNum ! Nous allons vous demander quelques infos pour la creation de votre compte");
-
+		Utilisateur utilisateur = null;
+		String nom ="";
+		String prenom = "";
+		while (utilisateur == null)	{
 		String statut= StatutUtilisateur.definir();			
-		String mail= LectureClavier.lireChaine("Votre adresse mail : ");	
-		String mdp= LectureClavier.lireChaine("Votre mot de passe : ");	
-		String nom= LectureClavier.lireChaine("Votre nom : ");
-		String prenom= LectureClavier.lireChaine("Votre prenom : ");
-		System.out.println("   ");
+			String mail= LectureClavier.lireChaine("Votre adresse mail : ");	
+			String mdp= LectureClavier.lireChaine("Votre mot de passe : ");	
+			nom= LectureClavier.lireChaine("Votre nom : ");
+			prenom= LectureClavier.lireChaine("Votre prenom : ");
+			System.out.println("   ");
+			utilisateur = UtilisateurDAO.createUtilisateur(c,  nom,  prenom,  mdp,  mail,  statut);
+		}
 		System.out.println("Bienvenue a vous " + nom + " "+ prenom + " ! ");
 		System.out.println("Vous avez ete inscrit.");
-		return UtilisateurDAO.createUtilisateur(c,  nom,  prenom,  mdp,  mail,  statut);
+		return utilisateur;
+
 	}	
 
 	private static Utilisateur connexion(Connection c) throws SQLException{
