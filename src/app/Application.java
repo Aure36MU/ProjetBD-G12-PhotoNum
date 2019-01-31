@@ -77,8 +77,8 @@ public class Application {
 			Utilisateur utilisateur = null;
 			while(utilisateur == null){
 				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire sur PhotoNum ? ");
-				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire");
-				while(choix !=1 || choix !=2){
+				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire, 3 pour quitter l'appli");
+				while(choix !=1 && choix !=2 && choix !=3){
 					switch(choix){ 
 							case 1:  
 								utilisateur = connexion(c);
@@ -86,10 +86,13 @@ public class Application {
 							case 2:
 								utilisateur = inscription(c);
 								break;
-							default : 
+							case 3:
+								c.close();
+								System.exit(0);
+							default : System.out.println("Veuillez faire un choix. ");
 					}
 				}
-				System.out.println("Veuillez faire un choix. ");
+				
 				if(utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
 					UtilitaireClient.menuClient(c, utilisateur);
 					System.out.println("Vous avez ete deconnecte :) ");
