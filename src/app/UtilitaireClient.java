@@ -200,7 +200,7 @@ public class UtilitaireClient {
 										new Affichage<Photo>().afficher(tab);
 										int ph= LectureClavier.lireEntier("Quel photo voulez vous ajouter?");
 										int j=0;		while(j<tab.size() && tab.get(j).getIdPh()!=ph) {	j++;	}
-										if(j<tabImp.size()) {
+										if(j<tab.size()) {
 														String txt		= LectureClavier.lireChaine("Quel texte voulez vous ajouter a la photo?");
 														int nb			= LectureClavier.lireEntier("Combien de fois voulez vous cette photo?");
 														int page		= LectureClavier.lireEntier("Sur quel page?");
@@ -290,7 +290,7 @@ public class UtilitaireClient {
 			String qualite= Qualite.definir();
 			
 			System.out.println("Récapitulatif: ");
-			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
+			System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + " de qualite: " + qualite);
 			correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
 			
 			while(!correct) {
@@ -303,7 +303,7 @@ public class UtilitaireClient {
 				qualite= Qualite.definir();
 				
 				System.out.println("Récapitulatif: ");
-				System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + "de qualite: " + qualite);
+				System.out.println("Nom du fichier: "+ nomI + " du type:"+ type + " au format: " + format + " de qualite: " + qualite);
 				correct=LectureClavier.lireOuiNon("Cela vous conviens? (oui/non)");
 			}
 
