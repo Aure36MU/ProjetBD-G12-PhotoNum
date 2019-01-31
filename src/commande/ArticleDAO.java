@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import src.app.Affichage;
 import src.app.LectureClavier;
+import src.compte.Utilisateur;
 import src.impression.Impression;
 import src.impression.ImpressionDAO;
 import src.impression.agenda.AgendaDAO;
@@ -100,7 +102,7 @@ public class ArticleDAO {
 		return false;
 	}
 	
-	public static void ModifierQuantite(Connection conn) throws SQLException {
+	public static void ModifierQuantite(Connection conn,Utilisateur utilisateur) throws SQLException {
 		conn.setAutoCommit(false);
 		int idArticle = -1;
 		while(!idExists(conn,idArticle)){
@@ -114,9 +116,10 @@ public class ArticleDAO {
 		
 		conn.commit();
 		conn.setAutoCommit(true);
+		new Affichage<Article>().afficher(selectAllFromPanier(conn,utilisateur.getIdUser() ));
 	}
 	
-	public static void SupprimerUnArticle(Connection conn) throws SQLException {
+	public static void SupprimerUnArticle(Connection conn,Utilisateur utilisateur) throws SQLException {
 		conn.setAutoCommit(false);
 		int idArticle = -1;
 		while(!idExists(conn,idArticle)){
@@ -125,6 +128,9 @@ public class ArticleDAO {
 		deleteArticle(conn, idArticle);
 		conn.commit();
 		conn.setAutoCommit(true);
+		System.out.println("l'article a ete supprime : ");
+		new Affichage<Article>().afficher(selectAllFromPanier(conn,utilisateur.getIdUser() ));
+		
 	}
 	
     

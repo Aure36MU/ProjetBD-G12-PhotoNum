@@ -72,8 +72,8 @@ public class UtilitaireClient {
 						switch(choixAction){ 
 								case 1: return null;
 								case 2: back = true; 												break;
-								case 3: ArticleDAO.ModifierQuantite(c);			break;
-								case 4: ArticleDAO.SupprimerUnArticle(c);		break;
+								case 3: ArticleDAO.ModifierQuantite(c,utilisateur);			break;
+								case 4: ArticleDAO.SupprimerUnArticle(c,utilisateur);		break;
 								case 5:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
 								Article articleStockInsuffisant = CatalogueDAO.verifierStockPanier(c, utilisateur);
 										if(payer && articleStockInsuffisant==null) {
@@ -103,10 +103,10 @@ public class UtilitaireClient {
 			int choixAction = LectureClavier.lireEntier("6 : Ajouter un nouveau fichier.");
 
 			switch(choixAction){
-			case 1:  	utilisateur = null;	back = true;
+			case 1:  utilisateur = null;	back = true;
 							System.out.println("Vous avez ete deconnecte");
 							break;
-			case 2:   	back = true;
+			case 2:   back = true;
 							System.out.println("retour au menu precedent");
 							break;
 			case 3:	gererFichiers(c,utilisateur);
