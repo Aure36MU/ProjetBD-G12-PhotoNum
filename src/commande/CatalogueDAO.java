@@ -112,7 +112,7 @@ public class CatalogueDAO {
 		}
 		query +=  " AND c.statut<>'Brouillon'";
 		ResultSet result = state.executeQuery(query);        		
-        return result.getInt(0); //nbVentes
+        return result.getInt(1); //nbVentes
 	}
 	
 	public static ArrayList<Stat> getStat(Connection conn, ArrayList<Catalogue> catalogues) throws SQLException {

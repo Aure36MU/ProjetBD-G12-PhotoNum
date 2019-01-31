@@ -41,6 +41,7 @@ public class Application {
 			try {
 				utilisateur = UtilisateurDAO.selectWithCondition(c, "email = '"+mail+"'").get(0);
 			} catch (IndexOutOfBoundsException ie) {
+				System.out.println("Votre email ne correspond a aucun utilisateur dans la base");
 			}
 		}
 		if(utilisateur.isActive()==1){
@@ -79,22 +80,23 @@ public class Application {
 				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire");
 
 				switch(choix){ 
-				case 1:  
-					utilisateur = connexion(c);
-					break;
-				case 2:
-					utilisateur = inscription(c);
-					break;
-				default : 
+						case 1:  
+							utilisateur = connexion(c);
+							break;
+						case 2:
+							utilisateur = inscription(c);
+							break;
+						default : 
+				}		
+				System.out.println("Veuillez faire un choix. ");
+				if(utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
+					UtilitaireClient.menuClient(c, utilisateur);
+					System.out.println("Vous avez ete deconnecte :) ");
+				}else {
+					UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
+					System.out.println("Vous avez ete deconnecte :) ");
 				}
-			}
-		
-			System.out.println("Veuillez faire un choix. ");
-			if(utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
-				UtilitaireClient.menuClient(c, utilisateur);
-			}else {
-				UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
-			}
+		}
 			c.close();
 		}
 		catch (Exception e) {
