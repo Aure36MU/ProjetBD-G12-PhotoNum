@@ -1,11 +1,7 @@
 package src.app;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import src.commande.Article;
@@ -44,7 +40,7 @@ public class UtilitaireClient {
 				case 1:  	utilisateur = null;		System.out.println("Vous avez ete deconnecte");			break;
 				case 2:	gererImpression(c,utilisateur);				break;
 				case 3:	gererFichierImages(c,utilisateur);		break;
-				case 4:	gererPanier(c, utilisateur);					break;
+				case 4:	utilisateur = gererPanier(c, utilisateur);					break;
 				case 5:
 					ArrayList<Commande> commandes = CommandeDAO.selectAllFromUser(c, utilisateur.getIdUser());
 					new Affichage<Commande>().afficher(commandes);		break;
@@ -53,31 +49,37 @@ public class UtilitaireClient {
 		}
 	}
 	
-	public static void gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
+	public static Utilisateur gererPanier(Connection c, Utilisateur utilisateur) throws SQLException {
 		boolean back = false;
 		while(!back){
 			ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
-				if(panier.isEmpty()){ System.out.println("Vous n'avez aucun article dans votre panier"); return; }
+				if(panier.isEmpty()){ 
+					System.out.println("Vous n'avez aucun article dans votre panier"); 
+					return utilisateur; 
+				}
 				else{	new Affichage<Article>().afficher(panier);
 							
 						System.out.println("*****************************************************************************");
 						System.out.println("Que voulez vous faire ?");
-						System.out.println("1 : Revenir au menu precedent.");
-						System.out.println("2 : Modifier la quantité d'un article.");
-						System.out.println("3 : Retirer un article.");
-						int choixAction = LectureClavier.lireEntier("4 : Valider la commande.");
+						System.out.println("1 : Se deconnecter.");
+						System.out.println("2 : Retourner au menu precedent.");
+						System.out.println("3 : Modifier la quantité d'un article.");
+						System.out.println("4 : Retirer un article.");
+						int choixAction = LectureClavier.lireEntier("5 : Valider la commande.");
 							
 						switch(choixAction){ 
-								case 1: back = true; 							break;
-								case 2: ArticleDAO.ModifierQuantite(c);			break;
-								case 3: ArticleDAO.SupprimerUnArticle(c);		break;
-								case 4:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
+								case 1: return null;
+								case 2: back = true; 												break;
+								case 3: ArticleDAO.ModifierQuantite(c);			break;
+								case 4: ArticleDAO.SupprimerUnArticle(c);		break;
+								case 5:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
 										if(payer) {System.out.println("Vous avez paye :)"); }
 										break;
 								default : System.out.println("Veuillez faire un choix. ");
 							}
 				}
 		}
+		return utilisateur;
 	}
 	
 	private static void gererFichierImages(Connection c, Utilisateur utilisateur) throws SQLException {
@@ -110,7 +112,6 @@ public class UtilitaireClient {
 			default : System.out.println("Veuillez faire un choix. ");
 			}
 		}
-		
 	}
 	
 	
@@ -224,7 +225,6 @@ public class UtilitaireClient {
 								}
 								break;
 					}
-
 			}
 		} else {	System.out.println("Vous n'avez pas selectionne une impression que vous possedez");}
 	}
@@ -320,7 +320,6 @@ public class UtilitaireClient {
 				case "AGENDA":
 								String modeleAgenda= ModeleAgenda.definir();
 								String ornement = Ornement.definir();
-								System.out.println(utilisateur.getIdUser());
 								ImpressionDAO.insertImpression(c, nomI, 0, utilisateur.getIdUser(), type, format, qualite,ornement,modeleAgenda );
 								System.out.println("Vous venez de creer votre nouvelle impression");
 								break;
