@@ -93,6 +93,28 @@ public class ArticleDAO {
         return getArticles(result);
     }
     
+    public static void gererValidationCommande(Connection c, Utilisateur utilisateur) throws SQLException {
+    	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
+		Article articleStockInsuffisant = CatalogueDAO.verifierStockPanier(c, utilisateur);
+		int somme=0;
+			if(payer && articleStockInsuffisant==null) {
+				CommandeDAO.updateCommandeCommePayee(c, utilisateur.getIdUser());
+				System.out.println("Vous avez paye :)"); 
+				ArrayList <Article> tab= ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+				int i=0;
+				while(i<tab.size()) {
+					somme=somme + tab.get(i).getprix()*tab.get(i).getqte();
+				}
+				if(somme>100) {
+					System.out.println("Vous avez reçu sur votre adresse mail un code pour une remise de 10% sur votre futur commande");
+					CodePersonnelDAO.createCodePersonnel(c, utilisateur.getIdUser());
+				}
+				} else if(payer){
+					System.out.println("Commande Impossible : stock insuffisant pour l'article d'idArt = "+articleStockInsuffisant.getIdArt()); 
+				}
+    }
+    
+    
 	public static Boolean idExists(Connection c, int idArticle) throws SQLException {
 		Statement stat= c.createStatement();
 		ResultSet result =stat.executeQuery( "select count(*) from Article where idArt='"+idArticle+"'");

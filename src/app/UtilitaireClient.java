@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import src.commande.Article;
 import src.commande.ArticleDAO;
 import src.commande.CatalogueDAO;
+import src.commande.CodePersonnelDAO;
 import src.commande.Commande;
 import src.commande.CommandeDAO;
 import src.compte.Utilisateur;
@@ -74,14 +75,8 @@ public class UtilitaireClient {
 								case 2: back = true; 												break;
 								case 3: ArticleDAO.ModifierQuantite(c,utilisateur);			break;
 								case 4: ArticleDAO.SupprimerUnArticle(c,utilisateur);		break;
-								case 5:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
-								Article articleStockInsuffisant = CatalogueDAO.verifierStockPanier(c, utilisateur);
-										if(payer && articleStockInsuffisant==null) {
-											CommandeDAO.updateCommandeCommePayee(c, utilisateur.getIdUser());
-											System.out.println("Vous avez paye :)"); 
-										} else if(payer){
-											System.out.println("Commande Impossible : stock insuffisant pour l'article d'idArt = "+articleStockInsuffisant.getIdArt()); 
-										}
+								case 5:	ArticleDAO.gererValidationCommande(c,utilisateur);
+
 										break;
 								default : System.out.println("Veuillez faire un choix. ");
 							}
