@@ -310,6 +310,15 @@ public class FichierImageDAO {
 		return false;
 	}
 	
+	public static Boolean userShared(Connection c, int idUser) throws SQLException {
+		Statement stat= c.createStatement();
+		ResultSet result =stat.executeQuery( "select count(*) from FichierImage where idUser = '"+idUser+"' and partager = 1");
+		if (result.next()) {
+			return result.getInt(1)==1;
+		}
+		return false;
+	}
+	
 	public static void supprimerUnFichierClient(Connection c) throws SQLException {
 		new Affichage<Owners>().afficher(selectAllWithOwner(c));
 		int idFichier = -2;
