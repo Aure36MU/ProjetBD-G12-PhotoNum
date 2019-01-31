@@ -1,4 +1,5 @@
 package src.app;
+import java.io.FileInputStream;
 import java.sql.*;
 import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
@@ -7,8 +8,8 @@ import src.compte.UtilisateurDAO;
 
 public class Application {
 	static final String CONN_URL = "jdbc:oracle:thin:@im2ag-oracle.e.ujf-grenoble.fr:1521:im2ag";
-	 static String USER = "roussys";
-	 static String PASSWD = "fn7DPQxAEB";
+	 static String USER = "bourreta";
+	 static String PASSWD = "cv570ewUGA";
 	static Connection c; 
 
 	private static Utilisateur inscription(Connection c) throws SQLException{
@@ -62,6 +63,7 @@ public class Application {
 		try{
 			//USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
 			//PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
+			//System.setIn(new FileInputStream("Connexion_Base_Oracle\\\\jeudetest"));
 
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());  	    
 			System.out.print("Connecting to the database... "); 
