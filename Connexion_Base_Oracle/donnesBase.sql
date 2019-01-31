@@ -20,8 +20,8 @@ insert into Photo (idPh, idFichier, retouche) values (1, 1,' ')
 insert into Photo (idPh, idFichier, retouche) values (2, 2,'filtre sequoia ')
 insert into Photo (idPh, idFichier, retouche) values (3, 3,' ')
 
-insert into Impression (nomImp, nbrPageTotal, idUser, type, format, qualite)  values ('mon_tirage', 1, 2, 'tirage', 'petit', 'basse')
-insert into Impression (nomImp, nbrPageTotal, idUser, type, format, qualite)  values ('mon_album', 1, 2, 'album', 'moyen', 'basse')
+insert into Impression (nomImp, nbrPageTotal, idUser, type, format, qualite)  values ('mon_tirage', 1, 2, 'TIRAGE', 'PETIT', 'BASSE')
+insert into Impression (nomImp, nbrPageTotal, idUser, type, format, qualite)  values ('mon_album', 1, 2, 'ALBUM', 'MOYEN', 'BASSE')
 
 insert into  Impression_Photo (idImp , idPh,num_page,text,nbExemplairePHOTO) values (2,1,1,'chat',1)
 insert into  Impression_Photo (idImp ,idPh,num_page,text,nbExemplairePHOTO) values (2,2,2,'chien',2)
