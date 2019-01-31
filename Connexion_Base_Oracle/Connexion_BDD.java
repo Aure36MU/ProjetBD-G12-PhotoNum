@@ -107,7 +107,7 @@ public class Connexion_BDD {
     			System.out.println("++++++++++");
     		}catch(Exception e)
     		{
-    			e.printStackTrace();
+    			//e.printStackTrace();
     			System.out.println("EXCEPTION LANCE PAR LE TRIGGER ET CAPTURE PAR L APPLICATION");
     		}
     		}
