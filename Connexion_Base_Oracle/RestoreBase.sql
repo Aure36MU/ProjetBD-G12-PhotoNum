@@ -16,11 +16,11 @@ create table Calendrier (idImp INTEGER PRIMARY KEY NOT NULL,modeleCalendrier Var
 create table Album (idImp INTEGER PRIMARY KEY NOT NULL,photoCouv INTEGER,titreCouv Varchar2(100),CONSTRAINT FK_Album1 FOREIGN KEY (photoCouv) REFERENCES Photo(idPh),CONSTRAINT FK_Album2 FOREIGN KEY (idImp) REFERENCES Impression(idImp))
 create table Agenda (idImp INTEGER PRIMARY KEY NOT NULL,ornement Varchar2(20), modeleAgenda Varchar2(20), CONSTRAINT FK_Agenda FOREIGN KEY (idImp) REFERENCES Impression(idImp))
 create table Cadre (idImp INTEGER PRIMARY KEY NOT NULL,modeleCadre Varchar2(20),CONSTRAINT FK_Cadre FOREIGN KEY (idImp) REFERENCES Impression(idImp))
+create sequence idPh_seq
 create sequence idAdre_seq
 create sequence idUser_seq
 create sequence idCodeP_seq
 create sequence idFichier_seq
-create sequence idPh_seq
 create sequence idImp_seq
 create sequence idArt_seq
 create sequence idComm_seq

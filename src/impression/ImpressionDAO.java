@@ -328,7 +328,30 @@ public class ImpressionDAO {
      * @throws SQLException
      */
     public static void deleteImpression(Connection conn, int id) throws SQLException {
+    	
         Statement state = conn.createStatement();
-        state.executeUpdate("DELETE FROM Impression WHERE idImp="+id);
+        ResultSet result = state.executeQuery("SELECT type FROM Impression WHERE idImp="+id);
+        if (result.next()) {
+        	 String leType = result.getString("type");
+        	 switch(leType) {
+        	 case "AGENDA":
+        		 AgendaDAO.deleteAgenda(conn, id);
+        		 break;
+        	 case "ALBUM":
+        		 AlbumDAO.deleteAlbum(conn, id);
+        		 break;
+        	 case "CADRE":
+        		 CadreDAO.deleteCadre(conn, id);
+        		 break;
+        	 case "CALENDRIER":
+        		 CalendrierDAO.deleteCalendrier(conn, id);
+        		 break;
+        	 case "TIRAGE":
+        		 TirageDAO.deleteTirage(conn, id);
+        		 break;
+        	 }
+        	state.executeUpdate("DELETE FROM Impression WHERE idImp="+id);
+        }
+       
     }
 }
