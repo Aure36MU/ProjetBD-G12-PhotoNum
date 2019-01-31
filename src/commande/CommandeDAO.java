@@ -85,6 +85,12 @@ public class CommandeDAO {
 			c.setAutoCommit(true);
 	    }
 	    
+	    public static void updateCommandeCommePayee(Connection c, int idUser) throws SQLException {
+	    	Statement stat= c.createStatement();
+			String query= "update Commande set statutCommande = 'EN_COURS' where idUser="+idUser+" AND statutCommande='BROUILLON'";
+			stat.executeUpdate(query);
+	    }
+	    
 	    
 		public static Boolean idExists(Connection c, int idComm) throws SQLException {
 			Statement stat= c.createStatement();
