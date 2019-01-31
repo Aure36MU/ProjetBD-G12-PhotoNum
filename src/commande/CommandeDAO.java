@@ -163,7 +163,8 @@ public class CommandeDAO {
 			new Affichage<Commande>().afficher(selectWithStatut(c,"PRET_A_L_ENVOI"));
 			int idComm = -1;
 			while(!idExists(c,idComm)){
-				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
+				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus). -1 pour annuler.");
+				if (idComm==-1) {return;}
 			}
 			updateCommandeCommeEnvoyee(c, idComm);
 			c.commit();
@@ -175,7 +176,8 @@ public class CommandeDAO {
 			new Affichage<Commande>().afficher(selectWithStatut(c,"EN_COURS"));
 			int idComm = -1;
 			while(!idExists(c,idComm)){
-				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus).");
+				idComm = LectureClavier.lireEntier("Pour selectionner une commande, entrez son idComm (dans la liste présentée ci-dessus). -1 pour annuler.");
+				if (idComm==-1) {return;}
 			}
 			updateCommandeCommeImprimee(c, idComm);
 			c.commit();
