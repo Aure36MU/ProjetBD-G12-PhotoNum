@@ -133,7 +133,7 @@ public class CommandeDAO {
 	    		Date today = Date.valueOf(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 	    		state.executeUpdate("INSERT INTO Commande (idUser,idCodeP, dateC,modeLivraison,statutCommande) VALUES("+idUser+", 0, TO_DATE('"+today+"', 'YYYY-MM-DD'), 'NULL', 'BROUILLON')");
 	    		try {
-	    			ResultSet result2 = state.executeQuery("SELECT max(idImp) FROM Commande");
+	    			ResultSet result2 = state.executeQuery("SELECT max(idComm) FROM Commande");
 	    			result2.next();
 					ArticleDAO.insertArticleFromImpression(conn, idImp, result2.getInt(1), qte);
 				} catch (Exception e) {

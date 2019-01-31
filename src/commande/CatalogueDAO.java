@@ -47,6 +47,7 @@ public class CatalogueDAO {
 		String query= "update Catalogue set prix='"+prix+"' where type='"+type+"'and format='"+format+"' and modele='"+modele+"'";
 		stat.executeUpdate(query);
 		Catalogues= selectAll(c,"type='"+type+"'and format='"+format+"' and modele='"+modele+"'");
+		ArticleDAO.modifierLesPrixDansPaniers(c, Catalogues.get(0));
 		System.out.println(" le nouveau prix de : "+format+" "+type+" "+modele+" est de "+Catalogues.get(0).prix);
 	}
     
@@ -75,14 +76,15 @@ public class CatalogueDAO {
 			Statement state = c.createStatement();
 			String query= "SELECT i.type FROM Article a, Impression i where a.idImp = i.idImp and i.idUser = '"+utilisateur.getIdUser()+"'"; 
 			ResultSet result = state.executeQuery(query);
+			result.next();
 			String type = result.getString(1);
 			
-			query = "SELECT count(*) FROM Article a, Catalogue cat, Impression i, ";
-			String where = "WHERE a.idArt = '"+a.getIdArt()+"'"
-					+ "a.qte > cat.qteStock"
-					+ "cat.format+=i.format "
-					+ "and cat.type=i.type "
-					+ "and cat.modele";
+			query = "SELECT count(*) FROM Article a, Catalogue cat, Impression i";
+			String where = "WHERE a.idArt = '"+a.getIdArt()+"' "
+					+ "AND a.qte > cat.qteStock "
+					+ "AND cat.format=i.format "
+					+ "AND cat.type=i.type "
+					+ "AND cat.modele";
 			
 			switch(type){
 					case "AGENDA" : 			where += " = ag.modeleAgenda";
@@ -108,7 +110,7 @@ public class CatalogueDAO {
     	if(i<panier.size()){
     		return null;
     	}else {
-    		return panier.get(i);
+    		return panier.get(i-1);
     	}
     }
     

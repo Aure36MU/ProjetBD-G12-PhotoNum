@@ -116,6 +116,35 @@ public class ArticleDAO {
 		conn.setAutoCommit(true);
 	}
 	
+	public static void modifierLesPrixDansPaniers(Connection conn, Catalogue cat) throws SQLException {
+		
+		String where = "";
+		switch(cat.getType()){
+		case "AGENDA" :
+			where += "NATURAL JOIN Agenda WHERE '"+cat.getModele()+"'=modeleAgenda ";
+			break;
+		case "CALENDRIER" : 
+			where += "NATURAL JOIN Calendrier WHERE '"+cat.getModele()+"'=modeleCalendrier ";
+			break;
+		case "CADRE" : 
+			where += "NATURAL JOIN Cadre WHERE '"+cat.getModele()+"'=modeleCadre ";
+			break;
+		case "ALBUM" :
+			where += "NATURAL JOIN Album " ;
+			break;
+		case "TIRAGE" :
+			where += "NATURAL JOIN Tirage " ;
+			break;
+												
+		}
+		
+		Statement state = conn.createStatement();
+		state.executeUpdate("UPDATE Article SET prix=" + cat.getPrix()
+		+ " WHERE idComm IN (SELECT idComm FROM Commande WHERE statutCommande='BROUILLON') "
+		+ "AND idImp IN (SELECT idImp FROM Impression " + where + ")");
+		
+	}
+	
 	public static void SupprimerUnArticle(Connection conn) throws SQLException {
 		conn.setAutoCommit(false);
 		int idArticle = -1;
