@@ -77,16 +77,17 @@ public class Application {
 			while(utilisateur == null){
 				System.out.println("Souhaitez-vous, vous connectez ou vous inscrire sur PhotoNum ? ");
 				int choix = LectureClavier.lireEntier("tapez 1 pour vous connecter, ou tapez 2 pour vous inscrire");
-
-				switch(choix){ 
-						case 1:  
-							utilisateur = connexion(c);
-							break;
-						case 2:
-							utilisateur = inscription(c);
-							break;
-						default : 
-				}		
+				while(choix !=1 || choix !=2){
+					switch(choix){ 
+							case 1:  
+								utilisateur = connexion(c);
+								break;
+							case 2:
+								utilisateur = inscription(c);
+								break;
+							default : 
+					}
+				}
 				System.out.println("Veuillez faire un choix. ");
 				if(utilisateur.getStatut() == StatutUtilisateur.valueOf("CLIENT")){
 					UtilitaireClient.menuClient(c, utilisateur);
@@ -95,7 +96,7 @@ public class Application {
 					UtilitaireGestionnaire.menuGestionnaire(c, utilisateur);
 					System.out.println("Vous avez ete deconnecte :) ");
 				}
-		}
+			}
 			c.close();
 		}
 		catch (Exception e) {
