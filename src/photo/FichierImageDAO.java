@@ -332,13 +332,15 @@ public class FichierImageDAO {
 	}
 	
 	public static void modifierFichier(Connection c, Utilisateur utilisateur) throws SQLException {
-		int idFichier = -1;
-		while(!idExists(c,idFichier) || !belongToUser(c, idFichier, utilisateur.getIdUser())){
-			idFichier = LectureClavier.lireEntier("Pour modifier un fichier, entrez son idFichier (dans la liste présentée ci-dessus).");
-		}
-		FichierImage f = selectAll(c, "idFichier=" + idFichier).get(0);
+		int idFichier = -2;
 		boolean back = false;
 		while (!back){
+			while(!idExists(c,idFichier) || !belongToUser(c, idFichier, utilisateur.getIdUser())){
+				idFichier = LectureClavier.lireEntier("Pour modifier un fichier, entrez son idFichier (dans la liste présentée ci-dessus). -1 pour quitter.");
+				if (idFichier == -1) {return;}
+			}
+			FichierImage f = selectAll(c, "idFichier=" + idFichier).get(0);
+
 			System.out.println(" \n"+f.toString());
 			if(LectureClavier.lireOuiNon("modifier les infos de prise de vue ?")){
 				f.setInfoPVue(LectureClavier.lireChaine("Nouvelles infos ?"));
@@ -354,6 +356,7 @@ public class FichierImageDAO {
 			} else {
 				back = true;
 			}
+			idFichier = -2;
 		}
 		
 	}
