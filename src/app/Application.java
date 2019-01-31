@@ -39,18 +39,23 @@ public class Application {
 			try {
 				utilisateur = UtilisateurDAO.selectWithCondition(c, "email = '"+mail+"'").get(0);
 			} catch (IndexOutOfBoundsException ie) {
-				
+				//TODO
 			}
 		}
-		
-		String mdp = "";
-		while(!mdp.equals(utilisateur.getMdp())){
-			mdp = LectureClavier.lireChaine("Veuillez entrer le mot de passe correspondant ou entrez \"return to menu\" pour retourner au Menu Principal");
-			if(mdp.equals("return to menu")){
-				return null;
+		if(utilisateur.isActive()==1){
+			String mdp = "";
+			while(!mdp.equals(utilisateur.getMdp())){
+				mdp = LectureClavier.lireChaine("Veuillez entrer le mot de passe correspondant ou entrez \"return to menu\" pour retourner au Menu Principal");
+				if(mdp.equals("return to menu")){
+					return null;
+				}
 			}
+			return utilisateur;
 		}
-		return utilisateur;
+		else {
+			System.out.println("Ce compte a ete desactive pour des raisons juridiques.");
+			return null;
+		}
 	}
 	
 	public static void main(String[] args) throws SQLException {

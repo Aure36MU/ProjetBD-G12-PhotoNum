@@ -104,7 +104,7 @@ public class UtilitaireClient {
 			case 4:	new Affichage<Photo>().afficher(PhotoDAO.selectAllFromUser(c, utilisateur.getIdUser()));
 							gererPhotos(c,utilisateur);
 							break;
-			case 5:			gererFichierPartages(c, utilisateur);
+			case 5:	gererFichierPartages(c, utilisateur);
 							break;
 			case 6:	FichierImageDAO.ajouterFichier(c,utilisateur);		break;
 			default : System.out.println("Veuillez faire un choix. ");
