@@ -1,5 +1,4 @@
 package src.app;
-import java.io.FileInputStream;
 import java.sql.*;
 import src.compte.StatutUtilisateur;
 import src.compte.Utilisateur;
