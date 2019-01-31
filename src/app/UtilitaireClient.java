@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import src.commande.Article;
 import src.commande.ArticleDAO;
+import src.commande.CatalogueDAO;
 import src.commande.Commande;
 import src.commande.CommandeDAO;
 import src.compte.Utilisateur;
@@ -74,6 +75,7 @@ public class UtilitaireClient {
 								case 4: ArticleDAO.SupprimerUnArticle(c);		break;
 								case 5:	boolean payer=LectureClavier.lireOuiNon("Voulez vous valider et payer votre commande?");
 										if(payer) {
+											CatalogueDAO.verifierStockPanier(c, utilisateur);
 											CommandeDAO.updateCommandeCommePayee(c, utilisateur.getIdUser());
 											System.out.println("Vous avez paye :)"); }
 										break;
