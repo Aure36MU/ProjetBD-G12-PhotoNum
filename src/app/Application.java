@@ -7,8 +7,8 @@ import src.compte.UtilisateurDAO;
 
 public class Application {
 	static final String CONN_URL = "jdbc:oracle:thin:@im2ag-oracle.e.ujf-grenoble.fr:1521:im2ag";
-	 static String USER;
-	 static String PASSWD;
+	 static String USER = "roussys";
+	 static String PASSWD = "fn7DPQxAEB";
 	static Connection c; 
 
 	private static Utilisateur inscription(Connection c) throws SQLException{
@@ -55,8 +55,8 @@ public class Application {
 	
 	public static void main(String[] args) throws SQLException {
 		try{
-			USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
-			PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
+			//USER=LectureClavier.lireChaine("Saississez l'identifiant pour la connexion de la base : ");
+			//PASSWD=LectureClavier.lireChaine("Quel est le mot de passe ? ");
 
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());  	    
 			System.out.print("Connecting to the database... "); 

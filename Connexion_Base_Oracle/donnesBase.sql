@@ -30,3 +30,24 @@ insert into  Impression_Photo (idImp ,idPh,num_page,text,nbExemplairePHOTO) valu
 insert into Commande (idUser, idCodeP, dateC, modeLivraison, statutCommande) values (2, 1, TO_DATE('27/01/2019', 'DD/MM/YYYY'), 'DOMICILE', 'BROUILLON')
 
 insert into Article (prix, qte, idImp, idComm)  values (20, 1,1,1)
+
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',22,'PETIT','SEMAINIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',32,'MOYEN','SEMAINIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',42,'GRAND','SEMAINIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',27,'PETIT','JOURNALIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',37,'MOYEN','JOURNALIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('AGENDA',47,'GRAND','JOURNALIER',5)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',11,'PETIT','BOIS',105)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',21,'MOYEN','BOIS',45)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',31,'GRAND','BOIS',35)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',15,'PETIT','ALUMINIUM',1)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',25,'MOYEN','ALUMINIUM',1)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('TIRAGE',55,'GRAND','ALUMINIUM',0)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',9,'PETIT','MURAL',10)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',11,'MOYEN','MURAL',40)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',15,'GRAND','MURAL',30)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',1,'PETIT','BUREAU',1)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',9,'MOYEN','BUREAU',1)
+insert into Catalogue (type,prix,format,modele,qteStock) values ('CALENDRIER',19,'GRAND','BUREAU',0)
+
+
