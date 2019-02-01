@@ -175,7 +175,7 @@ public class UtilitaireClient {
 		if(LectureClavier.lireOuiNon("Voulez vous utiliser un de ces fichiers ?")) {
 			int idFichier = -1;
 			c.setAutoCommit(false);
-			while(!FichierImageDAO.idExists(c,idFichier) || !(FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser()) || FichierImageDAO.isShared(c,idFichier)) || FichierImageDAO.userShared(c, utilisateur.getIdUser())){
+			while(!FichierImageDAO.idExists(c,idFichier) || !(FichierImageDAO.belongToUser(c, idFichier, utilisateur.getIdUser()) || FichierImageDAO.isShared(c,idFichier)) || !FichierImageDAO.userShared(c, utilisateur.getIdUser())){
 				idFichier = LectureClavier.lireEntier("Pour selectionner un fichier, entrez son idFichier (dans la liste ci-dessus ou -1 pour annuler).");
 				if(idFichier == -1) {
 					c.setAutoCommit(true);
