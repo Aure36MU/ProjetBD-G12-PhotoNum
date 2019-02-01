@@ -142,9 +142,9 @@ public class CatalogueDAO {
 		String query = "SELECT sum(a.qte) FROM Commande c "
         		+ "JOIN Article a ON (c.idComm=a.idComm) "
         		+ "JOIN Impression i ON (a.idImp=i.idImp) ";
-		String where = "WHERE "+catalogue.format+"=i.format and "
-        											+catalogue.type+"=i.type and "
-        											+ catalogue.modele;
+		String where = " WHERE "+"'"+catalogue.format+ "'"+"=i.format AND "
+        											+"'"+catalogue.type+ "'"+"=i.type AND "
+        											+ "'"+catalogue.modele+ "'";
 		
 		switch(catalogue.type){
 				case "AGENDA" : 			where += " = Agenda.modeleAgenda";
@@ -161,8 +161,9 @@ public class CatalogueDAO {
 				default :							where += " = 'AUCUN'" ;
 														query += where;
 		}
-		query +=  " AND c.statut<>'Brouillon'";
-		ResultSet result = state.executeQuery(query);        		
+		query +=  " AND c.statutCommande<>'BROUILLON'";
+		ResultSet result = state.executeQuery(query);   
+		result.next();
         return result.getInt(1); //nbVentes
 	}
 	
