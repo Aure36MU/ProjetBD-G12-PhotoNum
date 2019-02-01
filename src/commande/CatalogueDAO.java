@@ -114,6 +114,22 @@ public class CatalogueDAO {
     	}
     }
     
+    
+    
+    
+    public static void DecrementeStockPanier(Connection c, Utilisateur utilisateur) throws SQLException{
+    	ArrayList<Article> panier = ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
+    	int i = 0; 
+    	Article a;    	
+    	while (i<panier.size()){
+    		 a = panier.get(i);			
+			Statement state = c.createStatement();
+			String query= "UPDATE Catalogue SET qteStock = QteStock - "+a.getqte(); 
+			state.executeUpdate(query);			
+    	}
+    }
+    
+    
     /**
      * Retourne les objets Catalogue construits e partir d'un resultat de requete.
      *

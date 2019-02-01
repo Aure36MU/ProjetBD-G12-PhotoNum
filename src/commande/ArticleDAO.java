@@ -100,6 +100,7 @@ public class ArticleDAO {
 			if(payer && articleStockInsuffisant==null) {
 				CommandeDAO.updateCommandeCommePayee(c, utilisateur.getIdUser());
 				System.out.println("Vous avez paye :)"); 
+				CatalogueDAO.DecrementeStockPanier(c,utilisateur);
 				ArrayList <Article> tab= ArticleDAO.selectAllFromPanier(c, utilisateur.getIdUser());
 				int i=0;
 				while(i<tab.size()) {
@@ -109,9 +110,9 @@ public class ArticleDAO {
 					System.out.println("Vous avez reçu sur votre adresse mail un code pour une remise de 10% sur votre futur commande");
 					CodePersonnelDAO.createCodePersonnel(c, utilisateur.getIdUser());
 				}
-				} else if(payer){
-					System.out.println("Commande Impossible : stock insuffisant pour l'article d'idArt = "+articleStockInsuffisant.getIdArt()); 
-				}
+			} else if(payer){
+				System.out.println("Commande Impossible : stock insuffisant pour l'article d'idArt = "+articleStockInsuffisant.getIdArt()); 
+			}
     }
     
     
