@@ -43,5 +43,7 @@ public class Stat {
 	public void getNbVentes(int nbVentes) {
 		this.nbVentes = nbVentes;
 	}
-	
+	public String toString(){
+		return "type : "+type+"     format : "+format+"     modele : "+modele+"     nbVentes : "+nbVentes;
+	}
 }
