@@ -80,7 +80,7 @@ public class CatalogueDAO {
 			String type = result.getString(1);
 			
 			query = "SELECT count(*) FROM Article a, Catalogue cat, Impression i";
-			String where = "WHERE a.idArt = '"+a.getIdArt()+"' "
+			String where = " WHERE a.idArt = '"+a.getIdArt()+"' "
 					+ "AND a.qte > cat.qteStock "
 					+ "AND cat.format=i.format "
 					+ "AND cat.type=i.type "
